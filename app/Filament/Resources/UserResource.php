@@ -52,6 +52,11 @@ class UserResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->required()
                             ->maxLength(255),
+                        Forms\Components\Select::make('roles')
+                            ->relationship('roles', 'name')
+                            ->multiple()
+                            ->preload()
+                            ->searchable(),
                         TextInput::make('password')
                             ->label(__('filament-panels::pages/auth/edit-profile.form.password.label'))
                             ->password()
