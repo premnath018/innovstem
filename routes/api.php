@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPasswordMail;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Middleware\JwtMiddleware;
 
@@ -16,4 +17,5 @@ Route::post('reset-password', [UserAuthController::class, 'resetPassword'])->nam
 Route::middleware([JwtMiddleware::class])->group(function () {
     Route::get('user', [UserAuthController::class, 'getUser']);
     Route::post('logout', [UserAuthController::class, 'logout']);
+    Route::get('refresh',[UserAuthController::class, 'refresh']);
 });
