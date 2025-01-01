@@ -7,8 +7,36 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Course extends Model
 {
-    protected $fillable = ['title', 'description'];
+    protected $fillable = [
+        'course_slug',
+        'course_title',
+        'content_short_description',
+        'content_long_description',
+        'course_content',
+        'learning_materials',
+        'course_banner',
+        'course_thumbnail',
+        'category_id',
+        'created_by',
+        'course_meta_title',
+        'course_meta_keyword',
+        'course_meta_description',
+        'class_level',
+        'view_count',
+        'enrolment_count',
+    ];
 
+    protected $casts = [
+        'learning_materials' => 'array',
+        'course_content' => 'array',
+    ];
+
+    // Relationships
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    
     public function quizzes(): MorphMany
     {
         return $this->morphMany(Quiz::class, 'quizable');
