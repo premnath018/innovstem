@@ -22,6 +22,9 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Njxqlus\FilamentProgressbar\FilamentProgressbarPlugin;
 use ShuvroRoy\FilamentSpatieLaravelHealth\FilamentSpatieLaravelHealthPlugin;
+use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
+use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use Filament\Navigation\MenuItem;
 use Filament\Enums\ThemeMode;
 
 class AdminPanelProvider extends PanelProvider
@@ -31,18 +34,20 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('admin')
+            ->path('/')
             ->login(Login::class)
             ->passwordReset()
             ->registration()
             ->sidebarCollapsibleOnDesktop()
-//            ->sidebarFullyCollapsibleOnDesktop()
+       //     ->sidebarFullyCollapsibleOnDesktop()
             ->spa()
-            ->profile(Profile::class, false)
+            ->profile(Profile::class)
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->colors([
-                'primary' => Color::rgb('rgb(161,98,7)'),
+                'primary' => Color::hex('#fb8b24'),
+                'secondary' => Color::hex('#2F2C83'),
             ])
+   //         ->topNavigation(true)
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->globalSearchFieldKeyBindingSuffix()
             ->brandLogo(asset('images/logo.png'))
@@ -51,6 +56,7 @@ class AdminPanelProvider extends PanelProvider
             ->unsavedChangesAlerts()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->databaseNotifications()
             ->pages([
                 Pages\Dashboard::class,
             ])
@@ -73,9 +79,19 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentShieldPlugin::make(),
                 FilamentSpatieLaravelHealthPlugin::make(),
+                FilamentEditProfilePlugin::make()->shouldRegisterNavigation(false)
+                ->slug('my-profile')
+                ->setTitle('My Profile')
+                ->shouldShowDeleteAccountForm(false),
                 ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->userMenuItems([
+                'profile' => MenuItem::make()
+                    ->label(fn() => auth()->user()->name)
+                    ->url('/my-profile')
+                    ->icon('heroicon-m-user-circle'),
             ]);
     }
 }

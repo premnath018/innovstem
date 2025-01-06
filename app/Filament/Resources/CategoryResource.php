@@ -19,28 +19,43 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
+    protected static ?string $navigationGroup = 'Content Management System';
+
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('short_description')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('long_description')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('image_url')
-                    ->columnSpanFull(),
-            ]);
+        ->schema([
+            Forms\Components\Section::make('General Information')
+                ->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\Textarea::make('short_description')
+                        ->columnSpanFull(),
+                ]),
+            Forms\Components\Section::make('Details')
+                ->schema([
+                    Forms\Components\Textarea::make('long_description')
+                        ->columnSpanFull(),
+                    Forms\Components\FileUpload::make('image_url')
+                    ->label('Category Image')
+                    ->image()
+                    ->directory('categories') // Directory in `storage/app/public/categories`
+                    ->visibility('public') // Ensure file is publicly accessible
+                    ->maxSize(1024) // 1MB limit
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg']),
+               ]),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('Index')->rowIndex(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('short_description'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

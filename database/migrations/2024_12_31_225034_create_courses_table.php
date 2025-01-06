@@ -26,7 +26,7 @@ return new class extends Migration
             $table->text('course_meta_title')->nullable();
             $table->text('course_meta_keyword')->nullable();
             $table->text('course_meta_description')->nullable();
-            $table->enum('class_level', ['6-8', '9-10', '11-12']);
+            $table->foreignId('class_level_id')->nullable()->change()->constrained('class_levels')->nullOnDelete(); 
             $table->integer('view_count')->default(0);
             $table->integer('enrolment_count')->default(0);
             $table->timestamps();

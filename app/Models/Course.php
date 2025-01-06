@@ -9,7 +9,7 @@ class Course extends Model
 {
     protected $fillable = [
         'course_slug',
-        'course_title',
+        'title',
         'content_short_description',
         'content_long_description',
         'course_content',
@@ -40,5 +40,10 @@ class Course extends Model
     public function quizzes(): MorphMany
     {
         return $this->morphMany(Quiz::class, 'quizable');
+    }
+
+    public function classLevel()
+    {
+        return $this->belongsTo(ClassLevel::class);
     }
 }

@@ -8,6 +8,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -25,6 +26,8 @@ class User extends Authenticatable implements FilamentUser , JWTSubject
         'name',
         'email',
         'password',
+        'avatar_url', // or column name according to config('filament-edit-profile.avatar_column', 'avatar_url')
+
     ];
 
     /**

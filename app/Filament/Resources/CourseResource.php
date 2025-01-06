@@ -3,15 +3,24 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CourseResource\Pages;
-use App\Filament\Resources\CourseResource\RelationManagers;
 use App\Models\Course;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class CourseResource extends Resource
 {
@@ -21,51 +30,125 @@ class CourseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
-    public static function form(Form $form): Form
+    public static function form(Forms\Form $form): Forms\Form
     {
         return $form
             ->schema([
-                Forms\Components\Textarea::make('course_slug')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('course_title')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('content_short_description')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('content_long_description')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('course_content')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('learning_materials')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('course_banner')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('course_thumbnail')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('category_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Textarea::make('created_by')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('course_meta_title')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('course_meta_keyword')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('course_meta_description')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('class_level')
-                    ->required(),
-                Forms\Components\TextInput::make('view_count')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('enrolment_count')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
+                Forms\Components\Section::make('General Information')
+                    ->schema([
+                        TextInput::make('title')
+                            ->label('Title')
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
+                                // Auto-generate slug and meta title if toggles are enabled
+                                if ($get('sync_slug')) {
+                                    $set('course_slug', Str::slug($state));
+                                }
+                                if ($get('sync_meta_title')) {
+                                    $set('course_meta_title', $state);
+                                }
+                            }),
+                        Select::make('category_id')
+                            ->label('Category')
+                            ->relationship('category', 'name')
+                            ->native(false)
+                            ->required(),
+                        Textarea::make('content_short_description')
+                            ->label('Short Description')
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
+                                // Sync meta description if toggle is enabled
+                                if ($get('sync_meta_description')) {
+                                    $set('course_meta_description', $state);
+                                }
+                            }),
+                        Select::make('class_level_id')
+                            ->label('Class Level')
+                            ->relationship('classLevel', 'name')
+                            ->native(false)
+                            ->required(),
+                        Textarea::make('content_long_description')
+                        ->columnSpanFull()
+                        ->label('Long Description'),
+
+                        ])->columns(2),
+                Forms\Components\Fieldset::make('Options')
+                    ->schema([
+                        Toggle::make('sync_meta_title')
+                            ->label('Generate Meta Title')
+                            ->default(true)
+                            ->reactive()
+                            ->inline(),
+                        Toggle::make('sync_slug')
+                            ->label('Sync Slug')
+                            ->default(true)
+                            ->reactive()
+                            ->inline(),
+                        Toggle::make('sync_meta_description')
+                            ->label('Sync Meta Description')
+                            ->default(true)
+                            ->reactive()
+                            ->inline(),
+                    ])
+                    ->columns(3),
+
+                Forms\Components\Section::make('Course Details and Media')
+                    ->schema([
+                        RichEditor::make('course_content')
+                            ->label('Course Content')
+                            ->required()
+                            ->columnSpanFull(),
+                        FileUpload::make('course_banner')
+                            ->label('Banner Image')
+                            ->directory('courses/banners')
+                            ->visibility('public')
+                            ->image()
+                            ->required()
+                            ->maxSize(2048),
+                        FileUpload::make('course_thumbnail')
+                            ->label('Thumbnail Image')
+                            ->directory('courses/thumbnails')
+                            ->visibility('public')
+                            ->image()
+                            ->required()
+                            ->maxSize(1024),
+                        Textarea::make('learning_materials')
+                            ->columnSpanFull()
+                            ->label('Learning Materials'),
+                    ])->columns(2),
+
+                Forms\Components\Section::make('Meta Information')
+                    ->schema([
+                        TextInput::make('course_slug')
+                            ->label('Slug')
+                            ->required()
+                            ->disabled(fn (Get $get) => $get('sync_slug'))
+                            ->maxLength(255)
+                            ->dehydrated()
+                            ->unique(),
+                        TextInput::make('course_meta_title')
+                            ->label('Meta Title')
+                            ->required()
+                            ->disabled(fn (Get $get) => $get('sync_meta_title'))
+                            ->maxLength(255)
+                            ->dehydrated(),
+                        Textarea::make('course_meta_description')
+                            ->label('Meta Description')
+                            ->required()
+                            ->disabled(fn (Get $get) => $get('sync_meta_description'))
+                            ->columnSpanFull()
+                            ->dehydrated(),
+                        Textarea::make('course_meta_keyword')
+                            ->label('Meta Keywords')
+                            ->placeholder('Separated by commas')
+                            ->required()
+                            ->columnSpanFull(),
+                        TextInput::make('created_by')
+                            ->label('Author')
+                            ->required(),
+                    ]),
             ]);
     }
 
@@ -73,42 +156,113 @@ class CourseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('category_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('class_level'),
+                Tables\Columns\TextColumn::make('index')
+                    ->rowIndex()
+                    ->label('Index'),
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Title')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Category')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('view_count')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Views')
+                    ->sortable()
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('enrolment_count')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Enrolments')
+                    ->sortable()
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Updated At')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
+                    ->sortable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('General Information')
+                    ->schema([
+                        TextEntry::make('title')
+                            ->label('Title'),
+                        TextEntry::make('category.name')
+                            ->label('Category'),
+                        TextEntry::make('classLevel.name')
+                            ->label('Class Level'),
+                        TextEntry::make('course_short_description')
+                            ->label('Short Description'),
+                        TextEntry::make('course_long_description')
+                            ->label('Long Description')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+
+                Section::make('Course Content and Media')
+                    ->schema([
+                        ImageEntry::make('course_banner')
+                            ->label('Banner Image')
+                            ->size(400),
+                        ImageEntry::make('course_thumbnail')
+                            ->label('Thumbnail Image')
+                            ->size(200),
+                        TextEntry::make('course_content')
+                            ->label('Content')
+                            ->html()
+                            ->columnSpanFull(),
+                        TextEntry::make('learing_materials')
+                            ->label('Content')
+                            ->html()
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+
+                Section::make('Meta Information')
+                    ->schema([
+                        TextEntry::make('course_meta_title')
+                            ->label('Meta Title'),
+                        TextEntry::make('course_slug')
+                            ->label('Slug'),
+                        TextEntry::make('course_meta_description')
+                            ->label('Meta Description')
+                            ->columnSpanFull(),
+                        TextEntry::make('course_meta_keyword')
+                            ->label('Meta Keywords')
+                            ->columnSpanFull(),
+                        TextEntry::make('created_by')
+                            ->label('Author'),
+                        TextEntry::make('view_count')
+                            ->label('View Count'),
+                        TextEntry::make('enrolment_count')
+                            ->label('Enrolment Count'),
+                        TextEntry::make('created_at')
+                            ->label('Created At')
+                            ->dateTime(),
+                        TextEntry::make('updated_at')
+                            ->label('Last Updated')
+                            ->dateTime(),
+                    ])
+                    ->columns(2),
             ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            // Define relations here if needed
         ];
     }
 
@@ -118,6 +272,8 @@ class CourseResource extends Resource
             'index' => Pages\ListCourses::route('/'),
             'create' => Pages\CreateCourse::route('/create'),
             'edit' => Pages\EditCourse::route('/{record}/edit'),
+            'view' => Pages\ViewCourse::route('/{record}'),
+
         ];
     }
 }

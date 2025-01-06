@@ -18,6 +18,8 @@
         "bezhansalleh/filament-shield": "^3.3",
         "doctrine/dbal": "^4.2",
         "filament/filament": "^3.2",
+        "filament/notifications": "^3.2",
+        "joaopaulolndev/filament-edit-profile": "^1.0",
         "laravel/framework": "^11.9",
         "laravel/pail": "^1.2",
         "laravel/passport": "^12.0",
