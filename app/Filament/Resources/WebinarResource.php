@@ -37,7 +37,7 @@ class WebinarResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Webinar Details')
                     ->schema([
-                        TextInput::make('webinar_title')
+                        TextInput::make('title')
                             ->label('Title')
                             ->required()
                             ->live(onBlur: true)
@@ -111,7 +111,7 @@ class WebinarResource extends Resource
                             ->maxLength(255)
                             ->disabled(fn (Get $get) => $get('sync_slug'))
                             ->dehydrated()
-                            ->unique(),
+                            ->unique(Webinar::class, 'webinar_slug',ignoreRecord: true),
                         TextInput::make('webinar_meta_title')
                             ->label('Meta Title')
                             ->disabled(fn (Get $get) => $get('sync_meta_title'))
@@ -143,12 +143,16 @@ class WebinarResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('ID')->sortable(),
-                Tables\Columns\TextColumn::make('webinar_title')
+                Tables\Columns\TextColumn::make('title')
                     ->label('Title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
                     ->sortable()
+                    ->badge()
+                    ->color(fn (string $state): string => [
+                        'primary', 'secondary', 'success', 'danger', 'warning', 'info',
+                    ][crc32($state) % 6] ?? 'primary') // Dynamically assign color
                     ->searchable(),
                 Tables\Columns\TextColumn::make('webinar_date_time')
                     ->label('Date and Time')
@@ -161,13 +165,16 @@ class WebinarResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

@@ -91,7 +91,7 @@ class BlogResource extends Resource
                             ->inline(),
                     ])
                     ->columns(3), // Adjust the number of columns to fit your layout
-                    
+
                 Forms\Components\Section::make('Blog Content and Media')
                     ->schema([
                         RichEditor::make('blog_content')
@@ -128,7 +128,7 @@ class BlogResource extends Resource
                             ->disabled(fn (Get $get) => $get('sync_slug'))
                             ->maxLength(255)
                             ->dehydrated()
-                            ->unique(),
+                            ->unique(Blog::class, 'blog_slug' ,ignoreRecord: true),
                         Textarea::make('blog_meta_description')
                             ->label('Meta Description')
                             ->disabled(fn (Get $get) => $get('sync_meta_description'))
@@ -142,7 +142,7 @@ class BlogResource extends Resource
                             ->columnSpanFull(),
                         TextInput::make('created_by')
                             ->label('Author'),
-                        
+
                 ]),
             ]);
     }
@@ -161,6 +161,10 @@ class BlogResource extends Resource
 
                 Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
+                    ->badge()
+                    ->color(fn (string $state): string => [
+                        'primary', 'secondary', 'success', 'danger', 'warning', 'info',
+                    ][crc32($state) % 6] ?? 'primary') // Dynamically assign color
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('view_count')
@@ -171,11 +175,13 @@ class BlogResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
             ->actions([

@@ -45,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->colors([
                 'primary' => Color::hex('#fb8b24'),
-                'secondary' => Color::hex('#2F2C83'),
+                'secondary' => Color::hex('#64E3D0'),
             ])
    //         ->topNavigation(true)
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])

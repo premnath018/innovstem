@@ -127,7 +127,7 @@ class CourseResource extends Resource
                             ->disabled(fn (Get $get) => $get('sync_slug'))
                             ->maxLength(255)
                             ->dehydrated()
-                            ->unique(),
+                            ->unique(Course::class,'course_slug',ignoreRecord: true),
                         TextInput::make('course_meta_title')
                             ->label('Meta Title')
                             ->required()
@@ -148,6 +148,11 @@ class CourseResource extends Resource
                         TextInput::make('created_by')
                             ->label('Author')
                             ->required(),
+                        Select::make('active')
+                            ->label('Active')
+                            ->options([ 0 => 'Inactive', 1 => 'Active'])
+                            ->required()
+                            ->native(false),
                     ]),
             ]);
     }
@@ -165,6 +170,18 @@ class CourseResource extends Resource
                 Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
                     ->sortable()
+                    ->badge()
+                    ->color(fn (string $state): string => [
+                        'primary', 'secondary', 'success', 'danger', 'warning', 'info',
+                    ][crc32($state) % 6] ?? 'primary') // Dynamically assign color
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('classLevel.name')
+                    ->label('Class')
+                    ->sortable()
+                    ->badge()
+                    ->color(fn (string $state): string => [
+                        'primary', 'secondary', 'success', 'danger', 'warning', 'info',
+                    ][crc32($state) % 6] ?? 'primary') // Dynamically assign color
                     ->searchable(),
                 Tables\Columns\TextColumn::make('view_count')
                     ->label('Views')
@@ -174,16 +191,23 @@ class CourseResource extends Resource
                     ->label('Enrolments')
                     ->sortable()
                     ->numeric(),
+                Tables\Columns\IconColumn::make('active')
+                    ->label('Active')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
+            ->searchOnBlur()
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -203,9 +227,9 @@ class CourseResource extends Resource
                             ->label('Category'),
                         TextEntry::make('classLevel.name')
                             ->label('Class Level'),
-                        TextEntry::make('course_short_description')
+                        TextEntry::make('content_short_description')
                             ->label('Short Description'),
-                        TextEntry::make('course_long_description')
+                        TextEntry::make('content_long_description')
                             ->label('Long Description')
                             ->columnSpanFull(),
                     ])
@@ -224,7 +248,7 @@ class CourseResource extends Resource
                             ->html()
                             ->columnSpanFull(),
                         TextEntry::make('learing_materials')
-                            ->label('Content')
+                            ->label('Learing Materials')
                             ->html()
                             ->columnSpanFull(),
                     ])

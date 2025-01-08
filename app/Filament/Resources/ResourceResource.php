@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ResourceResource\Pages;
 use App\Models\Resource as ResourceModel;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -109,7 +110,7 @@ class ResourceResource extends Resource
                             ->maxLength(255)
                             ->disabled(fn (Get $get) => $get('sync_slug'))
                             ->dehydrated()
-                            ->unique(),
+                            ->unique(Resource::class, 'resource_slug',ignoreRecord: true),
                         TextInput::make('resource_meta_title')
                             ->label('Meta Title')
                             ->disabled(fn (Get $get) => $get('sync_meta_title'))
@@ -142,17 +143,24 @@ class ResourceResource extends Resource
                 Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
                     ->sortable()
+                    ->badge()
+                    ->color(fn (string $state): string => [
+                        'primary', 'secondary', 'success', 'danger', 'warning', 'info',
+                    ][crc32($state) % 6] ?? 'primary') // Dynamically assign color
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

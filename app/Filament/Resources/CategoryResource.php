@@ -43,7 +43,7 @@ class CategoryResource extends Resource
                     ->directory('categories') // Directory in `storage/app/public/categories`
                     ->visibility('public') // Ensure file is publicly accessible
                     ->maxSize(1024) // 1MB limit
-                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg']),
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg','image/webp']),
                ]),
         ]);
     }

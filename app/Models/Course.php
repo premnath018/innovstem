@@ -24,11 +24,13 @@ class Course extends Model
         'class_level',
         'view_count',
         'enrolment_count',
+        'active',
     ];
 
     protected $casts = [
-        'learning_materials' => 'array',
-        'course_content' => 'array',
+        'active' => 'boolean',
+//        'learning_materials' => 'array',
+//        'course_content' => 'array',
     ];
 
     // Relationships
@@ -36,7 +38,7 @@ class Course extends Model
     {
         return $this->belongsTo(Category::class);
     }
-    
+
     public function quizzes(): MorphMany
     {
         return $this->morphMany(Quiz::class, 'quizable');

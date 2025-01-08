@@ -26,9 +26,10 @@ return new class extends Migration
             $table->text('course_meta_title')->nullable();
             $table->text('course_meta_keyword')->nullable();
             $table->text('course_meta_description')->nullable();
-            $table->foreignId('class_level_id')->nullable()->change()->constrained('class_levels')->nullOnDelete(); 
+            $table->foreignId('class_level_id')->nullable()->change()->constrained('class_levels')->nullOnDelete();
             $table->integer('view_count')->default(0);
             $table->integer('enrolment_count')->default(0);
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }
