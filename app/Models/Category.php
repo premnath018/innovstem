@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,6 +7,7 @@ class Category extends Model
 {
     protected $fillable = [
         'name',
+        'slug',
         'short_description',
         'long_description',
         'image_url',

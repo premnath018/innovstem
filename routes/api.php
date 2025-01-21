@@ -1,21 +1,41 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ResetPasswordMail;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Middleware\JwtMiddleware;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ResourceController;
 
 Route::post('register',[UserAuthController::class,'register']);
 Route::post('login',[UserAuthController::class,'login']);
 Route::post('forgot-password', [UserAuthController::class, 'forgotPassword']);
 Route::post('reset-password', [UserAuthController::class, 'resetPassword'])->name('password.reset');
+Route::get('user', [UserAuthController::class, 'getUser']);
 
 
 
 Route::middleware([JwtMiddleware::class])->group(function () {
-    Route::get('user', [UserAuthController::class, 'getUser']);
     Route::post('logout', [UserAuthController::class, 'logout']);
     Route::get('refresh',[UserAuthController::class, 'refresh']);
+});
+
+Route::prefix('blogs')->group(function () {
+    Route::get('/', [BlogController::class, 'paginate'])->name('blogs.paginate'); // Paginated blogs
+    Route::get('/{slug}', [BlogController::class, 'show']); // Blog by slug
+    Route::get('/recent', [BlogController::class, 'recent'])->name('blogs.recent'); // Recent blogs
+});
+
+
+
+Route::prefix('courses')->group(function () {
+    Route::get('/', [CourseController::class, 'paginate'])->name('courses.paginate'); // Paginated courses
+    Route::get('/{slug}', [CourseController::class, 'show'])->name('courses.show'); // Course by slug
+    Route::get('/recent', [CourseController::class, 'recent'])->name('courses.recent'); // Recent courses
+});
+
+Route::prefix('resources')->group(function () {
+    Route::get('/', [ResourceController::class, 'paginate'])->name('resources.paginate'); // Paginated resources
+    Route::get('/{slug}', [ResourceController::class, 'show'])->name('resources.show'); // Course by slug
+    Route::get('/recent', [ResourceController::class, 'recent'])->name('resources.recent'); // Recent resources
 });

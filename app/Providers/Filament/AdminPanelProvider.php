@@ -20,11 +20,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Njxqlus\FilamentProgressbar\FilamentProgressbarPlugin;
-use ShuvroRoy\FilamentSpatieLaravelHealth\FilamentSpatieLaravelHealthPlugin;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
-use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Filament\Navigation\MenuItem;
+use Filament\Support\Enums\Platform;
 use Filament\Enums\ThemeMode;
 
 class AdminPanelProvider extends PanelProvider
@@ -47,9 +45,13 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::hex('#fb8b24'),
                 'secondary' => Color::hex('#64E3D0'),
             ])
-   //         ->topNavigation(true)
-            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
-            ->globalSearchFieldKeyBindingSuffix()
+            ->topNavigation(true)
+            ->globalSearchKeyBindings(['command+s', 'ctrl+s'])
+            ->globalSearchFieldSuffix(fn (): ?string => match (Platform::detect()) {
+                Platform::Windows, Platform::Linux => 'CTRL + S',
+                Platform::Mac => '⌘ + S',
+                default => null,
+            })
             ->brandLogo(asset('images/logo.png'))
             ->brandLogoHeight('2.5rem')
             ->defaultThemeMode(ThemeMode::Dark)
@@ -58,7 +60,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->databaseNotifications()
             ->pages([
-                Pages\Dashboard::class,
+                //      Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
@@ -78,7 +80,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
-                FilamentSpatieLaravelHealthPlugin::make(),
                 FilamentEditProfilePlugin::make()->shouldRegisterNavigation(false)
                 ->slug('my-profile')
                 ->setTitle('My Profile')

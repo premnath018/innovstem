@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Resource extends Model
 {
@@ -26,5 +27,10 @@ class Resource extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function quizzes(): MorphMany
+    {
+        return $this->morphMany(Quiz::class, 'quizable');
     }
 }
