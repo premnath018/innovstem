@@ -77,8 +77,8 @@ class WebinarService
      */
     public function getRecentWebinars(int $limit = 5)
     {
-        return $this->webinarRepository->getRecent($limit)->map(function ($resource) {
-            return $this->transformResource($resource);
+        return $this->webinarRepository->getRecent($limit)->map(function ($webinars) {
+            return $this->transformWebinar($webinars);
         });
     }
 
