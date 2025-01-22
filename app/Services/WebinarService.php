@@ -68,6 +68,8 @@ class WebinarService
 
         // Replace the paginator's collection with the transformed data
         $paginatedWebinars->setCollection($transformedWebinars);
+
+        return $paginatedWebinars;
     }
 
     /**
@@ -75,17 +77,9 @@ class WebinarService
      */
     public function getRecentWebinars(int $limit = 5)
     {
-        $RecentWebinars = $this->webinarRepository->getRecent($perPage);
-
-        // Transform the collection inside the paginator
-        $transformedWebinars = $RecentWebinars->getCollection()->map(function ($blog) {
-            return $this->transformWebinar($blog);
+        return $this->webinarRepository->getRecent($limit)->map(function ($resource) {
+            return $this->transformResource($resource);
         });
-
-        // Replace the paginator's collection with the transformed data
-        $RecentWebinars->setCollection($transformedWebinars);
-
-        return $RecentWebinars;
     }
 
     /**
