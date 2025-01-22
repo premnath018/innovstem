@@ -32,12 +32,13 @@ class CourseController extends Controller
      */
     public function show($slug)
     {
-        try {
-            $course = $this->courseService->getCourseBySlug($slug);
+        $course = $this->courseService->getCourseBySlug($slug);
             return ApiResponse::success($course, 'Course retrieved successfully.');
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), 404);
-        }
+        // try {
+            
+        // } catch (\Exception $e) {
+        //     return ApiResponse::error($e->getMessage(), 404);
+        // }
     }
 
     /**

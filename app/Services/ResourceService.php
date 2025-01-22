@@ -33,12 +33,13 @@ class ResourceService
     public function getResourceById(int $id)
     {
         $resource = $this->resourceRepository->findById($id);
-        $resource->category_name = $resource->category->name;
-        unset($resource->category);
 
         if (!$resource) {
             throw new \Exception('Resource not found');
         }
+
+        $resource->category_name = $resource->category->name;
+        unset($resource->category);
 
         return $resource;
     }

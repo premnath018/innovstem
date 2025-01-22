@@ -18,29 +18,29 @@ class WebinarRepository {
     }
 
     public function findBySlug($slug){
-        return $this->webinar->where("webinar_slug","=", $slug)->first();
+        return $this->webinar->with('category')->where("webinar_slug","=", $slug)->first();
     }
 
     public function findById(int $id)
     {
-        return $this->webinar->find($id);
+        return $this->webinar->with('category')->find($id);
     }
 
     public function paginate(int $perPage = 15)
     {
-        return $this->webinar->paginate($perPage);
+        return $this->webinar->with('category')->paginate($perPage);
     }
 
     public function search(string $keyword, int $perPage = 15)
     {
-        return $this->webinar->where('title', 'like', "%$keyword%")
+        return $this->webinar->with('category')->where('title', 'like', "%$keyword%")
             ->orWhere('webinar_content', 'like', "%$keyword%")
             ->paginate($perPage);
     }
 
     public function getRecent(int $limit = 5)
     {
-        return $this->webinar->with('category')
+        return $this->webinar->with('category')->with('category')
             ->orderBy('created_at', 'desc')
             ->take($limit)
             ->get();

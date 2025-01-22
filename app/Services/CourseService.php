@@ -19,15 +19,16 @@ class CourseService
     public function getCourseBySlug(string $slug)
     {
         $course = $this->courseRepository->findBySlug($slug);
+       
+        if (!$course) {
+            throw new \Exception('Course not found');
+        }
+       
         $course->category_name = $course->category->name;
         $course->class_level_name = $course->classLevel->name;
       //   dd($course);
         unset($course->classLevel);
         unset($course->category);
-
-        if (!$course) {
-            throw new \Exception('Course not found');
-        }
 
         return $course;
     }

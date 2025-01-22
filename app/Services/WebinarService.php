@@ -19,10 +19,13 @@ class WebinarService
     public function getWebinarBySlug(string $slug)
     {
         $webinar = $this->webinarRepository->findBySlug($slug);
-
+        
         if (!$webinar) {
             throw new \Exception('Webinar not found');
         }
+        
+        $webinar->category_name = $webinar->category->name;
+        unset($webinar->category);
 
         return $webinar;
     }
@@ -56,9 +59,15 @@ class WebinarService
      */
     public function getPaginatedWebinars(int $perPage = 15)
     {
-        return $this->webinarRepository->paginate($perPage)->through(function ($webinar) {
-            return $this->transformWebinar($webinar);
+        $paginatedWebinars = $this->webinarRepository->paginate($perPage);
+
+        // Transform the collection inside the paginator
+        $transformedWebinars = $paginatedWebinars->getCollection()->map(function ($blog) {
+            return $this->transformWebinar($blog);
         });
+
+        // Replace the paginator's collection with the transformed data
+        $paginatedWebinars->setCollection($transformedWebinars);
     }
 
     /**
@@ -66,9 +75,17 @@ class WebinarService
      */
     public function getRecentWebinars(int $limit = 5)
     {
-        return $this->webinarRepository->getRecent($limit)->map(function ($webinar) {
-            return $this->transformWebinar($webinar);
+        $RecentWebinars = $this->webinarRepository->getRecent($perPage);
+
+        // Transform the collection inside the paginator
+        $transformedWebinars = $RecentWebinars->getCollection()->map(function ($blog) {
+            return $this->transformWebinar($blog);
         });
+
+        // Replace the paginator's collection with the transformed data
+        $RecentWebinars->setCollection($transformedWebinars);
+
+        return $RecentWebinars;
     }
 
     /**
@@ -79,7 +96,7 @@ class WebinarService
         return [
             'id' => $webinar->id,
             'webinar_slug' => $webinar->webinar_slug,
-            'title' => $webinar->webinar_title,
+            'title' => $webinar->title,
             'webinar_description' => $webinar->webinar_description,
             'webinar_thumbnail' => $webinar->webinar_thumbnail,
             'category_name' => $webinar->category->name ?? null,

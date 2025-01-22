@@ -65,7 +65,7 @@ class UserAuthController extends Controller
 
         // Send email logic here...
 
-        return ApiResponse::success([], 'Password reset link sent successfully');
+        return ApiResponse::success($result, 'Password reset link sent successfully');
     }
 
     public function resetPassword(Request $request)
