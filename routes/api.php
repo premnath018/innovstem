@@ -28,7 +28,7 @@ Route::prefix('blogs')->group(function () {
 });
 Route::prefix('courses')->group(function () {
     Route::get('/', [CourseController::class, 'paginate'])->name('courses.paginate'); // Paginated courses
-    Route::get('/recents', [CourseController::class, 'recent'])->name('courses.recent'); // Recent courses
+    Route::get('/recent', [CourseController::class, 'recent'])->name('courses.recent'); // Recent courses
     Route::get('/d/{slug}', [CourseController::class, 'show'])->name('courses.show'); // Course by slug
 });
 

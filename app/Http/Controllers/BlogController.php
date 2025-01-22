@@ -51,4 +51,14 @@ class BlogController extends Controller
             return ApiResponse::error($e->getMessage(), 500);
         }
     }
+
+    public function recent()
+    {
+        try {
+            $courses = $this->blogService->getRecentBlogs(5); // Default to 5 recent courses
+            return ApiResponse::success($courses, 'Recent blogs retrieved successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+    }
 }
