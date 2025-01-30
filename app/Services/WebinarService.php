@@ -24,6 +24,9 @@ class WebinarService
             throw new \Exception('Webinar not found');
         }
         
+        $quizExists = $webinar->quizzes()->exists();
+
+        $webinar->quiz = $quizExists;
         $webinar->category_name = $webinar->category->name;
         unset($webinar->category);
 
@@ -95,9 +98,11 @@ class WebinarService
             'webinar_thumbnail' => $webinar->webinar_thumbnail,
             'category_name' => $webinar->category->name ?? null,
             'webinar_date_time' => $webinar->webinar_date_time,
+            'view_count' => $webinar->view_count,
             'created_by' => $webinar->created_by,
             'view_count' => $webinar->view_count,
             'created_at' => $webinar->created_at->toIso8601String(),
+            'updated_at'=> $webinar->updated_at->toIso8601String(),
         ];
     }
 }

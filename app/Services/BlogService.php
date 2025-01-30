@@ -23,7 +23,10 @@ class BlogService
         if (!$blog) {
             throw new \Exception('Blog not found');
         }
-      
+
+        $quizExists = $blog->quizzes()->exists();
+
+        $blog->quiz = $quizExists;
         $blog->category_name = $blog->category->name;
         unset($blog->category);
 
@@ -97,6 +100,7 @@ class BlogService
             'created_by' => $blog->created_by,
             'view_count' => $blog->view_count,
             'created_at' => $blog->created_at->toIso8601String(),
+            'updated_at'=> $blog->updated_at->toIso8601String(),
         ];
     }
 }

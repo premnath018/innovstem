@@ -34,13 +34,25 @@ class QuizRepository
      */
     public function findBySlug(string $type, string $slug)
     {
+        $model = app($type);
+
+        // Determine the correct slug column name dynamically
+        $slugColumn = match ($type) {
+            \App\Models\Course::class => 'course_slug',
+            \App\Models\Blog::class => 'blog_slug',
+            \App\Models\Webinar::class => 'webinar_slug',
+            \App\Models\Resource::class => 'resource_slug',
+            default => 'slug'
+        };
+
         return $this->quiz
-            ->whereHasMorph('quizable', [$type], function ($query) use ($slug) {
-                $query->where('slug', '=', $slug);
+            ->whereHasMorph('quizable', [$type], function ($query) use ($slugColumn, $slug) {
+                $query->where($slugColumn, '=', $slug);
             })
             ->with('questions.options')
             ->first();
     }
+
 
     /**
      * Get quizzes without revealing correct answers.
@@ -72,7 +84,6 @@ class QuizRepository
 
         if (!$quiz) {
             return [
-                'success' => false,
                 'message' => 'Quiz not found.',
             ];
         }
@@ -91,10 +102,30 @@ class QuizRepository
         }
 
         return [
-            'success' => true,
-            'message' => 'Quiz answers evaluated.',
             'score' => $score,
             'total' => $totalQuestions,
         ];
     }
+
+    protected function transformQuiz($quiz)
+    {
+        return [
+            'id' => $quiz->id,
+            'title' => $quiz->title,
+            'quizable_id' => $quiz->quizable_id,
+            'questions' => $quiz->questions->map(function ($question) {
+                return [
+                    'id' => $question->id,
+                    'question_text' => $question->question_text,
+                    'options' => $question->options->map(function ($option) {
+                        return [
+                            'id' => $option->id,
+                            'option_text' => $option->option_text,
+                        ];
+                    }),
+                ];
+            }),
+        ];
+    }
+
 }

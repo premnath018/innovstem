@@ -7,6 +7,9 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\WebinarController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\QuizController;
+
 
 Route::post('register',[UserAuthController::class,'register']);
 Route::post('login',[UserAuthController::class,'login']);
@@ -43,3 +46,15 @@ Route::prefix('webinars')->group(function () {
     Route::get('/d/{slug}', [WebinarController::class, 'show'])->name('webinars.show'); // Course by slug
     Route::get('/recent', [WebinarController::class, 'recent'])->name('webinars.recent'); // Recent webinars
 });
+
+Route::prefix('quiz')->group(function () {
+    Route::get('/{type}/{slug}', [QuizController::class, 'show'])->name('quiz.show'); // List questions & options
+    Route::post('/{type}/{slug}/submit', [QuizController::class, 'submit'])->name('quiz.submit'); // Submit answers
+});
+
+
+
+
+Route::get('/home', [HomeController::class, 'home'])->name('home'); // Fetch top 5 recent items
+Route::post('/view', [HomeController::class, 'view'])->name('view'); // Update view count
+

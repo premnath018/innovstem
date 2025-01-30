@@ -23,7 +23,10 @@ class CourseService
         if (!$course) {
             throw new \Exception('Course not found');
         }
-       
+        
+        $quizExists = $course->quizzes()->exists();
+
+        $course->quiz = $quizExists;
         $course->category_name = $course->category->name;
         $course->class_level_name = $course->classLevel->name;
       //   dd($course);
@@ -102,6 +105,7 @@ class CourseService
             'view_count' => $course->view_count,
             'enrolment_count' => $course->enrolment_count,
             'created_at' => $course->created_at->toIso8601String(),
+            'updated_at'=> $course->updated_at->toIso8601String(),
         ];
     }
 }

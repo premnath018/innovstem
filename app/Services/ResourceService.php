@@ -24,6 +24,11 @@ class ResourceService
             throw new \Exception('Resource not found');
         }
 
+
+        $quizExists = $resource->quizzes()->exists();
+
+        $resource->quiz = $quizExists;
+
         return $resource;
     }
 
@@ -94,9 +99,11 @@ class ResourceService
             'resource_description' => $resource->resource_description,
             'resource_thumbnail' => $resource->resource_thumbnail,
             'category_name' => $resource->category->name ?? null,
+            'view_count' => $resource->view_count,
             'created_by' => $resource->created_by,
             'view_count' => $resource->view_count,
             'created_at' => $resource->created_at->toIso8601String(),
+            'updated_at'=> $resource->updated_at->toIso8601String(),
         ];
     }
 }

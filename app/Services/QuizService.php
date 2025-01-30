@@ -70,10 +70,9 @@ class QuizService
     {
         $result = $this->quizRepository->checkAnswers($quizId, $answers);
 
-        if (!$result['success']) {
-            throw new \Exception($result['message']);
-        }
-
         return $result;
     }
+
+
+   
 }
