@@ -26,7 +26,7 @@ class ResourceService
 
 
         $quizExists = $resource->quizzes()->exists();
-
+        $resource->increment('view_count');
         $resource->quiz = $quizExists;
 
         return $resource;

@@ -41,48 +41,5 @@ class HomeController extends Controller
         }
     }
 
-    /**
-     * Increment view count for a specific blog, course, or webinar.
-     */
-    public function view(Request $request)
-    {
-        try {
-            $request->validate([
-                'type' => 'required|string|in:blog,course,webinar',
-                'id' => 'required|integer',
-            ]);
-
-            $type = $request->input('type');
-            $id = $request->input('id');
-
-            switch ($type) {
-                case 'blog':
-                    $entity = $this->blogService->getBlogById($id);
-                    break;
-                case 'course':
-                    $entity = $this->courseService->getCourseById($id);
-                    break;
-                case 'webinar':
-                    $entity = $this->webinarService->getWebinarById($id);
-                    break;
-                default:
-                    return ApiResponse::error('Invalid type provided.', 400);
-            }
-
-            if (!$entity) {
-                return ApiResponse::error(ucfirst($type) . ' not found.', 404);
-            }
-
-            // Increment the view count and save
-            $entity->increment('view_count');
-
-            return ApiResponse::success([
-                'id' => $entity->id,
-                'type' => $type,
-                'view_count' => $entity->view_count,
-            ], ucfirst($type) . ' view count updated successfully.');
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), 500);
-        }
-    }
+   
 }

@@ -25,7 +25,7 @@ class WebinarService
         }
         
         $quizExists = $webinar->quizzes()->exists();
-
+        $webinar->increment('view_count');
         $webinar->quiz = $quizExists;
         $webinar->category_name = $webinar->category->name;
         unset($webinar->category);

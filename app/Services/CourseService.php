@@ -26,6 +26,7 @@ class CourseService
         
         $quizExists = $course->quizzes()->exists();
 
+        $course->increment('view_count');
         $course->quiz = $quizExists;
         $course->category_name = $course->category->name;
         $course->class_level_name = $course->classLevel->name;

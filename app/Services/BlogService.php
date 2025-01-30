@@ -19,13 +19,14 @@ class BlogService
     public function getBlogBySlug(string $slug)
     {
         $blog = $this->blogRepository->findBySlug($slug);
-      
+
+        
         if (!$blog) {
             throw new \Exception('Blog not found');
         }
 
         $quizExists = $blog->quizzes()->exists();
-
+        $blog->increment('view_count');
         $blog->quiz = $quizExists;
         $blog->category_name = $blog->category->name;
         unset($blog->category);
