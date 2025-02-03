@@ -16,6 +16,7 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-shield": "^3.3",
+        "devonab/filament-easy-footer": "^1.0",
         "doctrine/dbal": "^4.2",
         "filament/filament": "^3.2",
         "filament/notifications": "^3.2",

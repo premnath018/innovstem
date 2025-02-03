@@ -21,6 +21,7 @@ use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 
+
 class BlogResource extends Resource
 {
     protected static ?string $model = Blog::class;

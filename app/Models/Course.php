@@ -21,7 +21,7 @@ class Course extends Model
         'course_meta_title',
         'course_meta_keyword',
         'course_meta_description',
-        'class_level',
+        'class_level_id',
         'view_count',
         'enrolment_count',
         'active',

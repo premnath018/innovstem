@@ -64,7 +64,7 @@ class CourseResource extends Resource
                                     $set('course_meta_description', $state);
                                 }
                             }),
-                        Select::make('class_level')
+                        Select::make('class_level_id')
                             ->label('Class Level')
                             ->relationship('classLevel', 'name')
                             ->native(false)
