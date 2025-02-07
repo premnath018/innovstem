@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
 use App\Services\BlogService;
 use App\Services\CourseService;
+use App\Services\RecommendationService;
 use App\Services\WebinarService;
 
 class HomeController extends Controller
@@ -13,8 +14,9 @@ class HomeController extends Controller
     protected $blogService;
     protected $courseService;
     protected $webinarService;
+    protected $recommendationService;
 
-    public function __construct(BlogService $blogService, CourseService $courseService, WebinarService $webinarService)
+    public function __construct(BlogService $blogService, CourseService $courseService, WebinarService $webinarService, )
     {
         $this->blogService = $blogService;
         $this->courseService = $courseService;
@@ -40,6 +42,24 @@ class HomeController extends Controller
             return ApiResponse::error($e->getMessage(), 500);
         }
     }
+
+
+    public function recommend(Request $request)
+    {
+        try {
+            $recommendationService = app(RecommendationService::class); // Resolve service manually
+    
+            $categoryId = $request->input('category_id');
+            $limit =  $request->input('limit', 5);
+    
+            $recommendations = $recommendationService->getRecommendations($categoryId, $limit);
+    
+            return ApiResponse::success($recommendations, 'Recommendations retrieved successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+    }
+    
 
    
 }

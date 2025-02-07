@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Category;
 use App\Repositories\CourseRepository;
 
 class CourseService
@@ -64,9 +65,9 @@ class CourseService
     /**
      * Get paginated courses with limited fields.
      */
-    public function getPaginatedCourses(int $perPage = 15)
+    public function getPaginatedCourses(?int $categoryId = null, int $perPage = 9)
     {
-        $paginatedCourses = $this->courseRepository->paginate($perPage);
+        $paginatedCourses = $this->courseRepository->getPaginatedCourses($categoryId, $perPage);
 
         // Transform the collection inside the paginator
         $transformedCourses = $paginatedCourses->getCollection()->map(function ($blog) {
@@ -79,6 +80,10 @@ class CourseService
         return $paginatedCourses;
     }
 
+    public function allCategroies(){
+        return $this->courseRepository->getAllCategories();
+    }
+
     /**
      * Get recent courses with limited fields.
      */
@@ -87,6 +92,46 @@ class CourseService
         return $this->courseRepository->getRecent($limit)->map(function ($course) {
             return $this->transformCourse($course);
         });
+    }
+
+    public function searchCourses(string $keyword, int $perPage = 9)
+    {
+        $paginatedCourses = $this->courseRepository->search($keyword, $perPage);
+    
+        // Transform the collection inside the paginator
+        $transformedCourses = $paginatedCourses->getCollection()->map(function ($course) {
+            return $this->transformcourse($course);
+        });
+    
+        // Replace the paginator's collection with the transformed data
+        $paginatedCourses->setCollection($transformedCourses);
+    
+        return $paginatedCourses;
+    }
+
+    public function getCoursesByCategory($categoryId, int $limit = 5)
+    {
+       $paginatedCourses = $this->courseRepository->getCoursesByCategory($categoryId, $limit);
+
+    // Fetch the category details
+        $category = Category::findOrFail($categoryId);
+
+    // Transform the courses
+    $transformedCourses = $paginatedCourses->map(function ($course) {
+        return $this->transformCourse($course);
+    });
+
+  
+    return [
+        'category' => [
+            'id' => $category->id,
+            'name' => $category->name,
+            'short_description' => $category->short_description,
+            'long_description' => $category->long_description,
+            'image_url' => $category->image_url
+        ],
+        'courses' => $transformedCourses
+    ];
     }
 
     /**

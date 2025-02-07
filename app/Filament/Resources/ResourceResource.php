@@ -110,7 +110,7 @@ class ResourceResource extends Resource
                             ->maxLength(255)
                             ->disabled(fn (Get $get) => $get('sync_slug'))
                             ->dehydrated()
-                            ->unique(Resource::class, 'resource_slug',ignoreRecord: true),
+                            ->unique(ResourceModel::class, 'resource_slug',ignoreRecord: true),
                         TextInput::make('resource_meta_title')
                             ->label('Meta Title')
                             ->disabled(fn (Get $get) => $get('sync_meta_title'))

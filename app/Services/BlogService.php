@@ -86,6 +86,22 @@ class BlogService
         });
     }
 
+    public function searchBlogs(string $keyword, int $perPage = 9)
+    {
+        $paginatedBlogs = $this->blogRepository->search($keyword, $perPage);
+    
+        // Transform the collection inside the paginator
+        $transformedBlogs = $paginatedBlogs->getCollection()->map(function ($blog) {
+            return $this->transformBlog($blog);
+        });
+    
+        // Replace the paginator's collection with the transformed data
+        $paginatedBlogs->setCollection($transformedBlogs);
+    
+        return $paginatedBlogs;
+    }
+    
+
     /**
      * Transform a blog to include only the required fields.
      */

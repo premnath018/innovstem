@@ -87,6 +87,21 @@ class ResourceService
         });
     }
 
+    public function searchResource(string $keyword, int $perPage = 9)
+    {
+        $paginatedResource = $this->resourceRepository->search($keyword, $perPage);
+    
+        // Transform the collection inside the paginator
+        $transformedResource = $paginatedResource->getCollection()->map(function ($resource) {
+            return $this->transformResource($resource);
+        });
+    
+        // Replace the paginator's collection with the transformed data
+        $paginatedResource->setCollection($transformedResource);
+    
+        return $paginatedResource;
+    }
+
     /**
      * Transform a resource to include only the required fields.
      */

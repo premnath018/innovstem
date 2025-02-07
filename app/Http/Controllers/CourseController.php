@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\CourseService;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
@@ -17,16 +18,20 @@ class CourseController extends Controller
     /**
      * Get paginated courses.
      */
-    public function paginate()
+    public function paginate(Request $request)
     {
         try {
-            $courses = $this->courseService->getPaginatedCourses(9); // Default to 15 items per page
-            return ApiResponse::success($courses, 'Paginated courses retrieved successfully.');
+            $categoryId = $request->query('category'); // Get category from query params
+            $perPage = $request->query('perPage', 9); 
+    
+            $courses = $this->courseService->getPaginatedCourses($categoryId, $perPage);
+    
+            return ApiResponse::success($courses, 'Courses retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);
         }
     }
-
+    
     /**
      * Get a course by slug.
      */
@@ -49,6 +54,47 @@ class CourseController extends Controller
         try {
             $courses = $this->courseService->getRecentCourses(5); // Default to 5 recent courses
             return ApiResponse::success($courses, 'Recent courses retrieved successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+    }
+
+    public function search(Request $request)
+    {
+        try {
+            $request->validate([
+                'keyword' => 'required|string|min:2',
+                'perPage' => 'nullable|integer|min:1'
+            ]);
+
+            $keyword = $request->input('keyword');
+            $perPage = $request->input('perPage', 9);
+
+            $courses = $this->courseService->searchcourses($keyword, $perPage);
+
+            return ApiResponse::success($courses, 'Search results retrieved successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+    }
+
+    public function category(){
+        try {
+            $categroies = $this->courseService->allCategroies();
+
+            return ApiResponse::success($categroies, 'Categories retrieved successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+
+    }
+
+    public function showCategory(Request $request, $categoryId)
+    {
+        try {
+            $perPage = $request->input('perPage', 5);
+            $courses = $this->courseService->getCoursesByCategory($categoryId, $perPage);
+            return ApiResponse::success($courses, 'Courses retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);
         }

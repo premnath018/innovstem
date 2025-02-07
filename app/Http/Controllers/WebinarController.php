@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\WebinarService;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
 
 class WebinarController extends Controller
 {
@@ -48,6 +49,25 @@ class WebinarController extends Controller
         try {
             $Webinars = $this->WebinarService->getRecentWebinars(5); // Default to 5 recent Webinars
             return ApiResponse::success($Webinars, 'Recent Webinars retrieved successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+    }
+
+    public function search(Request $request)
+    {
+        try {
+            $request->validate([
+                'keyword' => 'required|string|min:2',
+                'perPage' => 'nullable|integer|min:1'
+            ]);
+
+            $keyword = $request->input('keyword');
+            $perPage = $request->input('perPage', 9);
+
+            $Webinars = $this->WebinarService->searchWebinars($keyword, $perPage);
+
+            return ApiResponse::success($Webinars, 'Search results retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);
         }

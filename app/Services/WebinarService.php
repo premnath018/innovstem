@@ -85,6 +85,21 @@ class WebinarService
         });
     }
 
+    public function searchWebinars(string $keyword, int $perPage = 9)
+    {
+        $paginatedWebinars = $this->webinarRepository->search($keyword, $perPage);
+    
+        // Transform the collection inside the paginator
+        $transformedWebinars = $paginatedWebinars->getCollection()->map(function ($webinar) {
+            return $this->transformWebinar($webinar);
+        });
+    
+        // Replace the paginator's collection with the transformed data
+        $paginatedWebinars->setCollection($transformedWebinars);
+    
+        return $paginatedWebinars;
+    }
+
     /**
      * Transform a webinar to include only the required fields.
      */

@@ -9,7 +9,7 @@ class Resource extends Model
 {
     protected $fillable = [
         'resource_slug',
-        'resource_title',
+        'title',
         'resource_content',
         'resource_url',
         'resource_description',

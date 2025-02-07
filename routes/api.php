@@ -9,7 +9,7 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\WebinarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuizController;
-
+use App\Models\Webinar;
 
 Route::post('register',[UserAuthController::class,'register']);
 Route::post('login',[UserAuthController::class,'login']);
@@ -27,10 +27,14 @@ Route::middleware([JwtMiddleware::class])->group(function () {
 Route::prefix('blogs')->group(function () {
     Route::get('/', [BlogController::class, 'paginate'])->name('blogs.paginate'); // Paginated blogs
     Route::get('/d/{slug}', [BlogController::class, 'show']); // Blog by slug
+    Route::get('/search', [BlogController::class, 'search'])->name('blogs.search');
     Route::get('/recent', [BlogController::class, 'recent'])->name('blogs.recent'); // Recent blogs
 });
 Route::prefix('courses')->group(function () {
     Route::get('/', [CourseController::class, 'paginate'])->name('courses.paginate'); // Paginated courses
+    Route::get('/categories', [CourseController::class,'category'])->name('courses.categories');
+    Route::get('/category/{category}', [CourseController::class,'showCategory'])->name('courses.category');
+    Route::get('/search', [CourseController::class, 'search'])->name('courses.search');
     Route::get('/recent', [CourseController::class, 'recent'])->name('courses.recent'); // Recent courses
     Route::get('/d/{slug}', [CourseController::class, 'show'])->name('courses.show'); // Course by slug
 });
@@ -38,12 +42,14 @@ Route::prefix('courses')->group(function () {
 Route::prefix('resources')->group(function () {
     Route::get('/', [ResourceController::class, 'paginate'])->name('resources.paginate'); // Paginated resources
     Route::get('/d/{slug}', [ResourceController::class, 'show'])->name('resources.show'); // Course by slug
+    Route::get('/search', [ResourceController::class, 'search'])->name('resources.search');
     Route::get('/recent', [ResourceController::class, 'recent'])->name('resources.recent'); // Recent resources
 });
 
 Route::prefix('webinars')->group(function () {
     Route::get('/', [WebinarController::class, 'paginate'])->name('webinars.paginate'); // Paginated webinars
     Route::get('/d/{slug}', [WebinarController::class, 'show'])->name('webinars.show'); // Course by slug
+    Route::get('/search', [WebinarController::class, 'search'])->name('webinars.search');
     Route::get('/recent', [WebinarController::class, 'recent'])->name('webinars.recent'); // Recent webinars
 });
 
@@ -53,8 +59,6 @@ Route::prefix('quiz')->group(function () {
 });
 
 
-
-
 Route::get('/home', [HomeController::class, 'home'])->name('home'); // Fetch top 5 recent items
-Route::post('/view', [HomeController::class, 'view'])->name('view'); // Update view count
+Route::get('/recommend', [HomeController::class, 'recommend'])->name('recommend'); // Fetch top 5 recent items
 

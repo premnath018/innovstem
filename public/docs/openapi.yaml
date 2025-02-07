@@ -1,0 +1,3640 @@
+openapi: 3.0.3
+info:
+  title: innovstem
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://127.0.0.1:8000'
+paths:
+  /api/register:
+    post:
+      summary: ''
+      operationId: postApiRegister
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: rlekmrakjzh
+                  nullable: false
+                email:
+                  type: string
+                  description: 'Must be a valid email address. Must not be greater than 255 characters.'
+                  example: aking@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Must be at least 6 characters.'
+                  example: '%xP4((~aq*VF'
+                  nullable: false
+              required:
+                - name
+                - email
+                - password
+      security: []
+  /api/login:
+    post:
+      summary: ''
+      operationId: postApiLogin
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/forgot-password:
+    post:
+      summary: ''
+      operationId: postApiForgotPassword
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address. Must not be greater than 255 characters.'
+                  example: kareem.ledner@example.net
+                  nullable: false
+              required:
+                - email
+      security: []
+  /api/reset-password:
+    post:
+      summary: ''
+      operationId: postApiResetPassword
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address. Must not be greater than 255 characters.'
+                  example: osinski.natasha@example.net
+                  nullable: false
+                token:
+                  type: string
+                  description: ''
+                  example: libero
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Must be at least 6 characters.'
+                  example: GUSvLubJ4
+                  nullable: false
+              required:
+                - email
+                - token
+                - password
+      security: []
+  /api/user:
+    get:
+      summary: ''
+      operationId: getApiUser
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Server Error'
+                properties:
+                  message:
+                    type: string
+                    example: 'Server Error'
+      tags:
+        - Endpoints
+      security: []
+  /api/logout:
+    post:
+      summary: ''
+      operationId: postApiLogout
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/refresh:
+    get:
+      summary: ''
+      operationId: getApiRefresh
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Token not valid'
+                properties:
+                  error:
+                    type: string
+                    example: 'Token not valid'
+      tags:
+        - Endpoints
+      security: []
+  /api/blogs:
+    get:
+      summary: ''
+      operationId: getApiBlogs
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Paginated blogs retrieved successfully.'
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 3
+                        slug: exploring-the-future-of-artificial-intelligence
+                        title: 'Exploring the Future of Artificial Intelligence'
+                        description: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                        thumbnail: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        view_count: 2
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-02-05T09:30:51+05:30'
+                      -
+                        id: 4
+                        slug: starting-your-first-business-a-student-guide
+                        title: 'Starting Your First Business: A Student Guide'
+                        description: 'Essential tips and strategies for young entrepreneurs looking to start their first business venture'
+                        thumbnail: null
+                        category_name: Entrepreneurship
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 5
+                        slug: smart-money-habits-for-teenagers
+                        title: 'Smart Money Habits for Teenagers'
+                        description: 'Building strong financial foundations: Essential money management skills for young adults'
+                        thumbnail: null
+                        category_name: 'Financial Literacy'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 6
+                        slug: choosing-the-right-career-path-in-2025
+                        title: 'Choosing the Right Career Path in 2025'
+                        description: 'A comprehensive guide to navigating career choices in the modern job market'
+                        thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 7
+                        slug: physical-fitness-and-mental-preparation-for-defense-careers
+                        title: 'Physical Fitness and Mental Preparation for Defense Careers'
+                        description: 'Essential guide to preparing yourself for a career in defense services'
+                        thumbnail: null
+                        category_name: 'Defense Training'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                    first_page_url: 'http://127.0.0.1:8000/api/blogs?page=1'
+                    from: 1
+                    last_page: 1
+                    last_page_url: 'http://127.0.0.1:8000/api/blogs?page=1'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://127.0.0.1:8000/api/blogs?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    next_page_url: null
+                    path: 'http://127.0.0.1:8000/api/blogs'
+                    per_page: 9
+                    prev_page_url: null
+                    to: 5
+                    total: 5
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Paginated blogs retrieved successfully.'
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 3
+                            slug: exploring-the-future-of-artificial-intelligence
+                            title: 'Exploring the Future of Artificial Intelligence'
+                            description: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                            thumbnail: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            view_count: 2
+                            created_at: '2025-01-08T10:20:31+05:30'
+                            updated_at: '2025-02-05T09:30:51+05:30'
+                          -
+                            id: 4
+                            slug: starting-your-first-business-a-student-guide
+                            title: 'Starting Your First Business: A Student Guide'
+                            description: 'Essential tips and strategies for young entrepreneurs looking to start their first business venture'
+                            thumbnail: null
+                            category_name: Entrepreneurship
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                            updated_at: '2025-01-08T10:20:31+05:30'
+                          -
+                            id: 5
+                            slug: smart-money-habits-for-teenagers
+                            title: 'Smart Money Habits for Teenagers'
+                            description: 'Building strong financial foundations: Essential money management skills for young adults'
+                            thumbnail: null
+                            category_name: 'Financial Literacy'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                            updated_at: '2025-01-08T10:20:31+05:30'
+                          -
+                            id: 6
+                            slug: choosing-the-right-career-path-in-2025
+                            title: 'Choosing the Right Career Path in 2025'
+                            description: 'A comprehensive guide to navigating career choices in the modern job market'
+                            thumbnail: null
+                            category_name: 'Career Guidance'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                            updated_at: '2025-01-08T10:20:31+05:30'
+                          -
+                            id: 7
+                            slug: physical-fitness-and-mental-preparation-for-defense-careers
+                            title: 'Physical Fitness and Mental Preparation for Defense Careers'
+                            description: 'Essential guide to preparing yourself for a career in defense services'
+                            thumbnail: null
+                            category_name: 'Defense Training'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                            updated_at: '2025-01-08T10:20:31+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 3
+                            slug:
+                              type: string
+                              example: exploring-the-future-of-artificial-intelligence
+                            title:
+                              type: string
+                              example: 'Exploring the Future of Artificial Intelligence'
+                            description:
+                              type: string
+                              example: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                            thumbnail:
+                              type: string
+                              example: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                            category_name:
+                              type: string
+                              example: 'STEM Skills'
+                            created_by:
+                              type: string
+                              example: System
+                            view_count:
+                              type: integer
+                              example: 2
+                            created_at:
+                              type: string
+                              example: '2025-01-08T10:20:31+05:30'
+                            updated_at:
+                              type: string
+                              example: '2025-02-05T09:30:51+05:30'
+                      first_page_url:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/blogs?page=1'
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      last_page_url:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/blogs?page=1'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://127.0.0.1:8000/api/blogs?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: null
+                      path:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/blogs'
+                      per_page:
+                        type: integer
+                        example: 9
+                      prev_page_url:
+                        type: string
+                        example: null
+                      to:
+                        type: integer
+                        example: 5
+                      total:
+                        type: integer
+                        example: 5
+      tags:
+        - Endpoints
+      security: []
+  '/api/blogs/d/{slug}':
+    get:
+      summary: 'Get a blog by slug.'
+      operationId: getABlogBySlug
+      description: ''
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Blog not found'
+                  data: []
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Blog not found'
+                  data:
+                    type: array
+                    example: []
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: slug
+        description: 'The slug of the d.'
+        example: dicta
+        required: true
+        schema:
+          type: string
+  /api/blogs/search:
+    get:
+      summary: ''
+      operationId: getApiBlogsSearch
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'The keyword field is required.'
+                  data: []
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'The keyword field is required.'
+                  data:
+                    type: array
+                    example: []
+      tags:
+        - Endpoints
+      security: []
+  /api/blogs/recent:
+    get:
+      summary: ''
+      operationId: getApiBlogsRecent
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Recent blogs retrieved successfully.'
+                  data:
+                    -
+                      id: 3
+                      slug: exploring-the-future-of-artificial-intelligence
+                      title: 'Exploring the Future of Artificial Intelligence'
+                      description: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                      thumbnail: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                      category_name: 'STEM Skills'
+                      created_by: System
+                      view_count: 2
+                      created_at: '2025-01-08T10:20:31+05:30'
+                      updated_at: '2025-02-05T09:30:51+05:30'
+                    -
+                      id: 4
+                      slug: starting-your-first-business-a-student-guide
+                      title: 'Starting Your First Business: A Student Guide'
+                      description: 'Essential tips and strategies for young entrepreneurs looking to start their first business venture'
+                      thumbnail: null
+                      category_name: Entrepreneurship
+                      created_by: System
+                      view_count: 0
+                      created_at: '2025-01-08T10:20:31+05:30'
+                      updated_at: '2025-01-08T10:20:31+05:30'
+                    -
+                      id: 5
+                      slug: smart-money-habits-for-teenagers
+                      title: 'Smart Money Habits for Teenagers'
+                      description: 'Building strong financial foundations: Essential money management skills for young adults'
+                      thumbnail: null
+                      category_name: 'Financial Literacy'
+                      created_by: System
+                      view_count: 0
+                      created_at: '2025-01-08T10:20:31+05:30'
+                      updated_at: '2025-01-08T10:20:31+05:30'
+                    -
+                      id: 6
+                      slug: choosing-the-right-career-path-in-2025
+                      title: 'Choosing the Right Career Path in 2025'
+                      description: 'A comprehensive guide to navigating career choices in the modern job market'
+                      thumbnail: null
+                      category_name: 'Career Guidance'
+                      created_by: System
+                      view_count: 0
+                      created_at: '2025-01-08T10:20:31+05:30'
+                      updated_at: '2025-01-08T10:20:31+05:30'
+                    -
+                      id: 7
+                      slug: physical-fitness-and-mental-preparation-for-defense-careers
+                      title: 'Physical Fitness and Mental Preparation for Defense Careers'
+                      description: 'Essential guide to preparing yourself for a career in defense services'
+                      thumbnail: null
+                      category_name: 'Defense Training'
+                      created_by: System
+                      view_count: 0
+                      created_at: '2025-01-08T10:20:31+05:30'
+                      updated_at: '2025-01-08T10:20:31+05:30'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Recent blogs retrieved successfully.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 3
+                        slug: exploring-the-future-of-artificial-intelligence
+                        title: 'Exploring the Future of Artificial Intelligence'
+                        description: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                        thumbnail: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        view_count: 2
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-02-05T09:30:51+05:30'
+                      -
+                        id: 4
+                        slug: starting-your-first-business-a-student-guide
+                        title: 'Starting Your First Business: A Student Guide'
+                        description: 'Essential tips and strategies for young entrepreneurs looking to start their first business venture'
+                        thumbnail: null
+                        category_name: Entrepreneurship
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 5
+                        slug: smart-money-habits-for-teenagers
+                        title: 'Smart Money Habits for Teenagers'
+                        description: 'Building strong financial foundations: Essential money management skills for young adults'
+                        thumbnail: null
+                        category_name: 'Financial Literacy'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 6
+                        slug: choosing-the-right-career-path-in-2025
+                        title: 'Choosing the Right Career Path in 2025'
+                        description: 'A comprehensive guide to navigating career choices in the modern job market'
+                        thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 7
+                        slug: physical-fitness-and-mental-preparation-for-defense-careers
+                        title: 'Physical Fitness and Mental Preparation for Defense Careers'
+                        description: 'Essential guide to preparing yourself for a career in defense services'
+                        thumbnail: null
+                        category_name: 'Defense Training'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 3
+                        slug:
+                          type: string
+                          example: exploring-the-future-of-artificial-intelligence
+                        title:
+                          type: string
+                          example: 'Exploring the Future of Artificial Intelligence'
+                        description:
+                          type: string
+                          example: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                        thumbnail:
+                          type: string
+                          example: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                        category_name:
+                          type: string
+                          example: 'STEM Skills'
+                        created_by:
+                          type: string
+                          example: System
+                        view_count:
+                          type: integer
+                          example: 2
+                        created_at:
+                          type: string
+                          example: '2025-01-08T10:20:31+05:30'
+                        updated_at:
+                          type: string
+                          example: '2025-02-05T09:30:51+05:30'
+      tags:
+        - Endpoints
+      security: []
+  /api/courses:
+    get:
+      summary: 'Get paginated courses.'
+      operationId: getPaginatedCourses
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Paginated courses retrieved successfully.'
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 1
+                        course_slug: introduction-to-coding
+                        title: 'Introduction to Coding'
+                        content_short_description: 'Learn the basics of programming using block-based coding tools like Scratch or Code.org.'
+                        course_thumbnail: courses/thumbnails/01JK66END16BEGEBF8AV7YBEKQ.webp
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        class_level_name: 'Class 6 - 8'
+                        view_count: 196
+                        enrolment_count: 52
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-02-03T22:10:00+05:30'
+                      -
+                        id: 2
+                        course_slug: robotics-fundamentals
+                        title: 'Robotics Fundamentals'
+                        content_short_description: 'Hands-on workshops to assemble and program simple robots.'
+                        course_thumbnail: null
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        class_level_name: 'Class 6 - 8'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                      -
+                        id: 3
+                        course_slug: ai-and-ml-basics
+                        title: 'AI & ML Basics'
+                        content_short_description: 'Explore AI concepts through games, puzzles, and fun activities.'
+                        course_thumbnail: null
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        class_level_name: 'Class 6 - 8'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                      -
+                        id: 4
+                        course_slug: programming-with-python
+                        title: 'Programming with Python'
+                        content_short_description: 'Dive into coding with text-based programming languages like Python.'
+                        course_thumbnail: null
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        class_level_name: 'Class 9 - 10'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                      -
+                        id: 5
+                        course_slug: advanced-programming
+                        title: 'Advanced Programming'
+                        content_short_description: 'Advanced topics in C++, Python, or JavaScript, including algorithms and data structures.'
+                        course_thumbnail: null
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        class_level_name: 'Class 11 - 12'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                      -
+                        id: 6
+                        course_slug: creativity-and-innovation-workshops
+                        title: 'Creativity & Innovation Workshops'
+                        content_short_description: 'Activities to boost creativity and problem-solving skills.'
+                        course_thumbnail: null
+                        category_name: Entrepreneurship
+                        created_by: System
+                        class_level_name: 'Class 6 - 8'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                      -
+                        id: 7
+                        course_slug: business-basics
+                        title: 'Business Basics'
+                        content_short_description: 'Learn the fundamentals of business structures and operations.'
+                        course_thumbnail: null
+                        category_name: Entrepreneurship
+                        created_by: System
+                        class_level_name: 'Class 9 - 10'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                      -
+                        id: 8
+                        course_slug: advanced-entrepreneurship
+                        title: 'Advanced Entrepreneurship'
+                        content_short_description: 'Master the skills required to start and run a business effectively.'
+                        course_thumbnail: null
+                        category_name: Entrepreneurship
+                        created_by: System
+                        class_level_name: 'Class 11 - 12'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                      -
+                        id: 9
+                        course_slug: basics-of-money-management
+                        title: 'Basics of Money Management'
+                        content_short_description: 'Understand the importance of budgeting and saving.'
+                        course_thumbnail: null
+                        category_name: 'Financial Literacy'
+                        created_by: System
+                        class_level_name: 'Class 6 - 8'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                    first_page_url: 'http://127.0.0.1:8000/api/courses?page=1'
+                    from: 1
+                    last_page: 3
+                    last_page_url: 'http://127.0.0.1:8000/api/courses?page=3'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://127.0.0.1:8000/api/courses?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: 'http://127.0.0.1:8000/api/courses?page=2'
+                        label: '2'
+                        active: false
+                      -
+                        url: 'http://127.0.0.1:8000/api/courses?page=3'
+                        label: '3'
+                        active: false
+                      -
+                        url: 'http://127.0.0.1:8000/api/courses?page=2'
+                        label: 'Next &raquo;'
+                        active: false
+                    next_page_url: 'http://127.0.0.1:8000/api/courses?page=2'
+                    path: 'http://127.0.0.1:8000/api/courses'
+                    per_page: 9
+                    prev_page_url: null
+                    to: 9
+                    total: 21
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Paginated courses retrieved successfully.'
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            course_slug: introduction-to-coding
+                            title: 'Introduction to Coding'
+                            content_short_description: 'Learn the basics of programming using block-based coding tools like Scratch or Code.org.'
+                            course_thumbnail: courses/thumbnails/01JK66END16BEGEBF8AV7YBEKQ.webp
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            class_level_name: 'Class 6 - 8'
+                            view_count: 196
+                            enrolment_count: 52
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-02-03T22:10:00+05:30'
+                          -
+                            id: 2
+                            course_slug: robotics-fundamentals
+                            title: 'Robotics Fundamentals'
+                            content_short_description: 'Hands-on workshops to assemble and program simple robots.'
+                            course_thumbnail: null
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            class_level_name: 'Class 6 - 8'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                          -
+                            id: 3
+                            course_slug: ai-and-ml-basics
+                            title: 'AI & ML Basics'
+                            content_short_description: 'Explore AI concepts through games, puzzles, and fun activities.'
+                            course_thumbnail: null
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            class_level_name: 'Class 6 - 8'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                          -
+                            id: 4
+                            course_slug: programming-with-python
+                            title: 'Programming with Python'
+                            content_short_description: 'Dive into coding with text-based programming languages like Python.'
+                            course_thumbnail: null
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            class_level_name: 'Class 9 - 10'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                          -
+                            id: 5
+                            course_slug: advanced-programming
+                            title: 'Advanced Programming'
+                            content_short_description: 'Advanced topics in C++, Python, or JavaScript, including algorithms and data structures.'
+                            course_thumbnail: null
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            class_level_name: 'Class 11 - 12'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                          -
+                            id: 6
+                            course_slug: creativity-and-innovation-workshops
+                            title: 'Creativity & Innovation Workshops'
+                            content_short_description: 'Activities to boost creativity and problem-solving skills.'
+                            course_thumbnail: null
+                            category_name: Entrepreneurship
+                            created_by: System
+                            class_level_name: 'Class 6 - 8'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                          -
+                            id: 7
+                            course_slug: business-basics
+                            title: 'Business Basics'
+                            content_short_description: 'Learn the fundamentals of business structures and operations.'
+                            course_thumbnail: null
+                            category_name: Entrepreneurship
+                            created_by: System
+                            class_level_name: 'Class 9 - 10'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                          -
+                            id: 8
+                            course_slug: advanced-entrepreneurship
+                            title: 'Advanced Entrepreneurship'
+                            content_short_description: 'Master the skills required to start and run a business effectively.'
+                            course_thumbnail: null
+                            category_name: Entrepreneurship
+                            created_by: System
+                            class_level_name: 'Class 11 - 12'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                          -
+                            id: 9
+                            course_slug: basics-of-money-management
+                            title: 'Basics of Money Management'
+                            content_short_description: 'Understand the importance of budgeting and saving.'
+                            course_thumbnail: null
+                            category_name: 'Financial Literacy'
+                            created_by: System
+                            class_level_name: 'Class 6 - 8'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            course_slug:
+                              type: string
+                              example: introduction-to-coding
+                            title:
+                              type: string
+                              example: 'Introduction to Coding'
+                            content_short_description:
+                              type: string
+                              example: 'Learn the basics of programming using block-based coding tools like Scratch or Code.org.'
+                            course_thumbnail:
+                              type: string
+                              example: courses/thumbnails/01JK66END16BEGEBF8AV7YBEKQ.webp
+                            category_name:
+                              type: string
+                              example: 'STEM Skills'
+                            created_by:
+                              type: string
+                              example: System
+                            class_level_name:
+                              type: string
+                              example: 'Class 6 - 8'
+                            view_count:
+                              type: integer
+                              example: 196
+                            enrolment_count:
+                              type: integer
+                              example: 52
+                            created_at:
+                              type: string
+                              example: '2025-01-08T09:44:07+05:30'
+                            updated_at:
+                              type: string
+                              example: '2025-02-03T22:10:00+05:30'
+                      first_page_url:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/courses?page=1'
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 3
+                      last_page_url:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/courses?page=3'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://127.0.0.1:8000/api/courses?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: 'http://127.0.0.1:8000/api/courses?page=2'
+                            label: '2'
+                            active: false
+                          -
+                            url: 'http://127.0.0.1:8000/api/courses?page=3'
+                            label: '3'
+                            active: false
+                          -
+                            url: 'http://127.0.0.1:8000/api/courses?page=2'
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/courses?page=2'
+                      path:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/courses'
+                      per_page:
+                        type: integer
+                        example: 9
+                      prev_page_url:
+                        type: string
+                        example: null
+                      to:
+                        type: integer
+                        example: 9
+                      total:
+                        type: integer
+                        example: 21
+      tags:
+        - Endpoints
+      security: []
+  '/api/courses/category/{category}':
+    get:
+      summary: ''
+      operationId: getApiCoursesCategoryCategory
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Courses retrieved successfully.'
+                  data:
+                    category:
+                      id: 1
+                      name: 'STEM Skills'
+                      short_description: 'Ignite curiosity and foster innovation with hands-on experiences in coding, robotics, AI, and more, designed to empower students with future-ready skills.'
+                      long_description: 'The STEM Skills program is a dynamic journey into the world of Science, Technology, Engineering, and Mathematics. For Classes 6-8, students explore the fundamentals of coding, robotics, AI, and renewable energy, cultivating curiosity and problem-solving abilities. Progressing to Classes 9-10, the curriculum delves deeper into programming languages, IoT, and intermediate AI and ML concepts, nurturing analytical thinking. By Classes 11-12, students master advanced programming, robotics automation, and AI applications, equipping them with cutting-edge'
+                      image_url: categories/01JGZCRK50DWP2Q64X4BZN8JA8.webp
+                    courses:
+                      -
+                        id: 1
+                        course_slug: introduction-to-coding
+                        title: 'Introduction to Coding'
+                        content_short_description: 'Learn the basics of programming using block-based coding tools like Scratch or Code.org.'
+                        course_thumbnail: courses/thumbnails/01JK66END16BEGEBF8AV7YBEKQ.webp
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        class_level_name: 'Class 6 - 8'
+                        view_count: 196
+                        enrolment_count: 52
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-02-03T22:10:00+05:30'
+                      -
+                        id: 2
+                        course_slug: robotics-fundamentals
+                        title: 'Robotics Fundamentals'
+                        content_short_description: 'Hands-on workshops to assemble and program simple robots.'
+                        course_thumbnail: null
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        class_level_name: 'Class 6 - 8'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                      -
+                        id: 3
+                        course_slug: ai-and-ml-basics
+                        title: 'AI & ML Basics'
+                        content_short_description: 'Explore AI concepts through games, puzzles, and fun activities.'
+                        course_thumbnail: null
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        class_level_name: 'Class 6 - 8'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                      -
+                        id: 4
+                        course_slug: programming-with-python
+                        title: 'Programming with Python'
+                        content_short_description: 'Dive into coding with text-based programming languages like Python.'
+                        course_thumbnail: null
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        class_level_name: 'Class 9 - 10'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                      -
+                        id: 5
+                        course_slug: advanced-programming
+                        title: 'Advanced Programming'
+                        content_short_description: 'Advanced topics in C++, Python, or JavaScript, including algorithms and data structures.'
+                        course_thumbnail: null
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        class_level_name: 'Class 11 - 12'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:44:07+05:30'
+                        updated_at: '2025-01-08T09:44:07+05:30'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Courses retrieved successfully.'
+                  data:
+                    type: object
+                    properties:
+                      category:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: 'STEM Skills'
+                          short_description:
+                            type: string
+                            example: 'Ignite curiosity and foster innovation with hands-on experiences in coding, robotics, AI, and more, designed to empower students with future-ready skills.'
+                          long_description:
+                            type: string
+                            example: 'The STEM Skills program is a dynamic journey into the world of Science, Technology, Engineering, and Mathematics. For Classes 6-8, students explore the fundamentals of coding, robotics, AI, and renewable energy, cultivating curiosity and problem-solving abilities. Progressing to Classes 9-10, the curriculum delves deeper into programming languages, IoT, and intermediate AI and ML concepts, nurturing analytical thinking. By Classes 11-12, students master advanced programming, robotics automation, and AI applications, equipping them with cutting-edge'
+                          image_url:
+                            type: string
+                            example: categories/01JGZCRK50DWP2Q64X4BZN8JA8.webp
+                      courses:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            course_slug: introduction-to-coding
+                            title: 'Introduction to Coding'
+                            content_short_description: 'Learn the basics of programming using block-based coding tools like Scratch or Code.org.'
+                            course_thumbnail: courses/thumbnails/01JK66END16BEGEBF8AV7YBEKQ.webp
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            class_level_name: 'Class 6 - 8'
+                            view_count: 196
+                            enrolment_count: 52
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-02-03T22:10:00+05:30'
+                          -
+                            id: 2
+                            course_slug: robotics-fundamentals
+                            title: 'Robotics Fundamentals'
+                            content_short_description: 'Hands-on workshops to assemble and program simple robots.'
+                            course_thumbnail: null
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            class_level_name: 'Class 6 - 8'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                          -
+                            id: 3
+                            course_slug: ai-and-ml-basics
+                            title: 'AI & ML Basics'
+                            content_short_description: 'Explore AI concepts through games, puzzles, and fun activities.'
+                            course_thumbnail: null
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            class_level_name: 'Class 6 - 8'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                          -
+                            id: 4
+                            course_slug: programming-with-python
+                            title: 'Programming with Python'
+                            content_short_description: 'Dive into coding with text-based programming languages like Python.'
+                            course_thumbnail: null
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            class_level_name: 'Class 9 - 10'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                          -
+                            id: 5
+                            course_slug: advanced-programming
+                            title: 'Advanced Programming'
+                            content_short_description: 'Advanced topics in C++, Python, or JavaScript, including algorithms and data structures.'
+                            course_thumbnail: null
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            class_level_name: 'Class 11 - 12'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:44:07+05:30'
+                            updated_at: '2025-01-08T09:44:07+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            course_slug:
+                              type: string
+                              example: introduction-to-coding
+                            title:
+                              type: string
+                              example: 'Introduction to Coding'
+                            content_short_description:
+                              type: string
+                              example: 'Learn the basics of programming using block-based coding tools like Scratch or Code.org.'
+                            course_thumbnail:
+                              type: string
+                              example: courses/thumbnails/01JK66END16BEGEBF8AV7YBEKQ.webp
+                            category_name:
+                              type: string
+                              example: 'STEM Skills'
+                            created_by:
+                              type: string
+                              example: System
+                            class_level_name:
+                              type: string
+                              example: 'Class 6 - 8'
+                            view_count:
+                              type: integer
+                              example: 196
+                            enrolment_count:
+                              type: integer
+                              example: 52
+                            created_at:
+                              type: string
+                              example: '2025-01-08T09:44:07+05:30'
+                            updated_at:
+                              type: string
+                              example: '2025-02-03T22:10:00+05:30'
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: category
+        description: 'The category.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/courses/search:
+    get:
+      summary: ''
+      operationId: getApiCoursesSearch
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'The keyword field is required.'
+                  data: []
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'The keyword field is required.'
+                  data:
+                    type: array
+                    example: []
+      tags:
+        - Endpoints
+      security: []
+  /api/courses/recent:
+    get:
+      summary: 'Get recent courses.'
+      operationId: getRecentCourses
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Recent courses retrieved successfully.'
+                  data:
+                    -
+                      id: 16
+                      course_slug: career-guidance-program
+                      title: 'Career Guidance Program'
+                      content_short_description: 'Identify skills and explore career options.'
+                      course_thumbnail: null
+                      category_name: 'Career Guidance'
+                      created_by: System
+                      class_level_name: null
+                      view_count: 0
+                      enrolment_count: 0
+                      created_at: '2025-01-08T09:45:32+05:30'
+                      updated_at: '2025-01-08T09:45:32+05:30'
+                    -
+                      id: 17
+                      course_slug: skill-identification
+                      title: 'Skill Identification'
+                      content_short_description: 'Discover and evaluate your strengths and interests.'
+                      course_thumbnail: null
+                      category_name: 'Career Guidance'
+                      created_by: System
+                      class_level_name: null
+                      view_count: 0
+                      enrolment_count: 0
+                      created_at: '2025-01-08T09:45:32+05:30'
+                      updated_at: '2025-01-08T09:45:32+05:30'
+                    -
+                      id: 18
+                      course_slug: career-fairs
+                      title: 'Career Fairs'
+                      content_short_description: 'Explore opportunities in various fields and industries.'
+                      course_thumbnail: null
+                      category_name: 'Career Guidance'
+                      created_by: System
+                      class_level_name: null
+                      view_count: 0
+                      enrolment_count: 0
+                      created_at: '2025-01-08T09:45:32+05:30'
+                      updated_at: '2025-01-08T09:45:32+05:30'
+                    -
+                      id: 19
+                      course_slug: career-workshops
+                      title: 'Career Workshops'
+                      content_short_description: 'Engage in sessions to build career-readiness skills.'
+                      course_thumbnail: null
+                      category_name: 'Career Guidance'
+                      created_by: System
+                      class_level_name: null
+                      view_count: 0
+                      enrolment_count: 0
+                      created_at: '2025-01-08T09:45:32+05:30'
+                      updated_at: '2025-01-08T09:45:32+05:30'
+                    -
+                      id: 20
+                      course_slug: alumni-connections
+                      title: 'Alumni Connections'
+                      content_short_description: 'Network with alumni for career insights and mentorship.'
+                      course_thumbnail: null
+                      category_name: 'Career Guidance'
+                      created_by: System
+                      class_level_name: null
+                      view_count: 0
+                      enrolment_count: 0
+                      created_at: '2025-01-08T09:45:32+05:30'
+                      updated_at: '2025-01-08T09:45:32+05:30'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Recent courses retrieved successfully.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 16
+                        course_slug: career-guidance-program
+                        title: 'Career Guidance Program'
+                        content_short_description: 'Identify skills and explore career options.'
+                        course_thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        class_level_name: null
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                        updated_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 17
+                        course_slug: skill-identification
+                        title: 'Skill Identification'
+                        content_short_description: 'Discover and evaluate your strengths and interests.'
+                        course_thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        class_level_name: null
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                        updated_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 18
+                        course_slug: career-fairs
+                        title: 'Career Fairs'
+                        content_short_description: 'Explore opportunities in various fields and industries.'
+                        course_thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        class_level_name: null
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                        updated_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 19
+                        course_slug: career-workshops
+                        title: 'Career Workshops'
+                        content_short_description: 'Engage in sessions to build career-readiness skills.'
+                        course_thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        class_level_name: null
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                        updated_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 20
+                        course_slug: alumni-connections
+                        title: 'Alumni Connections'
+                        content_short_description: 'Network with alumni for career insights and mentorship.'
+                        course_thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        class_level_name: null
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                        updated_at: '2025-01-08T09:45:32+05:30'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 16
+                        course_slug:
+                          type: string
+                          example: career-guidance-program
+                        title:
+                          type: string
+                          example: 'Career Guidance Program'
+                        content_short_description:
+                          type: string
+                          example: 'Identify skills and explore career options.'
+                        course_thumbnail:
+                          type: string
+                          example: null
+                        category_name:
+                          type: string
+                          example: 'Career Guidance'
+                        created_by:
+                          type: string
+                          example: System
+                        class_level_name:
+                          type: string
+                          example: null
+                        view_count:
+                          type: integer
+                          example: 0
+                        enrolment_count:
+                          type: integer
+                          example: 0
+                        created_at:
+                          type: string
+                          example: '2025-01-08T09:45:32+05:30'
+                        updated_at:
+                          type: string
+                          example: '2025-01-08T09:45:32+05:30'
+      tags:
+        - Endpoints
+      security: []
+  '/api/courses/d/{slug}':
+    get:
+      summary: 'Get a course by slug.'
+      operationId: getACourseBySlug
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Server Error'
+                properties:
+                  message:
+                    type: string
+                    example: 'Server Error'
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: slug
+        description: 'The slug of the d.'
+        example: ab
+        required: true
+        schema:
+          type: string
+  /api/resources:
+    get:
+      summary: 'Get paginated Resources.'
+      operationId: getPaginatedResources
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Paginated Resources retrieved successfully.'
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 1
+                        resource_slug: comprehensive-coding-guide-for-beginners
+                        title: 'Comprehensive Coding Guide for Beginners'
+                        resource_description: 'A complete guide to starting your coding journey with Python and basic programming concepts'
+                        resource_thumbnail: null
+                        category_name: 'STEM Skills'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:11:07+05:30'
+                        updated_at: '2025-01-08T11:11:07+05:30'
+                      -
+                        id: 2
+                        resource_slug: startup-toolkit-business-planning-templates
+                        title: 'Startup Toolkit: Business Planning Templates'
+                        resource_description: 'Essential business planning templates and tools for young entrepreneurs'
+                        resource_thumbnail: null
+                        category_name: Entrepreneurship
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:11:07+05:30'
+                        updated_at: '2025-01-08T11:11:07+05:30'
+                      -
+                        id: 3
+                        resource_slug: personal-finance-management-handbook
+                        title: 'Personal Finance Management Handbook'
+                        resource_description: 'Comprehensive guide to personal finance management for students and young adults'
+                        resource_thumbnail: null
+                        category_name: 'Financial Literacy'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:11:07+05:30'
+                        updated_at: '2025-01-08T11:11:07+05:30'
+                      -
+                        id: 4
+                        resource_slug: career-planning-workbook-2025
+                        title: 'Career Planning Workbook 2025'
+                        resource_description: 'Interactive workbook for career exploration and planning'
+                        resource_thumbnail: null
+                        category_name: 'Career Guidance'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:11:07+05:30'
+                        updated_at: '2025-01-08T11:11:07+05:30'
+                      -
+                        id: 5
+                        resource_slug: defense-services-preparation-guide
+                        title: 'Defense Services Preparation Guide'
+                        resource_description: 'Comprehensive preparation guide for defense services entrance exams'
+                        resource_thumbnail: null
+                        category_name: 'Defense Training'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:11:07+05:30'
+                        updated_at: '2025-01-08T11:11:07+05:30'
+                    first_page_url: 'http://127.0.0.1:8000/api/resources?page=1'
+                    from: 1
+                    last_page: 1
+                    last_page_url: 'http://127.0.0.1:8000/api/resources?page=1'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://127.0.0.1:8000/api/resources?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    next_page_url: null
+                    path: 'http://127.0.0.1:8000/api/resources'
+                    per_page: 9
+                    prev_page_url: null
+                    to: 5
+                    total: 5
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Paginated Resources retrieved successfully.'
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            resource_slug: comprehensive-coding-guide-for-beginners
+                            title: 'Comprehensive Coding Guide for Beginners'
+                            resource_description: 'A complete guide to starting your coding journey with Python and basic programming concepts'
+                            resource_thumbnail: null
+                            category_name: 'STEM Skills'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:11:07+05:30'
+                            updated_at: '2025-01-08T11:11:07+05:30'
+                          -
+                            id: 2
+                            resource_slug: startup-toolkit-business-planning-templates
+                            title: 'Startup Toolkit: Business Planning Templates'
+                            resource_description: 'Essential business planning templates and tools for young entrepreneurs'
+                            resource_thumbnail: null
+                            category_name: Entrepreneurship
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:11:07+05:30'
+                            updated_at: '2025-01-08T11:11:07+05:30'
+                          -
+                            id: 3
+                            resource_slug: personal-finance-management-handbook
+                            title: 'Personal Finance Management Handbook'
+                            resource_description: 'Comprehensive guide to personal finance management for students and young adults'
+                            resource_thumbnail: null
+                            category_name: 'Financial Literacy'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:11:07+05:30'
+                            updated_at: '2025-01-08T11:11:07+05:30'
+                          -
+                            id: 4
+                            resource_slug: career-planning-workbook-2025
+                            title: 'Career Planning Workbook 2025'
+                            resource_description: 'Interactive workbook for career exploration and planning'
+                            resource_thumbnail: null
+                            category_name: 'Career Guidance'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:11:07+05:30'
+                            updated_at: '2025-01-08T11:11:07+05:30'
+                          -
+                            id: 5
+                            resource_slug: defense-services-preparation-guide
+                            title: 'Defense Services Preparation Guide'
+                            resource_description: 'Comprehensive preparation guide for defense services entrance exams'
+                            resource_thumbnail: null
+                            category_name: 'Defense Training'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:11:07+05:30'
+                            updated_at: '2025-01-08T11:11:07+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            resource_slug:
+                              type: string
+                              example: comprehensive-coding-guide-for-beginners
+                            title:
+                              type: string
+                              example: 'Comprehensive Coding Guide for Beginners'
+                            resource_description:
+                              type: string
+                              example: 'A complete guide to starting your coding journey with Python and basic programming concepts'
+                            resource_thumbnail:
+                              type: string
+                              example: null
+                            category_name:
+                              type: string
+                              example: 'STEM Skills'
+                            view_count:
+                              type: integer
+                              example: 0
+                            created_by:
+                              type: string
+                              example: System
+                            created_at:
+                              type: string
+                              example: '2025-01-08T11:11:07+05:30'
+                            updated_at:
+                              type: string
+                              example: '2025-01-08T11:11:07+05:30'
+                      first_page_url:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/resources?page=1'
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      last_page_url:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/resources?page=1'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://127.0.0.1:8000/api/resources?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: null
+                      path:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/resources'
+                      per_page:
+                        type: integer
+                        example: 9
+                      prev_page_url:
+                        type: string
+                        example: null
+                      to:
+                        type: integer
+                        example: 5
+                      total:
+                        type: integer
+                        example: 5
+      tags:
+        - Endpoints
+      security: []
+  '/api/resources/d/{slug}':
+    get:
+      summary: 'Get a Resource by slug.'
+      operationId: getAResourceBySlug
+      description: ''
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Resource not found'
+                  data: []
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Resource not found'
+                  data:
+                    type: array
+                    example: []
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: slug
+        description: 'The slug of the d.'
+        example: et
+        required: true
+        schema:
+          type: string
+  /api/resources/search:
+    get:
+      summary: ''
+      operationId: getApiResourcesSearch
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'The keyword field is required.'
+                  data: []
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'The keyword field is required.'
+                  data:
+                    type: array
+                    example: []
+      tags:
+        - Endpoints
+      security: []
+  /api/resources/recent:
+    get:
+      summary: 'Get recent Resources.'
+      operationId: getRecentResources
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Recent Resources retrieved successfully.'
+                  data:
+                    -
+                      id: 1
+                      resource_slug: comprehensive-coding-guide-for-beginners
+                      title: 'Comprehensive Coding Guide for Beginners'
+                      resource_description: 'A complete guide to starting your coding journey with Python and basic programming concepts'
+                      resource_thumbnail: null
+                      category_name: 'STEM Skills'
+                      view_count: 0
+                      created_by: System
+                      created_at: '2025-01-08T11:11:07+05:30'
+                      updated_at: '2025-01-08T11:11:07+05:30'
+                    -
+                      id: 2
+                      resource_slug: startup-toolkit-business-planning-templates
+                      title: 'Startup Toolkit: Business Planning Templates'
+                      resource_description: 'Essential business planning templates and tools for young entrepreneurs'
+                      resource_thumbnail: null
+                      category_name: Entrepreneurship
+                      view_count: 0
+                      created_by: System
+                      created_at: '2025-01-08T11:11:07+05:30'
+                      updated_at: '2025-01-08T11:11:07+05:30'
+                    -
+                      id: 3
+                      resource_slug: personal-finance-management-handbook
+                      title: 'Personal Finance Management Handbook'
+                      resource_description: 'Comprehensive guide to personal finance management for students and young adults'
+                      resource_thumbnail: null
+                      category_name: 'Financial Literacy'
+                      view_count: 0
+                      created_by: System
+                      created_at: '2025-01-08T11:11:07+05:30'
+                      updated_at: '2025-01-08T11:11:07+05:30'
+                    -
+                      id: 4
+                      resource_slug: career-planning-workbook-2025
+                      title: 'Career Planning Workbook 2025'
+                      resource_description: 'Interactive workbook for career exploration and planning'
+                      resource_thumbnail: null
+                      category_name: 'Career Guidance'
+                      view_count: 0
+                      created_by: System
+                      created_at: '2025-01-08T11:11:07+05:30'
+                      updated_at: '2025-01-08T11:11:07+05:30'
+                    -
+                      id: 5
+                      resource_slug: defense-services-preparation-guide
+                      title: 'Defense Services Preparation Guide'
+                      resource_description: 'Comprehensive preparation guide for defense services entrance exams'
+                      resource_thumbnail: null
+                      category_name: 'Defense Training'
+                      view_count: 0
+                      created_by: System
+                      created_at: '2025-01-08T11:11:07+05:30'
+                      updated_at: '2025-01-08T11:11:07+05:30'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Recent Resources retrieved successfully.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        resource_slug: comprehensive-coding-guide-for-beginners
+                        title: 'Comprehensive Coding Guide for Beginners'
+                        resource_description: 'A complete guide to starting your coding journey with Python and basic programming concepts'
+                        resource_thumbnail: null
+                        category_name: 'STEM Skills'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:11:07+05:30'
+                        updated_at: '2025-01-08T11:11:07+05:30'
+                      -
+                        id: 2
+                        resource_slug: startup-toolkit-business-planning-templates
+                        title: 'Startup Toolkit: Business Planning Templates'
+                        resource_description: 'Essential business planning templates and tools for young entrepreneurs'
+                        resource_thumbnail: null
+                        category_name: Entrepreneurship
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:11:07+05:30'
+                        updated_at: '2025-01-08T11:11:07+05:30'
+                      -
+                        id: 3
+                        resource_slug: personal-finance-management-handbook
+                        title: 'Personal Finance Management Handbook'
+                        resource_description: 'Comprehensive guide to personal finance management for students and young adults'
+                        resource_thumbnail: null
+                        category_name: 'Financial Literacy'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:11:07+05:30'
+                        updated_at: '2025-01-08T11:11:07+05:30'
+                      -
+                        id: 4
+                        resource_slug: career-planning-workbook-2025
+                        title: 'Career Planning Workbook 2025'
+                        resource_description: 'Interactive workbook for career exploration and planning'
+                        resource_thumbnail: null
+                        category_name: 'Career Guidance'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:11:07+05:30'
+                        updated_at: '2025-01-08T11:11:07+05:30'
+                      -
+                        id: 5
+                        resource_slug: defense-services-preparation-guide
+                        title: 'Defense Services Preparation Guide'
+                        resource_description: 'Comprehensive preparation guide for defense services entrance exams'
+                        resource_thumbnail: null
+                        category_name: 'Defense Training'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:11:07+05:30'
+                        updated_at: '2025-01-08T11:11:07+05:30'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        resource_slug:
+                          type: string
+                          example: comprehensive-coding-guide-for-beginners
+                        title:
+                          type: string
+                          example: 'Comprehensive Coding Guide for Beginners'
+                        resource_description:
+                          type: string
+                          example: 'A complete guide to starting your coding journey with Python and basic programming concepts'
+                        resource_thumbnail:
+                          type: string
+                          example: null
+                        category_name:
+                          type: string
+                          example: 'STEM Skills'
+                        view_count:
+                          type: integer
+                          example: 0
+                        created_by:
+                          type: string
+                          example: System
+                        created_at:
+                          type: string
+                          example: '2025-01-08T11:11:07+05:30'
+                        updated_at:
+                          type: string
+                          example: '2025-01-08T11:11:07+05:30'
+      tags:
+        - Endpoints
+      security: []
+  /api/webinars:
+    get:
+      summary: 'Get paginated Webinars.'
+      operationId: getPaginatedWebinars
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Paginated Webinars retrieved successfully.'
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 1
+                        webinar_slug: future-of-robotics-and-automation
+                        title: 'Future of Robotics and Automation'
+                        webinar_description: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                        webinar_thumbnail: null
+                        category_name: 'STEM Skills'
+                        webinar_date_time: '2025-02-15 14:00:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 2
+                        webinar_slug: launching-your-startup-in-the-digital-age
+                        title: 'Launching Your Startup in the Digital Age'
+                        webinar_description: "Learn from successful entrepreneurs about building and scaling startups in today's digital economy"
+                        webinar_thumbnail: null
+                        category_name: Entrepreneurship
+                        webinar_date_time: '2025-02-20 15:30:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 3
+                        webinar_slug: investment-strategies-for-young-investors
+                        title: 'Investment Strategies for Young Investors'
+                        webinar_description: 'Expert insights on smart investment options and financial planning for young adults'
+                        webinar_thumbnail: null
+                        category_name: 'Financial Literacy'
+                        webinar_date_time: '2025-02-25 16:00:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 4
+                        webinar_slug: navigating-careers-in-emerging-technologies
+                        title: 'Navigating Careers in Emerging Technologies'
+                        webinar_description: 'Explore exciting career opportunities in emerging technology sectors'
+                        webinar_thumbnail: null
+                        category_name: 'Career Guidance'
+                        webinar_date_time: '2025-03-01 14:30:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 5
+                        webinar_slug: preparing-for-defense-services-entrance-exams
+                        title: 'Preparing for Defense Services Entrance Exams'
+                        webinar_description: 'Comprehensive guidance on preparation strategies for defense services entrance examinations'
+                        webinar_thumbnail: null
+                        category_name: 'Defense Training'
+                        webinar_date_time: '2025-03-05 15:00:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                    first_page_url: 'http://127.0.0.1:8000/api/webinars?page=1'
+                    from: 1
+                    last_page: 1
+                    last_page_url: 'http://127.0.0.1:8000/api/webinars?page=1'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://127.0.0.1:8000/api/webinars?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    next_page_url: null
+                    path: 'http://127.0.0.1:8000/api/webinars'
+                    per_page: 9
+                    prev_page_url: null
+                    to: 5
+                    total: 5
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Paginated Webinars retrieved successfully.'
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            webinar_slug: future-of-robotics-and-automation
+                            title: 'Future of Robotics and Automation'
+                            webinar_description: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                            webinar_thumbnail: null
+                            category_name: 'STEM Skills'
+                            webinar_date_time: '2025-02-15 14:00:00'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:06:37+05:30'
+                            updated_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 2
+                            webinar_slug: launching-your-startup-in-the-digital-age
+                            title: 'Launching Your Startup in the Digital Age'
+                            webinar_description: "Learn from successful entrepreneurs about building and scaling startups in today's digital economy"
+                            webinar_thumbnail: null
+                            category_name: Entrepreneurship
+                            webinar_date_time: '2025-02-20 15:30:00'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:06:37+05:30'
+                            updated_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 3
+                            webinar_slug: investment-strategies-for-young-investors
+                            title: 'Investment Strategies for Young Investors'
+                            webinar_description: 'Expert insights on smart investment options and financial planning for young adults'
+                            webinar_thumbnail: null
+                            category_name: 'Financial Literacy'
+                            webinar_date_time: '2025-02-25 16:00:00'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:06:37+05:30'
+                            updated_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 4
+                            webinar_slug: navigating-careers-in-emerging-technologies
+                            title: 'Navigating Careers in Emerging Technologies'
+                            webinar_description: 'Explore exciting career opportunities in emerging technology sectors'
+                            webinar_thumbnail: null
+                            category_name: 'Career Guidance'
+                            webinar_date_time: '2025-03-01 14:30:00'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:06:37+05:30'
+                            updated_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 5
+                            webinar_slug: preparing-for-defense-services-entrance-exams
+                            title: 'Preparing for Defense Services Entrance Exams'
+                            webinar_description: 'Comprehensive guidance on preparation strategies for defense services entrance examinations'
+                            webinar_thumbnail: null
+                            category_name: 'Defense Training'
+                            webinar_date_time: '2025-03-05 15:00:00'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:06:37+05:30'
+                            updated_at: '2025-01-08T11:06:37+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            webinar_slug:
+                              type: string
+                              example: future-of-robotics-and-automation
+                            title:
+                              type: string
+                              example: 'Future of Robotics and Automation'
+                            webinar_description:
+                              type: string
+                              example: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                            webinar_thumbnail:
+                              type: string
+                              example: null
+                            category_name:
+                              type: string
+                              example: 'STEM Skills'
+                            webinar_date_time:
+                              type: string
+                              example: '2025-02-15 14:00:00'
+                            view_count:
+                              type: integer
+                              example: 0
+                            created_by:
+                              type: string
+                              example: System
+                            created_at:
+                              type: string
+                              example: '2025-01-08T11:06:37+05:30'
+                            updated_at:
+                              type: string
+                              example: '2025-01-08T11:06:37+05:30'
+                      first_page_url:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/webinars?page=1'
+                      from:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      last_page_url:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/webinars?page=1'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://127.0.0.1:8000/api/webinars?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: null
+                      path:
+                        type: string
+                        example: 'http://127.0.0.1:8000/api/webinars'
+                      per_page:
+                        type: integer
+                        example: 9
+                      prev_page_url:
+                        type: string
+                        example: null
+                      to:
+                        type: integer
+                        example: 5
+                      total:
+                        type: integer
+                        example: 5
+      tags:
+        - Endpoints
+      security: []
+  '/api/webinars/d/{slug}':
+    get:
+      summary: 'Get a Webinar by slug.'
+      operationId: getAWebinarBySlug
+      description: ''
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Webinar not found'
+                  data: []
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Webinar not found'
+                  data:
+                    type: array
+                    example: []
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: slug
+        description: 'The slug of the d.'
+        example: reiciendis
+        required: true
+        schema:
+          type: string
+  /api/webinars/search:
+    get:
+      summary: ''
+      operationId: getApiWebinarsSearch
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'The keyword field is required.'
+                  data: []
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'The keyword field is required.'
+                  data:
+                    type: array
+                    example: []
+      tags:
+        - Endpoints
+      security: []
+  /api/webinars/recent:
+    get:
+      summary: 'Get recent Webinars.'
+      operationId: getRecentWebinars
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Recent Webinars retrieved successfully.'
+                  data:
+                    -
+                      id: 1
+                      webinar_slug: future-of-robotics-and-automation
+                      title: 'Future of Robotics and Automation'
+                      webinar_description: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                      webinar_thumbnail: null
+                      category_name: 'STEM Skills'
+                      webinar_date_time: '2025-02-15 14:00:00'
+                      view_count: 0
+                      created_by: System
+                      created_at: '2025-01-08T11:06:37+05:30'
+                      updated_at: '2025-01-08T11:06:37+05:30'
+                    -
+                      id: 2
+                      webinar_slug: launching-your-startup-in-the-digital-age
+                      title: 'Launching Your Startup in the Digital Age'
+                      webinar_description: "Learn from successful entrepreneurs about building and scaling startups in today's digital economy"
+                      webinar_thumbnail: null
+                      category_name: Entrepreneurship
+                      webinar_date_time: '2025-02-20 15:30:00'
+                      view_count: 0
+                      created_by: System
+                      created_at: '2025-01-08T11:06:37+05:30'
+                      updated_at: '2025-01-08T11:06:37+05:30'
+                    -
+                      id: 3
+                      webinar_slug: investment-strategies-for-young-investors
+                      title: 'Investment Strategies for Young Investors'
+                      webinar_description: 'Expert insights on smart investment options and financial planning for young adults'
+                      webinar_thumbnail: null
+                      category_name: 'Financial Literacy'
+                      webinar_date_time: '2025-02-25 16:00:00'
+                      view_count: 0
+                      created_by: System
+                      created_at: '2025-01-08T11:06:37+05:30'
+                      updated_at: '2025-01-08T11:06:37+05:30'
+                    -
+                      id: 4
+                      webinar_slug: navigating-careers-in-emerging-technologies
+                      title: 'Navigating Careers in Emerging Technologies'
+                      webinar_description: 'Explore exciting career opportunities in emerging technology sectors'
+                      webinar_thumbnail: null
+                      category_name: 'Career Guidance'
+                      webinar_date_time: '2025-03-01 14:30:00'
+                      view_count: 0
+                      created_by: System
+                      created_at: '2025-01-08T11:06:37+05:30'
+                      updated_at: '2025-01-08T11:06:37+05:30'
+                    -
+                      id: 5
+                      webinar_slug: preparing-for-defense-services-entrance-exams
+                      title: 'Preparing for Defense Services Entrance Exams'
+                      webinar_description: 'Comprehensive guidance on preparation strategies for defense services entrance examinations'
+                      webinar_thumbnail: null
+                      category_name: 'Defense Training'
+                      webinar_date_time: '2025-03-05 15:00:00'
+                      view_count: 0
+                      created_by: System
+                      created_at: '2025-01-08T11:06:37+05:30'
+                      updated_at: '2025-01-08T11:06:37+05:30'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Recent Webinars retrieved successfully.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        webinar_slug: future-of-robotics-and-automation
+                        title: 'Future of Robotics and Automation'
+                        webinar_description: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                        webinar_thumbnail: null
+                        category_name: 'STEM Skills'
+                        webinar_date_time: '2025-02-15 14:00:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 2
+                        webinar_slug: launching-your-startup-in-the-digital-age
+                        title: 'Launching Your Startup in the Digital Age'
+                        webinar_description: "Learn from successful entrepreneurs about building and scaling startups in today's digital economy"
+                        webinar_thumbnail: null
+                        category_name: Entrepreneurship
+                        webinar_date_time: '2025-02-20 15:30:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 3
+                        webinar_slug: investment-strategies-for-young-investors
+                        title: 'Investment Strategies for Young Investors'
+                        webinar_description: 'Expert insights on smart investment options and financial planning for young adults'
+                        webinar_thumbnail: null
+                        category_name: 'Financial Literacy'
+                        webinar_date_time: '2025-02-25 16:00:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 4
+                        webinar_slug: navigating-careers-in-emerging-technologies
+                        title: 'Navigating Careers in Emerging Technologies'
+                        webinar_description: 'Explore exciting career opportunities in emerging technology sectors'
+                        webinar_thumbnail: null
+                        category_name: 'Career Guidance'
+                        webinar_date_time: '2025-03-01 14:30:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 5
+                        webinar_slug: preparing-for-defense-services-entrance-exams
+                        title: 'Preparing for Defense Services Entrance Exams'
+                        webinar_description: 'Comprehensive guidance on preparation strategies for defense services entrance examinations'
+                        webinar_thumbnail: null
+                        category_name: 'Defense Training'
+                        webinar_date_time: '2025-03-05 15:00:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        webinar_slug:
+                          type: string
+                          example: future-of-robotics-and-automation
+                        title:
+                          type: string
+                          example: 'Future of Robotics and Automation'
+                        webinar_description:
+                          type: string
+                          example: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                        webinar_thumbnail:
+                          type: string
+                          example: null
+                        category_name:
+                          type: string
+                          example: 'STEM Skills'
+                        webinar_date_time:
+                          type: string
+                          example: '2025-02-15 14:00:00'
+                        view_count:
+                          type: integer
+                          example: 0
+                        created_by:
+                          type: string
+                          example: System
+                        created_at:
+                          type: string
+                          example: '2025-01-08T11:06:37+05:30'
+                        updated_at:
+                          type: string
+                          example: '2025-01-08T11:06:37+05:30'
+      tags:
+        - Endpoints
+      security: []
+  '/api/quiz/{type}/{slug}':
+    get:
+      summary: 'Get quiz questions and options by type and slug.'
+      operationId: getQuizQuestionsAndOptionsByTypeAndSlug
+      description: ''
+      parameters: []
+      responses:
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid quiz type.'
+                  data: []
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid quiz type.'
+                  data:
+                    type: array
+                    example: []
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: type
+        description: ''
+        example: voluptatem
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: slug
+        description: 'The slug of the {type}.'
+        example: eum
+        required: true
+        schema:
+          type: string
+  '/api/quiz/{type}/{slug}/submit':
+    post:
+      summary: 'Submit quiz answers and check correctness.'
+      operationId: submitQuizAnswersAndCheckCorrectness
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: type
+        description: ''
+        example: 2
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: slug
+        description: 'The slug of the {type}.'
+        example: in
+        required: true
+        schema:
+          type: string
+  /api/home:
+    get:
+      summary: 'Get top 5 recent blogs, courses, and webinars.'
+      operationId: getTop5RecentBlogsCoursesAndWebinars
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Recent content retrieved successfully.'
+                  data:
+                    blogs:
+                      -
+                        id: 3
+                        slug: exploring-the-future-of-artificial-intelligence
+                        title: 'Exploring the Future of Artificial Intelligence'
+                        description: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                        thumbnail: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        view_count: 2
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-02-05T09:30:51+05:30'
+                      -
+                        id: 4
+                        slug: starting-your-first-business-a-student-guide
+                        title: 'Starting Your First Business: A Student Guide'
+                        description: 'Essential tips and strategies for young entrepreneurs looking to start their first business venture'
+                        thumbnail: null
+                        category_name: Entrepreneurship
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 5
+                        slug: smart-money-habits-for-teenagers
+                        title: 'Smart Money Habits for Teenagers'
+                        description: 'Building strong financial foundations: Essential money management skills for young adults'
+                        thumbnail: null
+                        category_name: 'Financial Literacy'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 6
+                        slug: choosing-the-right-career-path-in-2025
+                        title: 'Choosing the Right Career Path in 2025'
+                        description: 'A comprehensive guide to navigating career choices in the modern job market'
+                        thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 7
+                        slug: physical-fitness-and-mental-preparation-for-defense-careers
+                        title: 'Physical Fitness and Mental Preparation for Defense Careers'
+                        description: 'Essential guide to preparing yourself for a career in defense services'
+                        thumbnail: null
+                        category_name: 'Defense Training'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                        updated_at: '2025-01-08T10:20:31+05:30'
+                    courses:
+                      -
+                        id: 16
+                        course_slug: career-guidance-program
+                        title: 'Career Guidance Program'
+                        content_short_description: 'Identify skills and explore career options.'
+                        course_thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        class_level_name: null
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                        updated_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 17
+                        course_slug: skill-identification
+                        title: 'Skill Identification'
+                        content_short_description: 'Discover and evaluate your strengths and interests.'
+                        course_thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        class_level_name: null
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                        updated_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 18
+                        course_slug: career-fairs
+                        title: 'Career Fairs'
+                        content_short_description: 'Explore opportunities in various fields and industries.'
+                        course_thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        class_level_name: null
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                        updated_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 19
+                        course_slug: career-workshops
+                        title: 'Career Workshops'
+                        content_short_description: 'Engage in sessions to build career-readiness skills.'
+                        course_thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        class_level_name: null
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                        updated_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 20
+                        course_slug: alumni-connections
+                        title: 'Alumni Connections'
+                        content_short_description: 'Network with alumni for career insights and mentorship.'
+                        course_thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        class_level_name: null
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                        updated_at: '2025-01-08T09:45:32+05:30'
+                    webinars:
+                      -
+                        id: 1
+                        webinar_slug: future-of-robotics-and-automation
+                        title: 'Future of Robotics and Automation'
+                        webinar_description: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                        webinar_thumbnail: null
+                        category_name: 'STEM Skills'
+                        webinar_date_time: '2025-02-15 14:00:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 2
+                        webinar_slug: launching-your-startup-in-the-digital-age
+                        title: 'Launching Your Startup in the Digital Age'
+                        webinar_description: "Learn from successful entrepreneurs about building and scaling startups in today's digital economy"
+                        webinar_thumbnail: null
+                        category_name: Entrepreneurship
+                        webinar_date_time: '2025-02-20 15:30:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 3
+                        webinar_slug: investment-strategies-for-young-investors
+                        title: 'Investment Strategies for Young Investors'
+                        webinar_description: 'Expert insights on smart investment options and financial planning for young adults'
+                        webinar_thumbnail: null
+                        category_name: 'Financial Literacy'
+                        webinar_date_time: '2025-02-25 16:00:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 4
+                        webinar_slug: navigating-careers-in-emerging-technologies
+                        title: 'Navigating Careers in Emerging Technologies'
+                        webinar_description: 'Explore exciting career opportunities in emerging technology sectors'
+                        webinar_thumbnail: null
+                        category_name: 'Career Guidance'
+                        webinar_date_time: '2025-03-01 14:30:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 5
+                        webinar_slug: preparing-for-defense-services-entrance-exams
+                        title: 'Preparing for Defense Services Entrance Exams'
+                        webinar_description: 'Comprehensive guidance on preparation strategies for defense services entrance examinations'
+                        webinar_thumbnail: null
+                        category_name: 'Defense Training'
+                        webinar_date_time: '2025-03-05 15:00:00'
+                        view_count: 0
+                        created_by: System
+                        created_at: '2025-01-08T11:06:37+05:30'
+                        updated_at: '2025-01-08T11:06:37+05:30'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Recent content retrieved successfully.'
+                  data:
+                    type: object
+                    properties:
+                      blogs:
+                        type: array
+                        example:
+                          -
+                            id: 3
+                            slug: exploring-the-future-of-artificial-intelligence
+                            title: 'Exploring the Future of Artificial Intelligence'
+                            description: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                            thumbnail: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            view_count: 2
+                            created_at: '2025-01-08T10:20:31+05:30'
+                            updated_at: '2025-02-05T09:30:51+05:30'
+                          -
+                            id: 4
+                            slug: starting-your-first-business-a-student-guide
+                            title: 'Starting Your First Business: A Student Guide'
+                            description: 'Essential tips and strategies for young entrepreneurs looking to start their first business venture'
+                            thumbnail: null
+                            category_name: Entrepreneurship
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                            updated_at: '2025-01-08T10:20:31+05:30'
+                          -
+                            id: 5
+                            slug: smart-money-habits-for-teenagers
+                            title: 'Smart Money Habits for Teenagers'
+                            description: 'Building strong financial foundations: Essential money management skills for young adults'
+                            thumbnail: null
+                            category_name: 'Financial Literacy'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                            updated_at: '2025-01-08T10:20:31+05:30'
+                          -
+                            id: 6
+                            slug: choosing-the-right-career-path-in-2025
+                            title: 'Choosing the Right Career Path in 2025'
+                            description: 'A comprehensive guide to navigating career choices in the modern job market'
+                            thumbnail: null
+                            category_name: 'Career Guidance'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                            updated_at: '2025-01-08T10:20:31+05:30'
+                          -
+                            id: 7
+                            slug: physical-fitness-and-mental-preparation-for-defense-careers
+                            title: 'Physical Fitness and Mental Preparation for Defense Careers'
+                            description: 'Essential guide to preparing yourself for a career in defense services'
+                            thumbnail: null
+                            category_name: 'Defense Training'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                            updated_at: '2025-01-08T10:20:31+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 3
+                            slug:
+                              type: string
+                              example: exploring-the-future-of-artificial-intelligence
+                            title:
+                              type: string
+                              example: 'Exploring the Future of Artificial Intelligence'
+                            description:
+                              type: string
+                              example: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                            thumbnail:
+                              type: string
+                              example: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                            category_name:
+                              type: string
+                              example: 'STEM Skills'
+                            created_by:
+                              type: string
+                              example: System
+                            view_count:
+                              type: integer
+                              example: 2
+                            created_at:
+                              type: string
+                              example: '2025-01-08T10:20:31+05:30'
+                            updated_at:
+                              type: string
+                              example: '2025-02-05T09:30:51+05:30'
+                      courses:
+                        type: array
+                        example:
+                          -
+                            id: 16
+                            course_slug: career-guidance-program
+                            title: 'Career Guidance Program'
+                            content_short_description: 'Identify skills and explore career options.'
+                            course_thumbnail: null
+                            category_name: 'Career Guidance'
+                            created_by: System
+                            class_level_name: null
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:45:32+05:30'
+                            updated_at: '2025-01-08T09:45:32+05:30'
+                          -
+                            id: 17
+                            course_slug: skill-identification
+                            title: 'Skill Identification'
+                            content_short_description: 'Discover and evaluate your strengths and interests.'
+                            course_thumbnail: null
+                            category_name: 'Career Guidance'
+                            created_by: System
+                            class_level_name: null
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:45:32+05:30'
+                            updated_at: '2025-01-08T09:45:32+05:30'
+                          -
+                            id: 18
+                            course_slug: career-fairs
+                            title: 'Career Fairs'
+                            content_short_description: 'Explore opportunities in various fields and industries.'
+                            course_thumbnail: null
+                            category_name: 'Career Guidance'
+                            created_by: System
+                            class_level_name: null
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:45:32+05:30'
+                            updated_at: '2025-01-08T09:45:32+05:30'
+                          -
+                            id: 19
+                            course_slug: career-workshops
+                            title: 'Career Workshops'
+                            content_short_description: 'Engage in sessions to build career-readiness skills.'
+                            course_thumbnail: null
+                            category_name: 'Career Guidance'
+                            created_by: System
+                            class_level_name: null
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:45:32+05:30'
+                            updated_at: '2025-01-08T09:45:32+05:30'
+                          -
+                            id: 20
+                            course_slug: alumni-connections
+                            title: 'Alumni Connections'
+                            content_short_description: 'Network with alumni for career insights and mentorship.'
+                            course_thumbnail: null
+                            category_name: 'Career Guidance'
+                            created_by: System
+                            class_level_name: null
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:45:32+05:30'
+                            updated_at: '2025-01-08T09:45:32+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 16
+                            course_slug:
+                              type: string
+                              example: career-guidance-program
+                            title:
+                              type: string
+                              example: 'Career Guidance Program'
+                            content_short_description:
+                              type: string
+                              example: 'Identify skills and explore career options.'
+                            course_thumbnail:
+                              type: string
+                              example: null
+                            category_name:
+                              type: string
+                              example: 'Career Guidance'
+                            created_by:
+                              type: string
+                              example: System
+                            class_level_name:
+                              type: string
+                              example: null
+                            view_count:
+                              type: integer
+                              example: 0
+                            enrolment_count:
+                              type: integer
+                              example: 0
+                            created_at:
+                              type: string
+                              example: '2025-01-08T09:45:32+05:30'
+                            updated_at:
+                              type: string
+                              example: '2025-01-08T09:45:32+05:30'
+                      webinars:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            webinar_slug: future-of-robotics-and-automation
+                            title: 'Future of Robotics and Automation'
+                            webinar_description: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                            webinar_thumbnail: null
+                            category_name: 'STEM Skills'
+                            webinar_date_time: '2025-02-15 14:00:00'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:06:37+05:30'
+                            updated_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 2
+                            webinar_slug: launching-your-startup-in-the-digital-age
+                            title: 'Launching Your Startup in the Digital Age'
+                            webinar_description: "Learn from successful entrepreneurs about building and scaling startups in today's digital economy"
+                            webinar_thumbnail: null
+                            category_name: Entrepreneurship
+                            webinar_date_time: '2025-02-20 15:30:00'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:06:37+05:30'
+                            updated_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 3
+                            webinar_slug: investment-strategies-for-young-investors
+                            title: 'Investment Strategies for Young Investors'
+                            webinar_description: 'Expert insights on smart investment options and financial planning for young adults'
+                            webinar_thumbnail: null
+                            category_name: 'Financial Literacy'
+                            webinar_date_time: '2025-02-25 16:00:00'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:06:37+05:30'
+                            updated_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 4
+                            webinar_slug: navigating-careers-in-emerging-technologies
+                            title: 'Navigating Careers in Emerging Technologies'
+                            webinar_description: 'Explore exciting career opportunities in emerging technology sectors'
+                            webinar_thumbnail: null
+                            category_name: 'Career Guidance'
+                            webinar_date_time: '2025-03-01 14:30:00'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:06:37+05:30'
+                            updated_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 5
+                            webinar_slug: preparing-for-defense-services-entrance-exams
+                            title: 'Preparing for Defense Services Entrance Exams'
+                            webinar_description: 'Comprehensive guidance on preparation strategies for defense services entrance examinations'
+                            webinar_thumbnail: null
+                            category_name: 'Defense Training'
+                            webinar_date_time: '2025-03-05 15:00:00'
+                            view_count: 0
+                            created_by: System
+                            created_at: '2025-01-08T11:06:37+05:30'
+                            updated_at: '2025-01-08T11:06:37+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            webinar_slug:
+                              type: string
+                              example: future-of-robotics-and-automation
+                            title:
+                              type: string
+                              example: 'Future of Robotics and Automation'
+                            webinar_description:
+                              type: string
+                              example: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                            webinar_thumbnail:
+                              type: string
+                              example: null
+                            category_name:
+                              type: string
+                              example: 'STEM Skills'
+                            webinar_date_time:
+                              type: string
+                              example: '2025-02-15 14:00:00'
+                            view_count:
+                              type: integer
+                              example: 0
+                            created_by:
+                              type: string
+                              example: System
+                            created_at:
+                              type: string
+                              example: '2025-01-08T11:06:37+05:30'
+                            updated_at:
+                              type: string
+                              example: '2025-01-08T11:06:37+05:30'
+      tags:
+        - Endpoints
+      security: []
+  /api/recommend:
+    get:
+      summary: ''
+      operationId: getApiRecommend
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Recommendations retrieved successfully.'
+                  data:
+                    recommended_courses:
+                      -
+                        id: 16
+                        slug: career-guidance-program
+                        title: 'Career Guidance Program'
+                        content_short_description: 'Identify skills and explore career options.'
+                        thumbnail: null
+                        category_name: 'Career Guidance'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 17
+                        slug: skill-identification
+                        title: 'Skill Identification'
+                        content_short_description: 'Discover and evaluate your strengths and interests.'
+                        thumbnail: null
+                        category_name: 'Career Guidance'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 18
+                        slug: career-fairs
+                        title: 'Career Fairs'
+                        content_short_description: 'Explore opportunities in various fields and industries.'
+                        thumbnail: null
+                        category_name: 'Career Guidance'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 19
+                        slug: career-workshops
+                        title: 'Career Workshops'
+                        content_short_description: 'Engage in sessions to build career-readiness skills.'
+                        thumbnail: null
+                        category_name: 'Career Guidance'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                      -
+                        id: 20
+                        slug: alumni-connections
+                        title: 'Alumni Connections'
+                        content_short_description: 'Network with alumni for career insights and mentorship.'
+                        thumbnail: null
+                        category_name: 'Career Guidance'
+                        view_count: 0
+                        enrolment_count: 0
+                        created_at: '2025-01-08T09:45:32+05:30'
+                    recommended_blogs:
+                      -
+                        id: 3
+                        slug: exploring-the-future-of-artificial-intelligence
+                        title: 'Exploring the Future of Artificial Intelligence'
+                        description: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                        thumbnail: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                        category_name: 'STEM Skills'
+                        created_by: System
+                        view_count: 2
+                        created_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 4
+                        slug: starting-your-first-business-a-student-guide
+                        title: 'Starting Your First Business: A Student Guide'
+                        description: 'Essential tips and strategies for young entrepreneurs looking to start their first business venture'
+                        thumbnail: null
+                        category_name: Entrepreneurship
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 5
+                        slug: smart-money-habits-for-teenagers
+                        title: 'Smart Money Habits for Teenagers'
+                        description: 'Building strong financial foundations: Essential money management skills for young adults'
+                        thumbnail: null
+                        category_name: 'Financial Literacy'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 6
+                        slug: choosing-the-right-career-path-in-2025
+                        title: 'Choosing the Right Career Path in 2025'
+                        description: 'A comprehensive guide to navigating career choices in the modern job market'
+                        thumbnail: null
+                        category_name: 'Career Guidance'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                      -
+                        id: 7
+                        slug: physical-fitness-and-mental-preparation-for-defense-careers
+                        title: 'Physical Fitness and Mental Preparation for Defense Careers'
+                        description: 'Essential guide to preparing yourself for a career in defense services'
+                        thumbnail: null
+                        category_name: 'Defense Training'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T10:20:31+05:30'
+                    recommended_webinars:
+                      -
+                        id: 1
+                        slug: future-of-robotics-and-automation
+                        title: 'Future of Robotics and Automation'
+                        description: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                        thumbnail: null
+                        category_name: 'STEM Skills'
+                        webinar_date_time: '2025-02-15 14:00:00'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 2
+                        slug: launching-your-startup-in-the-digital-age
+                        title: 'Launching Your Startup in the Digital Age'
+                        description: "Learn from successful entrepreneurs about building and scaling startups in today's digital economy"
+                        thumbnail: null
+                        category_name: Entrepreneurship
+                        webinar_date_time: '2025-02-20 15:30:00'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 3
+                        slug: investment-strategies-for-young-investors
+                        title: 'Investment Strategies for Young Investors'
+                        description: 'Expert insights on smart investment options and financial planning for young adults'
+                        thumbnail: null
+                        category_name: 'Financial Literacy'
+                        webinar_date_time: '2025-02-25 16:00:00'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 4
+                        slug: navigating-careers-in-emerging-technologies
+                        title: 'Navigating Careers in Emerging Technologies'
+                        description: 'Explore exciting career opportunities in emerging technology sectors'
+                        thumbnail: null
+                        category_name: 'Career Guidance'
+                        webinar_date_time: '2025-03-01 14:30:00'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T11:06:37+05:30'
+                      -
+                        id: 5
+                        slug: preparing-for-defense-services-entrance-exams
+                        title: 'Preparing for Defense Services Entrance Exams'
+                        description: 'Comprehensive guidance on preparation strategies for defense services entrance examinations'
+                        thumbnail: null
+                        category_name: 'Defense Training'
+                        webinar_date_time: '2025-03-05 15:00:00'
+                        created_by: System
+                        view_count: 0
+                        created_at: '2025-01-08T11:06:37+05:30'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Recommendations retrieved successfully.'
+                  data:
+                    type: object
+                    properties:
+                      recommended_courses:
+                        type: array
+                        example:
+                          -
+                            id: 16
+                            slug: career-guidance-program
+                            title: 'Career Guidance Program'
+                            content_short_description: 'Identify skills and explore career options.'
+                            thumbnail: null
+                            category_name: 'Career Guidance'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:45:32+05:30'
+                          -
+                            id: 17
+                            slug: skill-identification
+                            title: 'Skill Identification'
+                            content_short_description: 'Discover and evaluate your strengths and interests.'
+                            thumbnail: null
+                            category_name: 'Career Guidance'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:45:32+05:30'
+                          -
+                            id: 18
+                            slug: career-fairs
+                            title: 'Career Fairs'
+                            content_short_description: 'Explore opportunities in various fields and industries.'
+                            thumbnail: null
+                            category_name: 'Career Guidance'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:45:32+05:30'
+                          -
+                            id: 19
+                            slug: career-workshops
+                            title: 'Career Workshops'
+                            content_short_description: 'Engage in sessions to build career-readiness skills.'
+                            thumbnail: null
+                            category_name: 'Career Guidance'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:45:32+05:30'
+                          -
+                            id: 20
+                            slug: alumni-connections
+                            title: 'Alumni Connections'
+                            content_short_description: 'Network with alumni for career insights and mentorship.'
+                            thumbnail: null
+                            category_name: 'Career Guidance'
+                            view_count: 0
+                            enrolment_count: 0
+                            created_at: '2025-01-08T09:45:32+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 16
+                            slug:
+                              type: string
+                              example: career-guidance-program
+                            title:
+                              type: string
+                              example: 'Career Guidance Program'
+                            content_short_description:
+                              type: string
+                              example: 'Identify skills and explore career options.'
+                            thumbnail:
+                              type: string
+                              example: null
+                            category_name:
+                              type: string
+                              example: 'Career Guidance'
+                            view_count:
+                              type: integer
+                              example: 0
+                            enrolment_count:
+                              type: integer
+                              example: 0
+                            created_at:
+                              type: string
+                              example: '2025-01-08T09:45:32+05:30'
+                      recommended_blogs:
+                        type: array
+                        example:
+                          -
+                            id: 3
+                            slug: exploring-the-future-of-artificial-intelligence
+                            title: 'Exploring the Future of Artificial Intelligence'
+                            description: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                            thumbnail: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                            category_name: 'STEM Skills'
+                            created_by: System
+                            view_count: 2
+                            created_at: '2025-01-08T10:20:31+05:30'
+                          -
+                            id: 4
+                            slug: starting-your-first-business-a-student-guide
+                            title: 'Starting Your First Business: A Student Guide'
+                            description: 'Essential tips and strategies for young entrepreneurs looking to start their first business venture'
+                            thumbnail: null
+                            category_name: Entrepreneurship
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                          -
+                            id: 5
+                            slug: smart-money-habits-for-teenagers
+                            title: 'Smart Money Habits for Teenagers'
+                            description: 'Building strong financial foundations: Essential money management skills for young adults'
+                            thumbnail: null
+                            category_name: 'Financial Literacy'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                          -
+                            id: 6
+                            slug: choosing-the-right-career-path-in-2025
+                            title: 'Choosing the Right Career Path in 2025'
+                            description: 'A comprehensive guide to navigating career choices in the modern job market'
+                            thumbnail: null
+                            category_name: 'Career Guidance'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                          -
+                            id: 7
+                            slug: physical-fitness-and-mental-preparation-for-defense-careers
+                            title: 'Physical Fitness and Mental Preparation for Defense Careers'
+                            description: 'Essential guide to preparing yourself for a career in defense services'
+                            thumbnail: null
+                            category_name: 'Defense Training'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T10:20:31+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 3
+                            slug:
+                              type: string
+                              example: exploring-the-future-of-artificial-intelligence
+                            title:
+                              type: string
+                              example: 'Exploring the Future of Artificial Intelligence'
+                            description:
+                              type: string
+                              example: 'Discover how AI is shaping the future of technology and its impact on everyday life'
+                            thumbnail:
+                              type: string
+                              example: blogs/thumbnails/01JKA49582ATREW3QYM68XESDD.webp
+                            category_name:
+                              type: string
+                              example: 'STEM Skills'
+                            created_by:
+                              type: string
+                              example: System
+                            view_count:
+                              type: integer
+                              example: 2
+                            created_at:
+                              type: string
+                              example: '2025-01-08T10:20:31+05:30'
+                      recommended_webinars:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            slug: future-of-robotics-and-automation
+                            title: 'Future of Robotics and Automation'
+                            description: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                            thumbnail: null
+                            category_name: 'STEM Skills'
+                            webinar_date_time: '2025-02-15 14:00:00'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 2
+                            slug: launching-your-startup-in-the-digital-age
+                            title: 'Launching Your Startup in the Digital Age'
+                            description: "Learn from successful entrepreneurs about building and scaling startups in today's digital economy"
+                            thumbnail: null
+                            category_name: Entrepreneurship
+                            webinar_date_time: '2025-02-20 15:30:00'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 3
+                            slug: investment-strategies-for-young-investors
+                            title: 'Investment Strategies for Young Investors'
+                            description: 'Expert insights on smart investment options and financial planning for young adults'
+                            thumbnail: null
+                            category_name: 'Financial Literacy'
+                            webinar_date_time: '2025-02-25 16:00:00'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 4
+                            slug: navigating-careers-in-emerging-technologies
+                            title: 'Navigating Careers in Emerging Technologies'
+                            description: 'Explore exciting career opportunities in emerging technology sectors'
+                            thumbnail: null
+                            category_name: 'Career Guidance'
+                            webinar_date_time: '2025-03-01 14:30:00'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T11:06:37+05:30'
+                          -
+                            id: 5
+                            slug: preparing-for-defense-services-entrance-exams
+                            title: 'Preparing for Defense Services Entrance Exams'
+                            description: 'Comprehensive guidance on preparation strategies for defense services entrance examinations'
+                            thumbnail: null
+                            category_name: 'Defense Training'
+                            webinar_date_time: '2025-03-05 15:00:00'
+                            created_by: System
+                            view_count: 0
+                            created_at: '2025-01-08T11:06:37+05:30'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            slug:
+                              type: string
+                              example: future-of-robotics-and-automation
+                            title:
+                              type: string
+                              example: 'Future of Robotics and Automation'
+                            description:
+                              type: string
+                              example: 'Join industry experts as they discuss the latest trends in robotics and automation technology'
+                            thumbnail:
+                              type: string
+                              example: null
+                            category_name:
+                              type: string
+                              example: 'STEM Skills'
+                            webinar_date_time:
+                              type: string
+                              example: '2025-02-15 14:00:00'
+                            created_by:
+                              type: string
+                              example: System
+                            view_count:
+                              type: integer
+                              example: 0
+                            created_at:
+                              type: string
+                              example: '2025-01-08T11:06:37+05:30'
+      tags:
+        - Endpoints
+      security: []
+tags:
+  -
+    name: Endpoints
+    description: ''

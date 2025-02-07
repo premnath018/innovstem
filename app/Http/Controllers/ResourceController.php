@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\ResourceService;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
 
 class ResourceController extends Controller
 {
@@ -48,6 +49,25 @@ class ResourceController extends Controller
         try {
             $Resources = $this->ResourceService->getRecentResources(5); // Default to 5 recent Resources
             return ApiResponse::success($Resources, 'Recent Resources retrieved successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+    }
+
+    public function search(Request $request)
+    {
+        try {
+            $request->validate([
+                'keyword' => 'required|string|min:2',
+                'perPage' => 'nullable|integer|min:1'
+            ]);
+
+            $keyword = $request->input('keyword');
+            $perPage = $request->input('perPage', 9);
+
+            $Resource = $this->ResourceService->searchResource($keyword, $perPage);
+
+            return ApiResponse::success($Resource, 'Search results retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);
         }

@@ -61,4 +61,23 @@ class BlogController extends Controller
             return ApiResponse::error($e->getMessage(), 500);
         }
     }
+
+    public function search(Request $request)
+    {
+        try {
+            $request->validate([
+                'keyword' => 'required|string|min:2',
+                'perPage' => 'nullable|integer|min:1'
+            ]);
+
+            $keyword = $request->input('keyword');
+            $perPage = $request->input('perPage', 9);
+
+            $blogs = $this->blogService->searchBlogs($keyword, $perPage);
+
+            return ApiResponse::success($blogs, 'Search results retrieved successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+    }
 }

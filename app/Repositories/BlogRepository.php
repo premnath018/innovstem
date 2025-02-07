@@ -32,7 +32,7 @@ class BlogRepository
     {
         return $this->blog->with('category')->paginate($perPage);
     }
-    public function search(string $keyword, int $perPage = 15)
+    public function search(string $keyword, int $perPage = 9)
     {
         return $this->blog->with('category')->where('title', 'like', "%$keyword%")
             ->orWhere('blog_content', 'like', "%$keyword%")

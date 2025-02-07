@@ -9,7 +9,7 @@ class Webinar extends Model
 {
     protected $fillable = [
         'webinar_slug',
-        'webinar_title',
+        'title',
         'webinar_description',
         'webinar_content',
         'webinar_banner',
