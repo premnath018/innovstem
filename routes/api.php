@@ -9,56 +9,163 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\WebinarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuizController;
-use App\Models\Webinar;
+use App\Http\Controllers\StudentController;
 
-Route::post('register',[UserAuthController::class,'register']);
-Route::post('login',[UserAuthController::class,'login']);
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+|
+| Routes for user authentication including registration, login, password 
+| reset, and fetching user details.
+|
+*/
+
+// User registration
+Route::post('register', [UserAuthController::class, 'register']);
+
+// User login
+Route::post('login', [UserAuthController::class, 'login']);
+
+// Forgot password request
 Route::post('forgot-password', [UserAuthController::class, 'forgotPassword']);
+
+// Reset password
 Route::post('reset-password', [UserAuthController::class, 'resetPassword'])->name('password.reset');
+
+// Get authenticated user details
 Route::get('user', [UserAuthController::class, 'getUser']);
 
-
+/*
+|--------------------------------------------------------------------------
+| Protected Routes (Requires Authentication)
+|--------------------------------------------------------------------------
+|
+| These routes are accessible only to authenticated users with a valid JWT.
+| The JwtMiddleware ensures security and token validation.
+|
+*/
 
 Route::middleware([JwtMiddleware::class])->group(function () {
+    // User logout
     Route::post('logout', [UserAuthController::class, 'logout']);
-    Route::get('refresh',[UserAuthController::class, 'refresh']);
+
+    // Refresh authentication token
+    Route::get('refresh', [UserAuthController::class, 'refresh']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student Routes
+    |--------------------------------------------------------------------------
+    |
+    | Routes for student-related actions such as enrolling in courses, 
+    | attending webinars, and fetching enrolled courses.
+    |
+    */
+    
+    Route::get('/student/courses', [StudentController::class, 'enrolledCourses']);
+    Route::get('/student/webinars', [StudentController::class, 'attendedWebinars']);
+    Route::post('/student/enroll-course', [StudentController::class, 'enrollCourse']);
+    Route::post('/student/attend-webinar', [StudentController::class, 'attendWebinar']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Quiz Routes
+    |--------------------------------------------------------------------------
+    |
+    | Routes for handling quizzes, including fetching quiz questions and 
+    | submitting answers.
+    |
+    */
+    
+    Route::prefix('quiz')->group(function () {
+        // Fetch quiz questions based on type and slug
+        Route::get('/{type}/{slug}', [QuizController::class, 'show'])->name('quiz.show');
+
+        // Submit quiz answers
+        Route::post('/{type}/{slug}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
+    });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Blog Routes
+|--------------------------------------------------------------------------
+|
+| Routes for managing and retrieving blog content, including search and 
+| pagination.
+|
+*/
 
 Route::prefix('blogs')->group(function () {
-    Route::get('/', [BlogController::class, 'paginate'])->name('blogs.paginate'); // Paginated blogs
-    Route::get('/d/{slug}', [BlogController::class, 'show']); // Blog by slug
-    Route::get('/search', [BlogController::class, 'search'])->name('blogs.search');
-    Route::get('/recent', [BlogController::class, 'recent'])->name('blogs.recent'); // Recent blogs
+    Route::get('/', [BlogController::class, 'paginate'])->name('blogs.paginate'); // Fetch paginated blogs
+    Route::get('/d/{slug}', [BlogController::class, 'show']); // Fetch a blog by slug
+    Route::get('/search', [BlogController::class, 'search'])->name('blogs.search'); // Search blogs
+    Route::get('/recent', [BlogController::class, 'recent'])->name('blogs.recent'); // Fetch recent blogs
 });
+
+/*
+|--------------------------------------------------------------------------
+| Course Routes
+|--------------------------------------------------------------------------
+|
+| Routes for managing courses, including categories, search, and details.
+|
+*/
+
 Route::prefix('courses')->group(function () {
-    Route::get('/', [CourseController::class, 'paginate'])->name('courses.paginate'); // Paginated courses
-    Route::get('/categories', [CourseController::class,'category'])->name('courses.categories');
-    Route::get('/category/{category}', [CourseController::class,'showCategory'])->name('courses.category');
-    Route::get('/search', [CourseController::class, 'search'])->name('courses.search');
-    Route::get('/recent', [CourseController::class, 'recent'])->name('courses.recent'); // Recent courses
-    Route::get('/d/{slug}', [CourseController::class, 'show'])->name('courses.show'); // Course by slug
+    Route::get('/', [CourseController::class, 'paginate'])->name('courses.paginate'); // Fetch paginated courses
+    Route::get('/categories', [CourseController::class, 'category'])->name('courses.categories'); // Fetch course categories
+    Route::get('/category/{category}', [CourseController::class, 'showCategory'])->name('courses.category'); // Fetch courses by category
+    Route::get('/search', [CourseController::class, 'search'])->name('courses.search'); // Search courses
+    Route::get('/recent', [CourseController::class, 'recent'])->name('courses.recent'); // Fetch recent courses
+    Route::get('/d/{slug}', [CourseController::class, 'show'])->name('courses.show'); // Fetch a course by slug
 });
+
+/*
+|--------------------------------------------------------------------------
+| Resource Routes
+|--------------------------------------------------------------------------
+|
+| Routes for retrieving resources, including search, pagination, and details.
+|
+*/
 
 Route::prefix('resources')->group(function () {
-    Route::get('/', [ResourceController::class, 'paginate'])->name('resources.paginate'); // Paginated resources
-    Route::get('/d/{slug}', [ResourceController::class, 'show'])->name('resources.show'); // Course by slug
-    Route::get('/search', [ResourceController::class, 'search'])->name('resources.search');
-    Route::get('/recent', [ResourceController::class, 'recent'])->name('resources.recent'); // Recent resources
+    Route::get('/', [ResourceController::class, 'paginate'])->name('resources.paginate'); // Fetch paginated resources
+    Route::get('/d/{slug}', [ResourceController::class, 'show'])->name('resources.show'); // Fetch a resource by slug
+    Route::get('/search', [ResourceController::class, 'search'])->name('resources.search'); // Search resources
+    Route::get('/recent', [ResourceController::class, 'recent'])->name('resources.recent'); // Fetch recent resources
 });
+
+/*
+|--------------------------------------------------------------------------
+| Webinar Routes
+|--------------------------------------------------------------------------
+|
+| Routes for retrieving webinar details, including pagination and search.
+|
+*/
 
 Route::prefix('webinars')->group(function () {
-    Route::get('/', [WebinarController::class, 'paginate'])->name('webinars.paginate'); // Paginated webinars
-    Route::get('/d/{slug}', [WebinarController::class, 'show'])->name('webinars.show'); // Course by slug
-    Route::get('/search', [WebinarController::class, 'search'])->name('webinars.search');
-    Route::get('/recent', [WebinarController::class, 'recent'])->name('webinars.recent'); // Recent webinars
+    Route::get('/', [WebinarController::class, 'paginate'])->name('webinars.paginate'); // Fetch paginated webinars
+    Route::get('/d/{slug}', [WebinarController::class, 'show'])->name('webinars.show'); // Fetch a webinar by slug
+    Route::get('/search', [WebinarController::class, 'search'])->name('webinars.search'); // Search webinars
+    Route::get('/recent', [WebinarController::class, 'recent'])->name('webinars.recent'); // Fetch recent webinars
 });
 
-Route::prefix('quiz')->group(function () {
-    Route::get('/{type}/{slug}', [QuizController::class, 'show'])->name('quiz.show'); // List questions & options
-    Route::post('/{type}/{slug}/submit', [QuizController::class, 'submit'])->name('quiz.submit'); // Submit answers
-});
+/*
+|--------------------------------------------------------------------------
+| Home & Recommendation Routes
+|--------------------------------------------------------------------------
+|
+| Routes for fetching homepage data and recommended content.
+|
+*/
 
+// Fetch top 5 recent blogs, courses, and webinars
+Route::get('/home', [HomeController::class, 'home'])->name('home');
 
-Route::get('/home', [HomeController::class, 'home'])->name('home'); // Fetch top 5 recent items
-Route::get('/recommend', [HomeController::class, 'recommend'])->name('recommend'); // Fetch top 5 recent items
+// Fetch recommended items based on user preferences
+Route::get('/recommend', [HomeController::class, 'recommend'])->name('recommend');
 

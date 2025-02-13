@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Quiz;
+use App\Models\QuizAttempt;
 
 class QuizRepository
 {
@@ -81,31 +82,58 @@ class QuizRepository
     public function checkAnswers(int $quizId, array $answers): array
     {
         $quiz = $this->findById($quizId);
-
+    
         if (!$quiz) {
             return [
                 'message' => 'Quiz not found.',
             ];
         }
-
+    
+        // ✅ Get the logged-in user and their student ID
+        $user = auth()->user();
+      //  dd($user);
+        $studentId = $user?->student?->id;
+    
+        if (!$studentId) {
+            return [
+                'message' => 'Student profile not found.',
+            ];
+        }
+    
         $score = 0;
         $totalQuestions = $quiz->questions->count();
-
+    
+        // ✅ Calculate the score
         foreach ($quiz->questions as $question) {
             if (isset($answers[$question->id])) {
                 $correctOption = $question->options->firstWhere('is_correct', true);
-
+    
                 if ($correctOption && $correctOption->id == $answers[$question->id]) {
                     $score++;
                 }
             }
         }
-
+    
+        $quizAttempt = QuizAttempt::where('student_id', $studentId)
+            ->where('quiz_id', $quizId)
+            ->first();
+    
+        if ($quizAttempt) {
+            $quizAttempt->update(['score' => $score]);
+        } else {
+            QuizAttempt::create([
+                'student_id' => $studentId,
+                'quiz_id' => $quizId,
+                'score' => $score
+            ]);
+        }
+    
         return [
             'score' => $score,
             'total' => $totalQuestions,
         ];
     }
+    
 
     protected function transformQuiz($quiz)
     {

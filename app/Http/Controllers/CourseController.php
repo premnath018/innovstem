@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Services\CourseService;
 use App\Helpers\ApiResponse;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CourseController extends Controller
 {
@@ -21,10 +23,10 @@ class CourseController extends Controller
     public function paginate(Request $request)
     {
         try {
-            $categoryId = $request->query('category'); // Get category from query params
+            $categorySlug = $request->query('category'); // Get category from query params
             $perPage = $request->query('perPage', 9); 
     
-            $courses = $this->courseService->getPaginatedCourses($categoryId, $perPage);
+            $courses = $this->courseService->getPaginatedCourses($categorySlug, $perPage);
     
             return ApiResponse::success($courses, 'Courses retrieved successfully.');
         } catch (\Exception $e) {
@@ -35,16 +37,35 @@ class CourseController extends Controller
     /**
      * Get a course by slug.
      */
-    public function show($slug)
+    public function show(Request $request, $slug)
     {
-        $course = $this->courseService->getCourseBySlug($slug);
+        try {
+            $user = null;
+            $studentId = null;
+
+            // Check if the request has an Authorization token
+            if ($request->hasHeader('Authorization')) {
+                try {
+                    $user = JWTAuth::parseToken()->authenticate();
+                 //   dd($user);
+                    if ($user) {
+                        $student = Student::where('user_id', $user->id)->first();
+                        $studentId = $student ? $student->id : null;
+                    }
+                } catch (\Exception $e) {
+                    // Token is invalid or not provided, continue without user
+                }
+            }
+
+            $course = $this->courseService->getCourseBySlug($slug, $studentId);
+
             return ApiResponse::success($course, 'Course retrieved successfully.');
-        // try {
-            
-        // } catch (\Exception $e) {
-        //     return ApiResponse::error($e->getMessage(), 404);
-        // }
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 404);
+        }
     }
+
+
 
     /**
      * Get recent courses.
@@ -89,11 +110,11 @@ class CourseController extends Controller
 
     }
 
-    public function showCategory(Request $request, $categoryId)
+    public function showCategory(Request $request, $categorySlug)
     {
         try {
-            $perPage = $request->input('perPage', 5);
-            $courses = $this->courseService->getCoursesByCategory($categoryId, $perPage);
+            $perPage = $request->input('perPage', 100);
+            $courses = $this->courseService->getCoursesByCategory($categorySlug, $perPage);
             return ApiResponse::success($courses, 'Courses retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);

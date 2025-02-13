@@ -17,26 +17,55 @@ class CourseService
     /**
      * Find a course by slug.
      */
-    public function getCourseBySlug(string $slug)
+    public function getCourseBySlug(string $slug, ?int $studentId = null)
     {
         $course = $this->courseRepository->findBySlug($slug);
        
         if (!$course) {
             throw new \Exception('Course not found');
         }
-        
+    
+        // Check if quizzes exist for this course
         $quizExists = $course->quizzes()->exists();
-
+    
+        // Increment view count
         $course->increment('view_count');
+    
+        // Check if the student is enrolled
+        $userRegistered = false;
+        $quizScore = null;
+    
+        if ($studentId) {
+            $userRegistered = $course->enrolledStudents()->where('student_id', $studentId)->exists();
+            // Fetch quiz score if attempted
+
+            $quizAttempt = $course->quizzes()
+                ->whereHas('quizAttempts', function ($query) use ($studentId) {
+                    $query->where('student_id', $studentId);
+                })
+                ->with(['quizAttempts' => function ($query) use ($studentId) {
+                    $query->where('student_id', $studentId);
+                }])
+                ->first();
+            
+            if ($quizAttempt && $quizAttempt->quizAttempts->isNotEmpty()) {
+                $quizScore = $quizAttempt->quizAttempts->first()->score ?? null;
+            }
+        }
+    
+        // Add new fields to the response
         $course->quiz = $quizExists;
-        $course->category_name = $course->category->name;
-        $course->class_level_name = $course->classLevel->name;
-      //   dd($course);
+        $course->user_registered = $userRegistered;
+        $course->quiz_score = $quizScore;
+        $course->category_name = $course->category->name ?? null;
+        $course->class_level_name = $course->classLevel->name ?? null;
+    
         unset($course->classLevel);
         unset($course->category);
-
+    
         return $course;
     }
+    
 
     /**
      * Find a course by ID.
@@ -65,7 +94,7 @@ class CourseService
     /**
      * Get paginated courses with limited fields.
      */
-    public function getPaginatedCourses(?int $categoryId = null, int $perPage = 9)
+    public function getPaginatedCourses(?String $categoryId = null, int $perPage = 9)
     {
         $paginatedCourses = $this->courseRepository->getPaginatedCourses($categoryId, $perPage);
 
@@ -109,12 +138,12 @@ class CourseService
         return $paginatedCourses;
     }
 
-    public function getCoursesByCategory($categoryId, int $limit = 5)
+    public function getCoursesByCategory($categorySlug, int $limit = 5)
     {
-       $paginatedCourses = $this->courseRepository->getCoursesByCategory($categoryId, $limit);
+       $paginatedCourses = $this->courseRepository->getCoursesByCategorySlug($categorySlug, $limit);
 
     // Fetch the category details
-        $category = Category::findOrFail($categoryId);
+    $category = Category::where('slug', $categorySlug)->firstOrFail();
 
     // Transform the courses
     $transformedCourses = $paginatedCourses->map(function ($course) {
@@ -126,6 +155,7 @@ class CourseService
         'category' => [
             'id' => $category->id,
             'name' => $category->name,
+            'slug' => $category->slug,
             'short_description' => $category->short_description,
             'long_description' => $category->long_description,
             'image_url' => $category->image_url
@@ -137,7 +167,7 @@ class CourseService
     /**
      * Transform a course to include only the required fields.
      */
-    protected function transformCourse($course)
+    protected function transformCourse($course, ?int $studentId = null)
     {
         return [
             'id' => $course->id,
@@ -152,6 +182,9 @@ class CourseService
             'enrolment_count' => $course->enrolment_count,
             'created_at' => $course->created_at->toIso8601String(),
             'updated_at'=> $course->updated_at->toIso8601String(),
+            'user_registered' => $course->user_registered ?? false,
+            'quiz_score' => $course->quiz_score ?? null,
         ];
     }
+    
 }

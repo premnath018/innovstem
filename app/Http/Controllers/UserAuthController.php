@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Services\UserService;
 use App\Helpers\ApiResponse;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -22,31 +24,79 @@ class UserAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
+            'mobile' => 'required|string|unique:students,mobile',
+            'standard' => 'required|string',
+            'ambition' => 'nullable|string',
+            'parent_no' => 'nullable|string',
+            'age' => 'required|integer',
+            'gender' => 'required|in:male,female,other',
+            'district' => 'required|string',
+            'address' => 'required|string',
+            'state' => 'required|string',
+        ], [
+            'email.required' => 'The email field is required.',
+            'email.email' => 'Please provide a valid email address.',
+            'email.unique' => 'This email is already registered. Please use a different one.',
+            'password.required' => 'The password field is required.',
+            'password.min' => 'The password must be at least 6 characters long.',
+            'password.confirmed' => 'Passwords do not match.',
+            'mobile.required' => 'The mobile number is required.',
+            'mobile.unique' => 'This mobile number is already registered.',
+            'standard.required' => 'Please provide the standard/class level.',
+            'age.required' => 'Please provide the age.',
+            'age.integer' => 'Age must be a valid integer.',
+            'gender.required' => 'Please select a gender.',
+            'gender.in' => 'Invalid gender selection.',
+            'district.required' => 'District is required.',
+            'address.required' => 'Address is required.',
+            'state.required' => 'State is required.',
         ]);
-
+    
         if ($validator->fails()) {
-            return ApiResponse::error($validator->errors()->toJson(), 400);
+            return ApiResponse::error($validator->errors()->first(), 400); // Return only the first error message
         }
-
-        $user = $this->userService->register($request->all());
-        $token = JWTAuth::fromUser($user);
-
-        return ApiResponse::success(compact('user', 'token'), 'User created successfully', 201);
+    
+        try {
+            // Create User
+            $user = $this->userService->register([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password,
+            ]);
+    
+            // Store Student Details
+            $this->userService->createStudentDetails($user->id, $request->all());
+    
+            $token = JWTAuth::fromUser($user);
+    
+            return ApiResponse::success(compact('user', 'token'), 'User created successfully', 201);
+        } catch (\Exception $e) {
+            return ApiResponse::error('An error occurred while registering the user. Please try again.', 500);
+        }
     }
-
+    
+    
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-
+    
+        // ✅ Check if the email exists
+        $user = User::where('email', $credentials['email'])->first();
+        if (!$user) {
+            return ApiResponse::error('Email not found', 404);
+        }
+    
+    
+        // ✅ Attempt login with JWT
         if (!$token = JWTAuth::attempt($credentials)) {
             return ApiResponse::error('Invalid credentials', 401);
         }
-
+    
         return ApiResponse::success(compact('token'), 'Login successful');
     }
-
+    
     public function forgotPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [

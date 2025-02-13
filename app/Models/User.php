@@ -70,4 +70,10 @@ class User extends Authenticatable implements FilamentUser , JWTSubject
         return [];
     }
 
+
+    public function student()
+{
+    return $this->hasOne(Student::class, 'user_id');
+}
+
 }

@@ -20,6 +20,9 @@ class ResourceService
     {
         $resource = $this->resourceRepository->findBySlug($slug);
 
+        $resource->category_name = $resource->category->name ?? null;
+        unset($resource->category);
+
         if (!$resource) {
             throw new \Exception('Resource not found');
         }

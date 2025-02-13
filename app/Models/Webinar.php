@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Webinar extends Model
@@ -32,5 +33,10 @@ class Webinar extends Model
     public function quizzes(): MorphMany
     {
         return $this->morphMany(Quiz::class, 'quizable');
+    }
+
+    public function attendedStudents(): HasMany
+    {
+        return $this->hasMany(WebinarAttendance::class, 'webinar_id');
     }
 }

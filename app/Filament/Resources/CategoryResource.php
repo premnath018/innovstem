@@ -6,12 +6,17 @@ use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
+
 
 class CategoryResource extends Resource
 {
@@ -29,7 +34,17 @@ class CategoryResource extends Resource
                 ->schema([
                     Forms\Components\TextInput::make('name')
                         ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
+                                    $set('slug', Str::slug($state));
+                            })
                         ->maxLength(255),
+                    TextInput::make('slug')
+                    ->label('Slug')
+                    ->required()
+                    ->disabled()
+                    ->maxLength(255)
+                    ->dehydrated(),
                     Forms\Components\Textarea::make('short_description')
                         ->columnSpanFull(),
                 ]),

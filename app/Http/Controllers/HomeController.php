@@ -30,7 +30,7 @@ class HomeController extends Controller
     {
         try {
             $blogs = $this->blogService->getRecentBlogs(5);
-            $courses = $this->courseService->getRecentCourses(5);
+            $courses = $this->courseService->allCategroies();
             $webinars = $this->webinarService->getRecentWebinars(5);
 
             return ApiResponse::success([
@@ -49,7 +49,7 @@ class HomeController extends Controller
         try {
             $recommendationService = app(RecommendationService::class); // Resolve service manually
     
-            $categoryId = $request->input('category_id');
+            $categoryId = $request->input('category');
             $limit =  $request->input('limit', 5);
     
             $recommendations = $recommendationService->getRecommendations($categoryId, $limit);

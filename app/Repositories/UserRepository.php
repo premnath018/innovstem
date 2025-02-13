@@ -6,6 +6,8 @@ use App\Models\User;
 
 class UserRepository
 {
+
+
     public function findByEmail(string $email): ?User
     {
         return User::where('email', $email)->first();
@@ -29,4 +31,6 @@ class UserRepository
         $user->reset_token_expiry = null;
         $user->save();
     }
+
+
 }
