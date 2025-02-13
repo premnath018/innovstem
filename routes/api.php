@@ -33,9 +33,6 @@ Route::post('forgot-password', [UserAuthController::class, 'forgotPassword']);
 // Reset password
 Route::post('reset-password', [UserAuthController::class, 'resetPassword'])->name('password.reset');
 
-// Get authenticated user details
-Route::get('user', [UserAuthController::class, 'getUser']);
-
 /*
 |--------------------------------------------------------------------------
 | Protected Routes (Requires Authentication)
@@ -52,6 +49,13 @@ Route::middleware([JwtMiddleware::class])->group(function () {
 
     // Refresh authentication token
     Route::get('refresh', [UserAuthController::class, 'refresh']);
+
+    // Get authenticated user details
+    Route::get('user', [UserAuthController::class, 'getUser']);
+
+    // Get authenticated user details
+    Route::post('user', [UserAuthController::class, 'updateUser']);
+
 
     /*
     |--------------------------------------------------------------------------
