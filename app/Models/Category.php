@@ -11,8 +11,14 @@ class Category extends Model
         'short_description',
         'long_description',
         'image_url',
+        'active',
     ];
 
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+    
     // Relationships
     public function blogs()
     {

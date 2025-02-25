@@ -31,6 +31,9 @@ class WebinarResource extends Resource
 
     protected static ?string $navigationGroup = 'Content Management System';
 
+    protected static ?int $navigationSort = 6;
+
+
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form
@@ -134,6 +137,11 @@ class WebinarResource extends Resource
                             ->required()
                             ->numeric()
                             ->default(0),
+                            Select::make('active')
+                            ->label('Active')
+                            ->options([ 0 => 'Inactive', 1 => 'Active'])
+                            ->required()
+                            ->native(false),
                     ]),
             ]);
     }
@@ -162,6 +170,10 @@ class WebinarResource extends Resource
                     ->label('Views')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('attendance_count')
+                ->label('Views')
+                ->numeric()
+                ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()
@@ -248,6 +260,11 @@ class WebinarResource extends Resource
         return [
             // Define any relations here if needed
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 
     public static function getPages(): array

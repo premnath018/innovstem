@@ -89,6 +89,13 @@ class UserAuthController extends Controller
             return ApiResponse::error('Email not found', 404);
         }
     
+        // ✅ Check if the user has a student profile
+        if ($user->student) {
+            if (!$user->student->active) {
+                return ApiResponse::error('Student profile is inactive', 403);
+            }
+        }
+    
         // ✅ Attempt login with JWT
         if (!$token = JWTAuth::attempt($credentials)) {
             return ApiResponse::error('Invalid credentials', 401);

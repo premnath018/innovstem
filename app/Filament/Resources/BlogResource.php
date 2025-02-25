@@ -20,6 +20,7 @@ use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
+use Filament\Forms\Components\Select;
 
 
 class BlogResource extends Resource
@@ -27,6 +28,8 @@ class BlogResource extends Resource
     protected static ?string $model = Blog::class;
 
     protected static ?string $navigationGroup = 'Content Management System';
+
+    protected static ?int $navigationSort = 5;
 
     protected static ?string $navigationIcon = 'heroicon-o-pencil';
 
@@ -143,6 +146,11 @@ class BlogResource extends Resource
                             ->columnSpanFull(),
                         TextInput::make('created_by')
                             ->label('Author'),
+                        Select::make('active')
+                        ->label('Active')
+                        ->options([ 0 => 'Inactive', 1 => 'Active'])
+                        ->required()
+                        ->native(false),
 
                 ]),
             ]);
@@ -257,6 +265,11 @@ class BlogResource extends Resource
         return [
             // Define relations here if needed
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 
     public static function getPages(): array

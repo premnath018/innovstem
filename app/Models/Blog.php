@@ -20,8 +20,14 @@ class Blog extends Model
         'blog_meta_keyword',
         'blog_meta_description',
         'view_count',
+        'active',
     ];
 
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+    
+    
     // Relationships
     public function category()
     {

@@ -18,6 +18,9 @@ class ClassLevelResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
 
+    protected static ?int $navigationSort = 2;
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -64,6 +67,11 @@ class ClassLevelResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 
     public static function getRelations(): array

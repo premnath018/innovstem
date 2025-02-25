@@ -28,6 +28,8 @@ class ResourceResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
+    protected static ?int $navigationSort = 7;
+
     protected static ?string $navigationGroup = 'Content Management System';
 
     public static function form(Forms\Form $form): Forms\Form
@@ -128,6 +130,11 @@ class ResourceResource extends Resource
                         TextInput::make('created_by')
                             ->label('Author')
                             ->required(),
+                            Select::make('active')
+                            ->label('Active')
+                            ->options([ 0 => 'Inactive', 1 => 'Active'])
+                            ->required()
+                            ->native(false),
                     ]),
             ]);
     }
@@ -231,6 +238,11 @@ class ResourceResource extends Resource
     public static function getRelations(): array
     {
         return [];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 
     public static function getPages(): array

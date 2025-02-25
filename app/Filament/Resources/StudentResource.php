@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
@@ -25,6 +26,8 @@ class StudentResource extends Resource
     protected static ?string $model = Student::class;
 
     protected static ?string $navigationGroup = 'User Management';
+
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
@@ -57,6 +60,11 @@ class StudentResource extends Resource
                                 'other' => 'Other',
                             ])
                             ->required(),
+                            Select::make('active')
+                            ->label('Active')
+                            ->options([ 0 => 'Inactive', 1 => 'Active'])
+                            ->required()
+                            ->native(false),
                     ])->columns(2),
 
                 Section::make('Address Details')
@@ -78,23 +86,16 @@ class StudentResource extends Resource
                 TextColumn::make('standard')
                     ->sortable()
                     ->badge()
-                    ->color(fn ($state) => match ($state) {
-                        'Class 6' => 'blue',
-                        'Class 7' => 'green',
-                        'Class 8' => 'yellow',
-                        'Class 9' => 'purple',
-                        'Class 10' => 'orange',
-                        'Class 11' => 'red',
-                        'Class 12' => 'pink',
-                        default => 'gray',
-                    }),
+                    ->color(fn (string $state): string => [
+                        'primary', 'secondary', 'success', 'danger', 'warning', 'info',
+                    ][crc32($state) % 6] ?? 'primary'),
                 TextColumn::make('gender')
                     ->sortable()
                     ->badge()
                     ->color(fn ($state) => match ($state) {
-                        'male' => 'blue',
-                        'female' => 'pink',
-                        'other' => 'gray',
+                        'male' => 'primary',
+                        'female' => 'secondary',
+                        'other' => 'warning',
                     }),
                 TextColumn::make('district')->sortable()->searchable(),
                 TextColumn::make('state')->sortable(),
@@ -146,6 +147,12 @@ class StudentResource extends Resource
                         TextEntry::make('created_at')->label('Registered At')->dateTime(),
                     ]),
             ]);
+    }
+
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 
     public static function getRelations(): array

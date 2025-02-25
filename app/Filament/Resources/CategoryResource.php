@@ -6,6 +6,7 @@ use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -26,6 +27,9 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationGroup = 'Content Management System';
 
+    protected static ?int $navigationSort = 1;
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -39,6 +43,11 @@ class CategoryResource extends Resource
                                     $set('slug', Str::slug($state));
                             })
                         ->maxLength(255),
+                        Select::make('active')
+                        ->label('Active')
+                        ->options([ 0 => 'Inactive', 1 => 'Active'])
+                        ->required()
+                        ->native(false),
                     TextInput::make('slug')
                     ->label('Slug')
                     ->required()
@@ -98,6 +107,11 @@ class CategoryResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 
     public static function getPages(): array

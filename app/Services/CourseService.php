@@ -143,8 +143,13 @@ class CourseService
        $paginatedCourses = $this->courseRepository->getCoursesByCategorySlug($categorySlug, $limit);
 
     // Fetch the category details
-    $category = Category::where('slug', $categorySlug)->firstOrFail();
+    $category = Category::where('slug', $categorySlug)
+        ->where('active', true)
+        ->firstOrFail();
 
+        if (!$category) {
+            throw new \Exception('Category not found');
+        }
     // Transform the courses
     $transformedCourses = $paginatedCourses->map(function ($course) {
         return $this->transformCourse($course);

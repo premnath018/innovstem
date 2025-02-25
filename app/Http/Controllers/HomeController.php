@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
 use App\Services\BlogService;
 use App\Services\CourseService;
+use App\Services\NewsService;
 use App\Services\RecommendationService;
 use App\Services\WebinarService;
 
@@ -15,12 +16,15 @@ class HomeController extends Controller
     protected $courseService;
     protected $webinarService;
     protected $recommendationService;
+    protected $newsService;
 
-    public function __construct(BlogService $blogService, CourseService $courseService, WebinarService $webinarService, )
+
+    public function __construct(BlogService $blogService, CourseService $courseService, WebinarService $webinarService,NewsService $newsService )
     {
         $this->blogService = $blogService;
         $this->courseService = $courseService;
         $this->webinarService = $webinarService;
+        $this->newsService = $newsService;
     }
 
     /**
@@ -32,11 +36,13 @@ class HomeController extends Controller
             $blogs = $this->blogService->getRecentBlogs(5);
             $courses = $this->courseService->allCategroies();
             $webinars = $this->webinarService->getRecentWebinars(5);
+            $news = $this->newsService->getNews(5);
 
             return ApiResponse::success([
                 'blogs' => $blogs,
                 'courses' => $courses,
                 'webinars' => $webinars,
+                'news' => $news
             ], 'Recent content retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);

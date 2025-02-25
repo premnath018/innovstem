@@ -19,6 +19,8 @@ class QuizResource extends Resource
 {
     protected static ?string $model = Quiz::class;
 
+    protected static ?int $navigationSort = 8;
+
     protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
 
     protected static ?string $navigationGroup = 'Content Management System';
@@ -118,6 +120,11 @@ class QuizResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 
     public static function getPages(): array

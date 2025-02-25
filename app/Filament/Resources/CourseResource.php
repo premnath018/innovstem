@@ -30,6 +30,9 @@ class CourseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
+    protected static ?int $navigationSort = 4;
+
+
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form
@@ -281,6 +284,11 @@ class CourseResource extends Resource
                     ])
                     ->columns(2),
             ]);
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 
     public static function getRelations(): array

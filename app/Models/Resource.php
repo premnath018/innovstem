@@ -21,7 +21,13 @@ class Resource extends Model
         'resource_meta_keyword',
         'resource_meta_description',
         'view_count',
+        'active',
     ];
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+    
 
     // Relationships
     public function category()

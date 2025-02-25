@@ -22,8 +22,16 @@ class Webinar extends Model
         'webinar_meta_description',
         'webinar_date_time',
         'view_count',
+        'active',
+        'attendance_count'
     ];
 
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+    
+    
     // Relationships
     public function category()
     {
