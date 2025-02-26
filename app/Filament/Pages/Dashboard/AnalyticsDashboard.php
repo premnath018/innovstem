@@ -11,12 +11,9 @@ use App\Filament\Widgets\TopCoursesWidget;
 use App\Filament\Widgets\TopBlogsWidget;
 use App\Filament\Widgets\TopWebinarsWidget;
 use App\Filament\Widgets\UserGrowthChartWidget;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-use Illuminate\Testing\Fluent\Concerns\Has;
 
 class AnalyticsDashboard extends Dashboard
 {
-    use HasPageShield;
     
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
     protected static ?string $title = 'Analytics Dashboard';

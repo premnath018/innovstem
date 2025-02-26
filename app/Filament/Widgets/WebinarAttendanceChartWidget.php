@@ -4,12 +4,10 @@ namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use App\Models\WebinarAttendance;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Carbon\Carbon;
 
 class WebinarAttendanceChartWidget extends ChartWidget
 {
-    use HasWidgetShield;
 
     protected static ?string $heading = 'Monthly Webinar Attendance';
     protected static ?string $description = 'Attendance over the last 12 months';

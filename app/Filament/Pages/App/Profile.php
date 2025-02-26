@@ -3,7 +3,6 @@
 namespace App\Filament\Pages\App;
 
 use App\Filament\Actions\GeneratePasswordAction;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -11,7 +10,6 @@ use Filament\Pages\Auth\EditProfile;
 
 class Profile extends EditProfile
 {
-    use HasPageShield;
     
     public function getBreadcrumbs(): array
     {

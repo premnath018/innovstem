@@ -4,7 +4,6 @@ namespace App\Filament\Widgets;
 
 use App\Filament\Resources\CourseResource; // Adjust this namespace based on your CourseResource location
 use App\Models\Course;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -12,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class TopCoursesWidget extends BaseWidget
 {
-    use HasWidgetShield;
 
     protected int | string | array $columnSpan = 'full';
 

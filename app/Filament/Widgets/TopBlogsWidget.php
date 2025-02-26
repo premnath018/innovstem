@@ -4,14 +4,12 @@ namespace App\Filament\Widgets;
 
 use App\Filament\Resources\BlogResource; // Adjust this namespace based on your BlogResource location
 use App\Models\Blog;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
 class TopBlogsWidget extends BaseWidget
 {
-    use HasWidgetShield;
 
     protected int | string | array $columnSpan = 'full';
 

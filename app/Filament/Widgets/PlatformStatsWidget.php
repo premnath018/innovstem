@@ -9,12 +9,10 @@ use App\Models\Course;
 use App\Models\Webinar;
 use App\Models\Blog;
 use App\Models\Quiz;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class PlatformStatsWidget extends StatsOverviewWidget
 {
 
-    use HasWidgetShield;
 
     protected  ?string $heading = 'Platform Statistics';
     protected  ?string $description = 'Key metrics overview';

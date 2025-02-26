@@ -4,12 +4,10 @@ namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use App\Models\QuizAttempt;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Carbon\Carbon;
 
 class QuizAttemptsChartWidget extends ChartWidget
 {
-    use HasWidgetShield;
 
     protected static ?string $heading = 'Monthly Quiz Attempts';
     protected static ?string $description = 'Number of quiz attempts over the last 12 months';

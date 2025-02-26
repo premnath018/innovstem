@@ -4,12 +4,10 @@ namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use App\Models\User;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Carbon\Carbon;
 
 class UserGrowthChartWidget extends ChartWidget
 {
-    use HasWidgetShield;
 
     protected static ?string $heading = 'User Growth Over Time';
 

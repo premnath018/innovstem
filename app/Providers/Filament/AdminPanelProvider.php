@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\App\Profile;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Filament\Pages\Auth\Login;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -66,7 +65,7 @@ class AdminPanelProvider extends PanelProvider
                 ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+        //        Widgets\AccountWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -81,7 +80,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 EasyFooterPlugin::make(),
-                FilamentShieldPlugin::make(),
                 FilamentEditProfilePlugin::make()->shouldRegisterNavigation(false)
                 ->slug('my-profile')
                 ->setTitle('My Profile')

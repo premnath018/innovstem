@@ -3,14 +3,12 @@
 namespace App\Filament\Widgets;
 
 use App\Filament\Resources\WebinarResource; // Adjust if needed
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
 class TopWebinarsWidget extends BaseWidget
 {
-    use HasWidgetShield;
 
     protected int | string | array $columnSpan = 'full';
 
