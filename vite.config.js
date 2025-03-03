@@ -8,6 +8,7 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/js/app.js",
                 "resources/css/filament/admin/theme.css",
+                "vendor/nuxtifyts/dash-stack-theme/resources/css/theme.css",
             ],
             refresh: true,
         }),

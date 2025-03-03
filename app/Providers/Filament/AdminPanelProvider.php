@@ -25,6 +25,9 @@ use Filament\Navigation\MenuItem;
 use Filament\Support\Enums\Platform;
 use Filament\Enums\ThemeMode;
 use Devonab\FilamentEasyFooter\EasyFooterPlugin;
+use Nuxtifyts\DashStackTheme\DashStackThemePlugin;
+use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -79,6 +82,8 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
+                FilamentSpatieRolesPermissionsPlugin::make(),
+                DashStackThemePlugin::make(),
                 EasyFooterPlugin::make(),
                 FilamentEditProfilePlugin::make()->shouldRegisterNavigation(false)
                 ->slug('my-profile')
