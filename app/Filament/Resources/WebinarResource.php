@@ -57,6 +57,9 @@ class WebinarResource extends Resource
                             ->relationship('category', 'name')
                             ->native(false)
                             ->required(),
+                        TextInput::make('webinar_link')
+                        ->label('Webinar URL')
+                        ->required(),
                         Textarea::make('webinar_description')
                             ->label('Description')
                             ->required()
@@ -171,7 +174,7 @@ class WebinarResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('attendance_count')
-                ->label('Views')
+                ->label('Enrollment')
                 ->numeric()
                 ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -190,7 +193,9 @@ class WebinarResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),   
             ]);
     }
 

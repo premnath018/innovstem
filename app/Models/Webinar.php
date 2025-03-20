@@ -11,6 +11,7 @@ class Webinar extends Model
     protected $fillable = [
         'webinar_slug',
         'title',
+        'webinar_link',
         'webinar_description',
         'webinar_content',
         'webinar_banner',
@@ -29,6 +30,7 @@ class Webinar extends Model
 
     protected $casts = [
         'active' => 'boolean',
+        'webinar_date_time' => 'datetime'
     ];
     
     

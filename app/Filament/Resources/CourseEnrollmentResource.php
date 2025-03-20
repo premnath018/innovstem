@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\CourseEnrollmentExporter;
 use App\Filament\Resources\CourseEnrollmentResource\Pages;
 use App\Models\CourseEnrollment;
 use Filament\Forms;
@@ -10,7 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\Filter;
-use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ExportBulkAction;
 
 class CourseEnrollmentResource extends Resource
 {
@@ -88,6 +89,14 @@ class CourseEnrollmentResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make()->modal(),
                 Tables\Actions\EditAction::make()->modal(),
+                Tables\Actions\DeleteAction::make(),
+
+            ])->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                    ->exporter(CourseEnrollmentExporter::class),
+                ]),
             ]);
     }
 

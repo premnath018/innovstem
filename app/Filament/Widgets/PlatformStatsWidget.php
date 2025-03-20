@@ -14,6 +14,7 @@ class PlatformStatsWidget extends StatsOverviewWidget
 {
 
 
+    protected static ?string $pollingInterval = null;
     protected  ?string $heading = 'Platform Statistics';
     protected  ?string $description = 'Key metrics overview';
 

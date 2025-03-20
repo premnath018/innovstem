@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
+use App\Mail\CourseRegistrationMail;
+use App\Mail\WebinarRegistrationMail;
+use App\Models\Course;
+use App\Models\Webinar;
 use App\Services\StudentService;
+use Illuminate\Support\Facades\Mail;
 
 class StudentController extends Controller
 {
@@ -51,9 +56,11 @@ class StudentController extends Controller
     public function enrollCourse(Request $request)
     {
         try {
-            $userId = $request->user()->id;
+            $user = $request->user();
             $courseId = $request->input('course_id');
-            $this->studentService->enrollInCourse($userId, $courseId);
+            $this->studentService->enrollInCourse($user->id, $courseId);
+            $course_name = Course::where('id', $courseId)->pluck('title')->first();
+            Mail::to($user->email)->queue(new CourseRegistrationMail($user,$course_name));
             return ApiResponse::success([], 'Enrolled in course successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);
@@ -63,9 +70,11 @@ class StudentController extends Controller
     public function attendWebinar(Request $request)
     {
         try {
-            $userId = $request->user()->id;
+            $user = $request->user();
             $webinarId = $request->input('webinar_id');
-            $this->studentService->attendWebinar($userId, $webinarId);
+            $this->studentService->attendWebinar($user->id, $webinarId);
+            $webinar = Webinar::where('id', $webinarId)->first();
+            Mail::to($user->email)->queue(new WebinarRegistrationMail($user,$webinar));
             return ApiResponse::success([], 'Webinar attended successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);

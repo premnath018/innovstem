@@ -9,6 +9,9 @@ use Carbon\Carbon;
 class UserGrowthChartWidget extends ChartWidget
 {
 
+    protected static ?string $pollingInterval = null;
+
+
     protected static ?string $heading = 'User Growth Over Time';
 
     protected static ?string $description = 'Number of users registered over the last 6 months';

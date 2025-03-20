@@ -9,17 +9,16 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ResetPasswordMail extends Mailable
+class EmailVerificationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $token;
-    protected $user;
-
-    public function __construct($data)
+    /**
+     * Create a new message instance.
+     */
+    public function __construct()
     {
-        $this->token = $data['token'];
-        $this->user = $data['user'];
+        //
     }
 
     /**
@@ -28,7 +27,7 @@ class ResetPasswordMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Reset Your Password | Innovstem',
+            subject: 'Email Verification Mail',
         );
     }
 
@@ -38,12 +37,7 @@ class ResetPasswordMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.forgot-password',
-            with : [
-                'token' => $this->token,
-                'user' => $this->user,
-                'resetUrl' => url(route('password.reset', ['token' => $this->token], false))
-            ],
+            view: 'view.name',
         );
     }
 

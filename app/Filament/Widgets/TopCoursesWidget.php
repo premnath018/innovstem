@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 class TopCoursesWidget extends BaseWidget
 {
 
+    protected static ?string $pollingInterval = null;
+
+
     protected int | string | array $columnSpan = 'full';
 
     protected static ?int $sort = 3; // Controls widget order on the dashboard

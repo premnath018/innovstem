@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Services\UserService;
 use App\Helpers\ApiResponse;
+use App\Mail\PasswordResetSuccessMail;
+use App\Mail\ResetPasswordMail;
+use App\Mail\WelcomeMail;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -72,6 +76,8 @@ class UserAuthController extends Controller
     
             $token = JWTAuth::fromUser($user);
     
+            Mail::to($user->email)->queue(new WelcomeMail($user));
+
             return ApiResponse::success(compact('user', 'token'), 'User created successfully', 201);
         } catch (\Exception $e) {
             return ApiResponse::error('An error occurred while registering the user. Please try again.', 500);
@@ -122,13 +128,19 @@ class UserAuthController extends Controller
             return ApiResponse::error($validator->errors()->toJson(), 400);
         }
 
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return ApiResponse::error('Email not found', 404);
+        }
+
         $result = $this->userService->generateResetToken($request->email);
 
         if (!$result) {
             return ApiResponse::error('Email not found', 404);
         }
-
-        // Send email logic here...
+     
+        Mail::to($user->email)->queue(new ResetPasswordMail($result));
 
         return ApiResponse::success($result, 'Password reset link sent successfully');
     }
@@ -154,6 +166,8 @@ class UserAuthController extends Controller
         if (!$success) {
             return ApiResponse::error('Invalid or expired token', 400);
         }
+
+        Mail::to($request->email)->queue(new PasswordResetSuccessMail());
 
         return ApiResponse::success([], 'Password successfully updated');
     }

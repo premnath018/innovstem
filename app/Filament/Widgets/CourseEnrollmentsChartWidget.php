@@ -11,6 +11,7 @@ class CourseEnrollmentsChartWidget extends ChartWidget
 
 
 
+    protected static ?string $pollingInterval = null;
     protected static ?string $heading = 'Monthly Course Enrollments';
     protected static ?string $description = 'Enrollments over the last 12 months';
 

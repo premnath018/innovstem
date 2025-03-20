@@ -39,6 +39,9 @@ class StudentResource extends Resource
                     ->schema([
                         TextInput::make('name')->required(),
                         TextInput::make('mobile')->required()->unique(),
+                        Select::make('user_id')
+                        ->relationship('user','name')
+                        ->required(),
                         Select::make('standard')
                             ->options([
                                 'Class 6' => 'Class 6',
@@ -124,7 +127,9 @@ class StudentResource extends Resource
                 Tables\Actions\EditAction::make()->modal(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),   
             ]);
     }
 

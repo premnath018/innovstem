@@ -50,12 +50,12 @@ class AdminPanelProvider extends PanelProvider
                 'secondary' => Color::hex('#64E3D0'),
             ])
       //      ->topNavigation(true)
-            ->globalSearchKeyBindings(['command+s', 'ctrl+s'])
-            ->globalSearchFieldSuffix(fn (): ?string => match (Platform::detect()) {
-                Platform::Windows, Platform::Linux => 'CTRL + S',
-                Platform::Mac => '⌘ + S',
-                default => null,
-            })
+            // ->globalSearchKeyBindings(['command+s', 'ctrl+s'])
+            // ->globalSearchFieldSuffix(fn (): ?string => match (Platform::detect()) {
+            //     Platform::Windows, Platform::Linux => 'CTRL + S',
+            //     Platform::Mac => '⌘ + S',
+            //     default => null,
+            // })
             ->brandLogo(asset('images/logo.png'))
             ->brandLogoHeight('2.5rem')
             ->defaultThemeMode(ThemeMode::Dark)
@@ -83,7 +83,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentSpatieRolesPermissionsPlugin::make(),
-                DashStackThemePlugin::make(),
+             //   DashStackThemePlugin::make(),
                 EasyFooterPlugin::make(),
                 FilamentEditProfilePlugin::make()->shouldRegisterNavigation(false)
                 ->slug('my-profile')

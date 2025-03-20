@@ -79,6 +79,11 @@ class WebinarAttendanceResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make()->modal(),
                 Tables\Actions\EditAction::make()->modal(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),   
             ]);
     }
 

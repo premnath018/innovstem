@@ -10,6 +10,9 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class TopWebinarsWidget extends BaseWidget
 {
 
+    protected static ?string $pollingInterval = null;
+
+
     protected int | string | array $columnSpan = 'full';
 
     protected static ?int $sort = 4; // Controls widget order on the dashboard

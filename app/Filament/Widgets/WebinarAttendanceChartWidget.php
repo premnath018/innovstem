@@ -9,6 +9,9 @@ use Carbon\Carbon;
 class WebinarAttendanceChartWidget extends ChartWidget
 {
 
+    protected static ?string $pollingInterval = null;
+
+
     protected static ?string $heading = 'Monthly Webinar Attendance';
     protected static ?string $description = 'Attendance over the last 12 months';
 

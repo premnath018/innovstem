@@ -8,7 +8,7 @@ use Carbon\Carbon;
 
 class QuizAttemptsChartWidget extends ChartWidget
 {
-
+    protected static ?string $pollingInterval = null;
     protected static ?string $heading = 'Monthly Quiz Attempts';
     protected static ?string $description = 'Number of quiz attempts over the last 12 months';
 

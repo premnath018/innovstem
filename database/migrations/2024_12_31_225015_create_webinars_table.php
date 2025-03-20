@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('webinar_slug');
             $table->text('webinar_title');
+            $table->text('webinar_link');
             $table->text('webinar_description');
             $table->text('webinar_content');
             $table->text('webinar_banner')->nullable();

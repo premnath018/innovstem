@@ -24,21 +24,6 @@ class UserResource extends Resource
 
     protected static ?string $navigationGroup = 'Settings';
 
-    protected static ?string $recordTitleAttribute = 'name';
-
-    public static function getGloballySearchableAttributes(): array
-    {
-        return [
-            'name',
-            'email',
-        ];
-    }
-
-    public static function getGlobalSearchResultDetails(Model $record): array
-    {
-        /** @var User $record */
-        return ['email' => $record->email];
-    }
 
     public static function form(Form $form): Form
     {
