@@ -27,6 +27,7 @@ class User extends Authenticatable implements FilamentUser , JWTSubject
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
         'avatar_url', // or column name according to config('filament-edit-profile.avatar_column', 'avatar_url')
 

@@ -8,6 +8,7 @@ use App\Models\Task;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ListRecords\Tab;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ListTasks extends ListRecords
 {
@@ -22,7 +23,7 @@ class ListTasks extends ListRecords
 
     public function getTabs(): array
     {
-        $isAdmin = auth()->user()->hasRole('admin');
+        $isAdmin = Auth::user()->hasRole('admin') || Auth::user()->hasRole('Super Admin');
 
         $tabs = [
             'all' => Tab::make('All Tasks')

@@ -39,6 +39,21 @@ class UserResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->required()
                             ->maxLength(255),
+                        Forms\Components\TextInput::make('phone')
+                        ->label('Phone Number')
+                        ->required()
+                        ->prefix('+91')
+                        ->numeric()
+                        ->minLength(10)
+                        ->maxLength(10)
+                        ->rules(['digits:10']) // Ensures exactly 10 digits
+                        ->inputMode('tel') // Sets keyboard to phone pad on mobile devices
+                        ->placeholder('Enter 10-digit phone number')
+                        ->helperText('Enter a 10-digit Indian phone number (without country code)')
+                        ->validationMessages([
+                            'digits' => 'Phone number must be exactly 10 digits.',
+                            'numeric' => 'Phone number must contain only numbers.',
+                        ]),
                         Forms\Components\Select::make('roles')
                             ->relationship('roles', 'name')
                             ->multiple()
@@ -79,10 +94,20 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('Phone Number')
+                    ->searchable()
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => $state ? '+91 ' . chunk_split($state, 5, ' ') : '-')
+                    ->icon('heroicon-o-phone')
+                    ->copyable()
+                    ->copyMessage('Phone number copied!')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
