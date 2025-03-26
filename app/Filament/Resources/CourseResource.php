@@ -244,18 +244,24 @@ class CourseResource extends Resource
                     ->schema([
                         ImageEntry::make('course_banner')
                             ->label('Banner Image')
-                            ->size(400),
+                            ->columnSpanFull()
+                            ->extraAttributes(['class' => 'w-full h-auto']), // Makes it responsive
+
                         ImageEntry::make('course_thumbnail')
                             ->label('Thumbnail Image')
-                            ->size(200),
+                            ->columnSpanFull()
+                            ->extraAttributes(['class' => 'w-full h-auto']), // Ensures no cropping
+
                         TextEntry::make('course_content')
                             ->label('Content')
                             ->html()
                             ->columnSpanFull(),
-                        TextEntry::make('learing_materials')
+                        TextEntry::make('learning_materials')
                             ->label('Learing Materials')
                             ->html()
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->separator('@$')
+                            ->bulleted(),
                     ])
                     ->columns(2),
 

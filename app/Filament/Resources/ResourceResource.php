@@ -197,10 +197,12 @@ class ResourceResource extends Resource
                     ->schema([
                         ImageEntry::make('resource_banner')
                             ->label('Banner Image')
-                            ->size(400),
+                            ->columnSpanFull()
+                            ->extraAttributes(['class' => 'w-full h-auto']), 
                         ImageEntry::make('resource_thumbnail')
                             ->label('Thumbnail Image')
-                            ->size(200),
+                            ->columnSpanFull()
+                            ->extraAttributes(['class' => 'w-full h-auto']),
                         TextEntry::make('resource_content')
                             ->label('Content')
                             ->html()

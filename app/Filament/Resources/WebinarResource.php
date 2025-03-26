@@ -220,10 +220,12 @@ class WebinarResource extends Resource
                     ->schema([
                         ImageEntry::make('webinar_banner')
                             ->label('Banner Image')
-                            ->size(400),
+                            ->columnSpanFull()
+                            ->extraAttributes(['class' => 'w-full h-auto']), 
                         ImageEntry::make('webinar_thumbnail')
                             ->label('Thumbnail Image')
-                            ->size(200),
+                            ->columnSpanFull()
+                            ->extraAttributes(['class' => 'w-full h-auto']), 
                         TextEntry::make('webinar_content')
                             ->label('Content')
                             ->html()

@@ -224,10 +224,13 @@ class BlogResource extends Resource
                 ->schema([
                     ImageEntry::make('blog_banner')
                         ->label('Banner Image')
-                        ->size(400),
+                        ->columnSpanFull()
+                        ->extraAttributes(['class' => 'w-full h-auto']), // Ensures no cropping
+        
                     ImageEntry::make('blog_thumbnail')
                         ->label('Thumbnail Image')
-                        ->size(200),
+                        ->columnSpanFull()
+                        ->extraAttributes(['class' => 'w-full h-auto']), // Ensures no cropping
                     TextEntry::make('blog_content')
                         ->label('Content')
                         ->html()
