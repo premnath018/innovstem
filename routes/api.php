@@ -10,6 +10,10 @@ use App\Http\Controllers\WebinarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\CareerController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -173,3 +177,17 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
 // Fetch recommended items based on user preferences
 Route::get('/recommend', [HomeController::class, 'recommend'])->name('recommend');
 
+
+/*
+|--------------------------------------------------------------------------
+| Career Routes
+|--------------------------------------------------------------------------
+|
+| Routes for retrieving Career details, application detials and Apply jobs.
+|
+*/
+
+Route::get('/careers', [CareerController::class, 'index']);
+Route::get('/careers/{id}', [CareerController::class, 'show']);
+Route::post('/careers/{id}', [CareerController::class, 'apply']);
+Route::get('/careers/application/{id}', [CareerController::class, 'getApplication']);

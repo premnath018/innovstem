@@ -25,7 +25,7 @@ class StudentResource extends Resource
 {
     protected static ?string $model = Student::class;
 
-    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationGroup = 'Student Management';
 
     protected static ?int $navigationSort = 1;
 

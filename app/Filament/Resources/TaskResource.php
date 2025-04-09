@@ -19,10 +19,6 @@ class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
 
-    protected static ?string $navigationGroup = 'User Management';
-
-    protected static ?int $navigationSort = 5;
-
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
 
     protected static ?string $navigationLabel = 'Tasks';
@@ -33,7 +29,7 @@ class TaskResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $isAdmin = Auth::user()->hasRole('admin') || Auth::user()->hasRole('Super Admin');
+        $isAdmin = Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Super Admin');
         $userId = Auth::id();
         $record = $form->getRecord(); // The task being edited (null on create)
 
@@ -151,7 +147,7 @@ class TaskResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $isAdmin = Auth::user()->hasRole('admin') || Auth::user()->hasRole('Super Admin');
+        $isAdmin = Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Super Admin');
 
         return $table
             ->columns([
@@ -365,6 +361,7 @@ class TaskResource extends Resource
             'index' => Pages\ListTasks::route('/'),
             'create' => Pages\CreateTask::route('/create'),
             'edit' => Pages\EditTask::route('/{record}/edit'),
+            'view' => Pages\ViewTask::route('/{record}'),
         ];
     }
 
@@ -373,7 +370,7 @@ class TaskResource extends Resource
         $query = parent::getEloquentQuery();
         $user = Auth::user();
 
-        if (!($user->hasRole('admin') || $user->hasRole('Super Admin'))) {
+        if (!($user->hasRole('Admin') || $user->hasRole('Super Admin'))) {
             $query->where(function (Builder $q) use ($user) {
                 $q->where('created_by', $user->id)
                   ->orWhere('assigned_to', $user->id);
