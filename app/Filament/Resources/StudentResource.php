@@ -73,6 +73,8 @@ class StudentResource extends Resource
                 Section::make('Address Details')
                     ->schema([
                         TextInput::make('district')->required(),
+                        TextInput::make('city')->required(),
+                        TextInput::make('pincode')->required(),
                         Textarea::make('address')->rows(3)->required(),
                         TextInput::make('state')->required(),
                     ])->columns(2),

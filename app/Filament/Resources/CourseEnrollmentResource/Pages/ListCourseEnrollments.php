@@ -7,6 +7,7 @@ use App\Filament\Imports\CourseEnrollmentImporter;
 use App\Filament\Resources\CourseEnrollmentResource;
 use Filament\Actions;
 use Filament\Actions\ExportAction;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Actions\ImportAction;
 
@@ -18,8 +19,11 @@ class ListCourseEnrollments extends ListRecords
     {
         return [
             ExportAction::make()
-            ->exporter(CourseEnrollmentExporter::class),
-            ImportAction::make()
+            ->exporter(CourseEnrollmentExporter::class)
+            ->formats([
+                ExportFormat::Csv,
+            ]),
+            ImportAction::make(CourseEnrollmentImporter::class)
             ->importer(CourseEnrollmentImporter::class),
             Actions\CreateAction::make(),
         ];

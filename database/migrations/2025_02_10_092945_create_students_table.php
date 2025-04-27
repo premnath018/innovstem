@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('age');
             $table->enum('gender', ['male', 'female', 'other']);
             $table->string('district');
+            $table->string('city');
+            $table->string('pincode');
             $table->text('address');
             $table->string('state');
             $table->timestamps();

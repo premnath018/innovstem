@@ -174,6 +174,9 @@ Route::prefix('webinars')->group(function () {
 // Fetch top 5 recent blogs, courses, and webinars
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
+Route::get('/news', [HomeController::class, 'news'])->name('news');
+
+
 // Fetch recommended items based on user preferences
 Route::get('/recommend', [HomeController::class, 'recommend'])->name('recommend');
 

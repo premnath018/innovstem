@@ -55,12 +55,22 @@ class HomeController extends Controller
         try {
             $recommendationService = app(RecommendationService::class); // Resolve service manually
     
-            $categoryId = $request->input('category');
+            $categoryId = $request->input('category_id') ;
             $limit =  $request->input('limit', 5);
     
             $recommendations = $recommendationService->getRecommendations($categoryId, $limit);
     
             return ApiResponse::success($recommendations, 'Recommendations retrieved successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+    }
+
+    public function news(){
+        try {
+           $news = $this->newsService->getNews(5);
+
+            return ApiResponse::success($news, 'Recent content retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);
         }

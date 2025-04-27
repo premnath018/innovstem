@@ -10,7 +10,7 @@ class Student extends Model
 {
     protected $fillable = [
         'user_id', 'name', 'mobile', 'standard', 'ambition', 'parent_no',
-        'age', 'gender', 'district', 'address', 'state','active'
+        'age', 'gender', 'district', 'address', 'city','pincode','state','active'
     ];
 
     protected $casts = [

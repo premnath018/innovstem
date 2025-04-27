@@ -20,25 +20,25 @@ class CourseService
     public function getCourseBySlug(string $slug, ?int $studentId = null)
     {
         $course = $this->courseRepository->findBySlug($slug);
-       
+    
         if (!$course) {
             throw new \Exception('Course not found');
         }
     
-        // Check if quizzes exist for this course
-        $quizExists = $course->quizzes()->exists();
-    
         // Increment view count
         $course->increment('view_count');
     
-        // Check if the student is enrolled
+        // Initialize variables
         $userRegistered = false;
         $quizScore = null;
+        $quizInfo = null;
     
         if ($studentId) {
-            $userRegistered = $course->enrolledStudents()->where('student_id', $studentId)->exists();
+            $userRegistered = $course->enrolledStudents()
+                ->where('student_id', $studentId)
+                ->exists();
+    
             // Fetch quiz score if attempted
-
             $quizAttempt = $course->quizzes()
                 ->whereHas('quizAttempts', function ($query) use ($studentId) {
                     $query->where('student_id', $studentId);
@@ -47,14 +47,24 @@ class CourseService
                     $query->where('student_id', $studentId);
                 }])
                 ->first();
-            
+    
             if ($quizAttempt && $quizAttempt->quizAttempts->isNotEmpty()) {
                 $quizScore = $quizAttempt->quizAttempts->first()->score ?? null;
             }
         }
     
-        // Add new fields to the response
-        $course->quiz = $quizExists;
+        // Check if course has quizzes
+        if ($course->quizzes()->exists()) {
+            $quizInfo = $course->quizzes->map(function ($quiz) {
+                return [
+                    'quiz_title' => $quiz->title,
+                    'number_of_questions' => $quiz->questions->count(),
+                ];
+            })->toArray();
+        }
+    
+        // Final response structure
+        $course->quiz = $quizInfo;
         $course->user_registered = $userRegistered;
         $course->quiz_score = $quizScore;
         $course->category_name = $course->category->name ?? null;
@@ -62,11 +72,11 @@ class CourseService
     
         unset($course->classLevel);
         unset($course->category);
+        unset($course->quizzes);
     
         return $course;
     }
     
-
     /**
      * Find a course by ID.
      */

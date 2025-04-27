@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Exports\CourseEnrollmentExporter;
 use App\Filament\Resources\CourseEnrollmentResource\Pages;
 use App\Models\CourseEnrollment;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -95,7 +96,10 @@ class CourseEnrollmentResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     ExportBulkAction::make()
-                    ->exporter(CourseEnrollmentExporter::class),
+                    ->exporter(CourseEnrollmentExporter::class)
+                    ->formats([
+                        ExportFormat::Csv,
+                    ]),
                 ]),
             ]);
     }
