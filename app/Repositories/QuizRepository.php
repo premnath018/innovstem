@@ -140,6 +140,7 @@ class QuizRepository
         return [
             'id' => $quiz->id,
             'title' => $quiz->title,
+            'number_of_questions' => $quiz->questions->count(),
             'quizable_id' => $quiz->quizable_id,
             'questions' => $quiz->questions->map(function ($question) {
                 return [

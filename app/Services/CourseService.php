@@ -44,38 +44,31 @@ class CourseService
             }])
             ->get();
     
-        if ($studentId) {
-            $userRegistered = $course->enrolledStudents()
-                ->where('student_id', $studentId)
-                ->exists();
-    
-            // Collect quiz scores
-            foreach ($quizzes as $quiz) {
-                if ($quiz->quizAttempts->isNotEmpty()) {
-                    $score = $quiz->quizAttempts->first()->score ?? null;
-                    $quizScores[] = [
+            $quizData = [];
+
+            if ($quizzes->isNotEmpty()) {
+                foreach ($quizzes as $quiz) {
+                    $score = null;
+            
+                    if ($studentId && $quiz->quizAttempts->isNotEmpty()) {
+                        $attempt = $quiz->quizAttempts->firstWhere('student_id', $studentId);
+                        $score = $attempt?->score;
+                    }
+            
+                    $quizData[] = [
                         'quiz_id' => $quiz->id,
+                        'quiz_title' => $quiz->title,
+                        'number_of_questions' => $quiz->questions->count(),
                         'score' => $score,
                     ];
                 }
             }
-        }
+            
+            $course->quiz = $quizData;
+            
     
-        // Collect quiz metadata
-        if ($quizzes->isNotEmpty()) {
-            $quizInfo = $quizzes->map(function ($quiz) {
-                return [
-                    'quiz_id' => $quiz->id,
-                    'quiz_title' => $quiz->title,
-                    'number_of_questions' => $quiz->questions->count(),
-                ];
-            })->toArray();
-        }
-    
-        // Final response structure
-        $course->quiz = $quizInfo;
+        $course->quiz = $quizData;
         $course->user_registered = $userRegistered;
-        $course->quiz_scores = $quizScores;
         $course->category_name = $course->category->name ?? null;
         $course->class_level_name = $course->classLevel->name ?? null;
     

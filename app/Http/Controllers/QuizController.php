@@ -86,6 +86,7 @@ class QuizController extends Controller
         return [
             'id' => $quiz->id,
             'title' => $quiz->title,
+            'number_of_questions' => $quiz->questions->count(),
             'questions' => $quiz->questions->map(function ($question) {
                 return [
                     'id' => $question->id,

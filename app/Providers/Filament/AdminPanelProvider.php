@@ -57,6 +57,7 @@ class AdminPanelProvider extends PanelProvider
             //     default => null,
             // })
             ->brandLogo(asset('images/logo.png'))
+            ->favicon(asset('images/logo-favicon.png'))
             ->brandLogoHeight('2.5rem')
             ->defaultThemeMode(ThemeMode::Dark)
             ->unsavedChangesAlerts()
