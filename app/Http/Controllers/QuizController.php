@@ -18,16 +18,11 @@ class QuizController extends Controller
     /**
      * Get quiz questions and options by type and slug.
      */
-    public function show(Request $request, string $type, string $slug)
+    public function show(Request $request,int $quiz_id)
     {
         try {
-            $modelType = $this->resolveModelType($type);
 
-            if (!$modelType) {
-                return ApiResponse::error('Invalid quiz type.', 400);
-            }
-
-            $quiz = $this->quizService->getQuizBySlug($modelType, $slug);
+            $quiz = $this->quizService->getQuizById($quiz_id);
 
             if (!$quiz) {
                 return ApiResponse::error('Quiz not found.', 404);
@@ -47,20 +42,15 @@ class QuizController extends Controller
     /**
      * Submit quiz answers and check correctness.
      */
-    public function submit(Request $request, string $type, string $slug)
+    public function submit(Request $request, int $quiz_id)
     {
         try {
             $request->validate([
                 'answers' => 'required|array',
             ]);
 
-            $modelType = $this->resolveModelType($type);
 
-            if (!$modelType) {
-                return ApiResponse::error('Invalid quiz type.', 400);
-            }
-
-            $quiz = $this->quizService->getQuizBySlug($modelType, $slug);
+            $quiz = $this->quizService->getQuizById($quiz_id);
 
 
             if (!$quiz) {

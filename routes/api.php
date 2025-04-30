@@ -88,10 +88,10 @@ Route::middleware([JwtMiddleware::class])->group(function () {
     
     Route::prefix('quiz')->group(function () {
         // Fetch quiz questions based on type and slug
-        Route::get('/{type}/{slug}', [QuizController::class, 'show'])->name('quiz.show');
+        Route::get('/{quiz_id}', [QuizController::class, 'show'])->name('quiz.show');
 
         // Submit quiz answers
-        Route::post('/{type}/{slug}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
+        Route::post('/{quiz_id}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
     });
 });
 

@@ -19,6 +19,8 @@ class CourseService
      */
     public function getCourseBySlug(string $slug, ?int $studentId = null)
     {
+
+        
         $course = $this->courseRepository->findBySlug($slug);
     
         if (!$course) {
@@ -30,33 +32,40 @@ class CourseService
     
         // Initialize variables
         $userRegistered = false;
-        $quizScore = null;
+        $quizScores = [];
         $quizInfo = null;
+    
+        // Eager load quizzes with questions and quizAttempts (with optional filtering)
+        $quizzes = $course->quizzes()
+            ->with(['questions', 'quizAttempts' => function ($query) use ($studentId) {
+                if ($studentId) {
+                    $query->where('student_id', $studentId);
+                }
+            }])
+            ->get();
     
         if ($studentId) {
             $userRegistered = $course->enrolledStudents()
                 ->where('student_id', $studentId)
                 ->exists();
     
-            // Fetch quiz score if attempted
-            $quizAttempt = $course->quizzes()
-                ->whereHas('quizAttempts', function ($query) use ($studentId) {
-                    $query->where('student_id', $studentId);
-                })
-                ->with(['quizAttempts' => function ($query) use ($studentId) {
-                    $query->where('student_id', $studentId);
-                }])
-                ->first();
-    
-            if ($quizAttempt && $quizAttempt->quizAttempts->isNotEmpty()) {
-                $quizScore = $quizAttempt->quizAttempts->first()->score ?? null;
+            // Collect quiz scores
+            foreach ($quizzes as $quiz) {
+                if ($quiz->quizAttempts->isNotEmpty()) {
+                    $score = $quiz->quizAttempts->first()->score ?? null;
+                    $quizScores[] = [
+                        'quiz_id' => $quiz->id,
+                        'score' => $score,
+                    ];
+                }
             }
         }
     
-        // Check if course has quizzes
-        if ($course->quizzes()->exists()) {
-            $quizInfo = $course->quizzes->map(function ($quiz) {
+        // Collect quiz metadata
+        if ($quizzes->isNotEmpty()) {
+            $quizInfo = $quizzes->map(function ($quiz) {
                 return [
+                    'quiz_id' => $quiz->id,
                     'quiz_title' => $quiz->title,
                     'number_of_questions' => $quiz->questions->count(),
                 ];
@@ -66,7 +75,7 @@ class CourseService
         // Final response structure
         $course->quiz = $quizInfo;
         $course->user_registered = $userRegistered;
-        $course->quiz_score = $quizScore;
+        $course->quiz_scores = $quizScores;
         $course->category_name = $course->category->name ?? null;
         $course->class_level_name = $course->classLevel->name ?? null;
     
@@ -77,6 +86,7 @@ class CourseService
         return $course;
     }
     
+     
     /**
      * Find a course by ID.
      */

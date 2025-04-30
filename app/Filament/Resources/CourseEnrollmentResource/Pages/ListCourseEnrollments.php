@@ -23,7 +23,7 @@ class ListCourseEnrollments extends ListRecords
             ->formats([
                 ExportFormat::Csv,
             ]),
-            ImportAction::make(CourseEnrollmentImporter::class)
+            ImportAction::make()
             ->importer(CourseEnrollmentImporter::class),
             Actions\CreateAction::make(),
         ];
