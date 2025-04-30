@@ -35,6 +35,12 @@ class CourseService
         $quizScores = [];
         $quizInfo = null;
     
+
+        if ($studentId) {
+            $userRegistered = $course->enrolledStudents()
+                ->where('student_id', $studentId)
+                ->exists();
+        }
         // Eager load quizzes with questions and quizAttempts (with optional filtering)
         $quizzes = $course->quizzes()
             ->with(['questions', 'quizAttempts' => function ($query) use ($studentId) {
@@ -48,7 +54,7 @@ class CourseService
 
             if ($quizzes->isNotEmpty()) {
                 foreach ($quizzes as $quiz) {
-                    $score = null;
+                    $score = -1;
             
                     if ($studentId && $quiz->quizAttempts->isNotEmpty()) {
                         $attempt = $quiz->quizAttempts->firstWhere('student_id', $studentId);

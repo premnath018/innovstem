@@ -114,6 +114,7 @@ class QuizRepository
             }
         }
     
+        $score = round(($score / $totalQuestions) * 100);
         $quizAttempt = QuizAttempt::where('student_id', $studentId)
             ->where('quiz_id', $quizId)
             ->first();
