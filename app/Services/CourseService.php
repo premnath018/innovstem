@@ -32,9 +32,7 @@ class CourseService
     
         // Initialize variables
         $userRegistered = false;
-        $quizScores = [];
-        $quizInfo = null;
-    
+
 
         if ($studentId) {
             $userRegistered = $course->enrolledStudents()

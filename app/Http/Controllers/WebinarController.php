@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Services\WebinarService;
 use App\Helpers\ApiResponse;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class WebinarController extends Controller
 {
@@ -31,10 +33,27 @@ class WebinarController extends Controller
     /**
      * Get a Webinar by slug.
      */
-    public function show($slug)
+    public function show(Request $request,$slug)
     {
         try {
-            $Webinar = $this->WebinarService->getWebinarBySlug($slug);
+            $user = null;
+            $studentId = null;
+
+            // Check if the request has an Authorization token
+            if ($request->hasHeader('Authorization')) {
+                try {
+                    $user = JWTAuth::parseToken()->authenticate();
+                 //   dd($user);
+                    if ($user) {
+                        $student = Student::where('user_id', $user->id)->first();
+                        $studentId = $student ? $student->id : null;
+                    }
+                } catch (\Exception $e) {
+                    // Token is invalid or not provided, continue without user
+                }
+            }
+
+            $Webinar = $this->WebinarService->getWebinarBySlug($slug,$studentId);
             return ApiResponse::success($Webinar, 'Webinar retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 404);

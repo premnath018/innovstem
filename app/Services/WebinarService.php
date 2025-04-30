@@ -16,17 +16,26 @@ class WebinarService
     /**
      * Find a webinar by slug.
      */
-    public function getWebinarBySlug(string $slug)
+    public function getWebinarBySlug(string $slug,  ?int $studentId = null)
     {
         $webinar = $this->webinarRepository->findBySlug($slug);
         
+
+        $userRegistered = false;
+
+        if ($studentId) {
+            $userRegistered = $webinar->attendedStudents()
+                ->where('student_id', $studentId)
+                ->exists();
+        }
+
         if (!$webinar) {
             throw new \Exception('Webinar not found');
         }
         
-        $quizExists = $webinar->quizzes()->exists();
+
+        $webinar->user_registered = $userRegistered;
         $webinar->increment('view_count');
-        $webinar->quiz = $quizExists;
         $webinar->category_name = $webinar->category->name;
         unset($webinar->category);
 
