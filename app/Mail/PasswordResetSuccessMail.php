@@ -27,7 +27,7 @@ class PasswordResetSuccessMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Password Reset Success Mail',
+            subject: 'Password Reset Successful | Innovstem - Powering Youngminds',
         );
     }
 

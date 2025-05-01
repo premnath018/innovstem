@@ -107,7 +107,7 @@
             <p>We received a request to reset your password for your Innovstem account. If you didn't make this request, you can safely ignore this email.</p>
             
             <div style="text-align: center;">
-                <a href="{{ $resetUrl }}" class="btn">Reset Password</a>
+                <a href="{{ $resetUrl }}" target="_blank" class="btn">Reset Password</a>
             </div>
             
             <p>If the button above doesn't work, you can copy and paste the following link into your browser:</p>
@@ -127,12 +127,9 @@
         
         <div class="footer">
             <p>&copy; {{ date('Y') }} Innovstem. All rights reserved.</p>
-            <p>123 Education Street, Knowledge City, ST 12345</p>
+            <p>Powering Youngminds</p>
             
             <div class="social-links">
-                <a href="https://facebook.com/innovstem">Facebook</a> |
-                <a href="https://twitter.com/innovstem">Twitter</a> |
-                <a href="https://linkedin.com/company/innovstem">LinkedIn</a> |
                 <a href="https://instagram.com/innovstem">Instagram</a>
             </div>
             

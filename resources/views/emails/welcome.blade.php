@@ -162,13 +162,10 @@
         
         <div class="footer">
             <p>&copy; {{ date('Y') }} Innovstem. All rights reserved.</p>
-            <p>123 Education Street, Knowledge City, ST 12345</p>
+            <p>Powering Youngminds</p>
             
             <div class="social-links">
                 <p>Connect with us:</p>
-                <a href="https://facebook.com/innovstem">Facebook</a> |
-                <a href="https://twitter.com/innovstem">Twitter</a> |
-                <a href="https://linkedin.com/company/innovstem">LinkedIn</a> |
                 <a href="https://instagram.com/innovstem">Instagram</a>
             </div>
             

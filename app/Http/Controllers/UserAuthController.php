@@ -142,7 +142,7 @@ class UserAuthController extends Controller
      
         Mail::to($user->email)->queue(new ResetPasswordMail($result));
 
-        return ApiResponse::success($result, 'Password reset link sent successfully');
+        return ApiResponse::success([], 'Password reset link sent successfully');
     }
 
     public function resetPassword(Request $request)

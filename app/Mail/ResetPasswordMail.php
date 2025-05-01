@@ -40,9 +40,8 @@ class ResetPasswordMail extends Mailable
         return new Content(
             view: 'emails.forgot-password',
             with : [
-                'token' => $this->token,
                 'user' => $this->user,
-                'resetUrl' => url(route('password.reset', ['token' => $this->token], false))
+                'resetUrl' => 'https://innovstem.com/auth/reset-password/'.$this->token
             ],
         );
     }
