@@ -41,7 +41,7 @@ class ResetPasswordMail extends Mailable
             view: 'emails.forgot-password',
             with : [
                 'user' => $this->user,
-                'resetUrl' => 'https://innovstem.com/auth/reset-password/'.$this->token
+                'resetUrl' => 'https://innovstem.com/auth/reset-password/'.$this->token .'?email='. $this->user->email
             ],
         );
     }
