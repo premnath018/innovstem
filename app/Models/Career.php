@@ -16,6 +16,8 @@ class Career extends Model
         'description',
         'location',
         'employment_type',
+        'domain',
+        'experience',
         'is_active',
         'registration_count',
     ];

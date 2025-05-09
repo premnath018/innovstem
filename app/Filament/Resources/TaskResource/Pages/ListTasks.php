@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\TaskResource\Pages;
 
 use App\Enums\TaskStatus;
+use App\Filament\Exports\TaskExporter;
 use App\Filament\Resources\TaskResource;
 use App\Models\Task;
+use Filament\Actions\ExportAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ListRecords\Tab;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +19,8 @@ class ListTasks extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            ExportAction::make()
+            ->exporter(TaskExporter::class),
             \Filament\Actions\CreateAction::make(),
         ];
     }

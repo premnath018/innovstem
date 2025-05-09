@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('description');
             $table->string('location')->nullable();
             $table->enum('employment_type', ['Full-time', 'Part-time', 'Contract']);
+            $table->string('domain')->nullable();
+            $table->string('experience')->nullable();
             $table->boolean('is_active')->default(true);
             $table->unsignedInteger('registration_count')->default(0);
             $table->timestamps();

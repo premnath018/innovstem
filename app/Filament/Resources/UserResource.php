@@ -15,6 +15,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class UserResource extends Resource
 {
@@ -104,10 +106,17 @@ class UserResource extends Resource
                     ->copyMessage('Phone number copied!')
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Role')
+                    ->formatStateUsing(function (User $record) : string {
+                        if ($record->student()->exists())  {
+                            return 'Student';
+                        }
                 
+                        return $record->roles->pluck('name')->join(', ');
+                    })
+                    ->badge()
+                    ->sortable()
+                    ->searchable(),                
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -133,6 +142,12 @@ class UserResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery()->with(['roles']);
+        return $query;
+    }
+    
     public static function getPages(): array
     {
         return [

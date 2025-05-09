@@ -176,6 +176,9 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
 
 Route::get('/news', [HomeController::class, 'news'])->name('news');
 
+Route::post('/t' , [HomeController::class , 'track']);
+
+Route::get('/v' , [HomeController::class , 'getTotalViews']);
 
 // Fetch recommended items based on user preferences
 Route::get('/recommend', [HomeController::class, 'recommend'])->name('recommend');

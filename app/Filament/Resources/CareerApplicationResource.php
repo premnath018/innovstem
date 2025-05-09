@@ -127,6 +127,39 @@ class CareerApplicationResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ])
+            ->filters([
+                Tables\Filters\Filter::make('created_at')
+                ->form([
+                    Forms\Components\DatePicker::make('created_from')
+                        ->label('Applied From')
+                        ->native(false),
+                    Forms\Components\DatePicker::make('created_until')
+                        ->label('Applied Until')
+                        ->native(false),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when(
+                            $data['created_from'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
+                        )
+                        ->when(
+                            $data['created_until'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
+                        );
+                })
+                ->indicateUsing(function (array $data): array {
+                    $indicators = [];
+                    if ($data['created_from'] ?? null) {
+                        $indicators[] = 'Applied From: ' . \Carbon\Carbon::parse($data['created_from'])->toFormattedDateString();
+                    }
+                    if ($data['created_until'] ?? null) {
+                        $indicators[] = 'Applied Until: ' . \Carbon\Carbon::parse($data['created_until'])->toFormattedDateString();
+                    }
+                    return $indicators;
+                })
+                ->label('Applied Date Range'),
+            ])
             ->defaultSort('created_at', 'desc');
     }
 

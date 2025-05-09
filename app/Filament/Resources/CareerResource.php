@@ -35,12 +35,16 @@ class CareerResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                    Forms\Components\TextInput::make('location')
+                Forms\Components\TextInput::make('location')
                     ->maxLength(255),
-                Forms\Components\Textarea::make('description')
+                Forms\Components\RichEditor::make('description')
                     ->required()
                     ->maxLength(65535)
                     ->columnSpanFull(),
+                Forms\Components\TextInput::make('domain')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('experience')
+                    ->maxLength(255),
                 Forms\Components\Select::make('employment_type')
                     ->options([
                         'Full-time' => 'Full-time',
@@ -68,6 +72,10 @@ class CareerResource extends Resource
                 Tables\Columns\TextColumn::make('employment_type')
                     ->badge()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('domain')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('experience')
+                    ->searchable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active')
@@ -78,7 +86,7 @@ class CareerResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault : true ),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('employment_type')

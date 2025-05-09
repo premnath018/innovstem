@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\TaskStatus;
+use App\Filament\Exports\TaskExporter;
 use App\Filament\Resources\TaskResource\Pages;
 use App\Models\Task;
 use Filament\Forms;
@@ -29,6 +30,7 @@ class TaskResource extends Resource
 
     public static function form(Form $form): Form
     {
+
         $isAdmin = Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Super Admin');
         $userId = Auth::id();
         $record = $form->getRecord(); // The task being edited (null on create)
@@ -48,8 +50,11 @@ class TaskResource extends Resource
                             ->disabled(fn () => !$isAdmin && $record !== null),
                         Forms\Components\Select::make('assigned_to')
                             ->label('Assign To')
-                            ->relationship('assignedTo', 'name')
-                            ->preload()
+                            ->relationship('createdBy', 'name', function (Builder $query) {
+                                // Only include users who have at least one role
+                                return $query->whereHas('roles');
+                            })
+                             ->preload()
                             ->searchable()
                             ->visible($isAdmin)
                             ->disabled(fn () => !$isAdmin && $record !== null),
@@ -231,10 +236,6 @@ class TaskResource extends Resource
                     ])
                     ->native(false)
                     ->label('Status'),
-                Tables\Filters\Filter::make('assigned_to_me')
-                    ->query(fn (Builder $query) => $query->where('assigned_to', Auth::id()))
-                    ->label('Assigned to Me')
-                    ->visible($isAdmin),
                 Tables\Filters\SelectFilter::make('priority')
                     ->native(false)
                     ->options([
@@ -243,7 +244,93 @@ class TaskResource extends Resource
                         'high' => 'High',
                     ])
                     ->label('Priority'),
-            ])
+                Tables\Filters\SelectFilter::make('created_by')
+                ->label('Created By')
+                ->relationship('createdBy', 'name', function (Builder $query) {
+                    // Only include users who have at least one role
+                    return $query->whereHas('roles');
+                })
+                ->searchable()
+                ->visible($isAdmin)
+                ->preload()
+                ->native(false),
+                Tables\Filters\SelectFilter::make('assigned_to')
+                ->label('Assigned To')
+                ->relationship('assignedTo', 'name', function (Builder $query) {
+                    // Only include users who have at least one role
+                    return $query->whereHas('roles');
+                })
+                ->searchable()
+                ->preload()
+                ->visible($isAdmin)
+                ->native(false),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Created From')
+                            ->native(false),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Created Until')
+                            ->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['created_from'] ?? null) {
+                            $indicators[] = 'Created From: ' . \Carbon\Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators[] = 'Created Until: ' . \Carbon\Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+                        return $indicators;
+                    })
+                    ->label('Created Date Range'),
+                    Tables\Filters\Filter::make('deadline_date')
+                        ->form([
+                            Forms\Components\DatePicker::make('deadline_from')
+                                ->label('Deadline From')
+                                ->native(false),
+                            Forms\Components\DatePicker::make('deadline_until')
+                                ->label('Deadline Until')
+                                ->native(false),
+                        ])
+                        ->query(function (Builder $query, array $data): Builder {
+                            return $query
+                                ->when(
+                                    $data['deadline_from'],
+                                    fn (Builder $query, $date): Builder => $query->whereDate('deadline_date', '>=', $date)
+                                )
+                                ->when(
+                                    $data['deadline_until'],
+                                    fn (Builder $query, $date): Builder => $query->whereDate('deadline_date', '<=', $date)
+                                );
+                        })
+                        ->indicateUsing(function (array $data): array {
+                            $indicators = [];
+                            if ($data['deadline_from'] ?? null) {
+                                $indicators[] = 'Deadline From: ' . \Carbon\Carbon::parse($data['deadline_from'])->toFormattedDateString();
+                            }
+                            if ($data['deadline_until'] ?? null) {
+                                $indicators[] = 'Deadline Until: ' . \Carbon\Carbon::parse($data['deadline_until'])->toFormattedDateString();
+                            }
+                            return $indicators;
+                        })
+                        ->label('Deadline Date Range'),
+               
+                Tables\Filters\Filter::make('assigned_to_me')
+                ->query(fn (Builder $query) => $query->where('assigned_to', Auth::id()))
+                ->label('Assigned to Me'),
+            ])->filtersFormColumns(2)
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->icon('heroicon-o-eye')
@@ -253,9 +340,16 @@ class TaskResource extends Resource
                     ->icon('heroicon-o-pencil'),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make()
-                    ->visible($isAdmin)
-                    ->icon('heroicon-o-trash'),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->visible($isAdmin)
+                        ->icon('heroicon-o-trash'),
+                    Tables\Actions\ExportBulkAction::make()
+                        ->exporter(TaskExporter::class)
+                        ->visible($isAdmin)
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->label('Export Selected'),
+                ]),
             ])
             ->defaultSort('created_at', 'desc');
     }
@@ -370,7 +464,8 @@ class TaskResource extends Resource
         $query = parent::getEloquentQuery();
         $user = Auth::user();
 
-        if (!($user->hasRole('Admin') || $user->hasRole('Super Admin'))) {
+        $isAdmin = Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Super Admin');
+        if (!$isAdmin) {
             $query->where(function (Builder $q) use ($user) {
                 $q->where('created_by', $user->id)
                   ->orWhere('assigned_to', $user->id);
