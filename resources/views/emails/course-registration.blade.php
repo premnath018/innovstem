@@ -109,7 +109,7 @@
                 <a href="https://innovstem.com/dashboard" class="btn">Access Your Course</a>
             </div>
             
-            <p>If you have any questions or need assistance, please don't hesitate to contact our support team at <a href="mailto:support@innovstem.com">support@innovstem.com</a>.</p>
+            <p>If you have any questions or need assistance, please don't hesitate to contact our support team at <a href="mailto:info@innovstem.com">info@innovstem.com</a>.</p>
             
             <p>Best regards,<br>The Innovstem Team</p>
         </div>

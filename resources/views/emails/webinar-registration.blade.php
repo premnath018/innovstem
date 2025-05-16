@@ -134,7 +134,7 @@
             
             <p>We recommend joining a few minutes early to ensure your audio and video are working properly.</p>
             
-            <p>If you have any questions before the webinar, please contact us at <a href="mailto:support@innovstem.com">support@innovstem.com</a>.</p>
+            <p>If you have any questions before the webinar, please contact us at <a href="mailto:info@innovstem.com">info@innovstem.com</a>.</p>
             
             <p>We look forward to seeing you there!</p>
             

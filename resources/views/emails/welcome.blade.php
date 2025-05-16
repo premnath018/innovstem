@@ -153,7 +153,7 @@
             </div>
             
             
-            <p>If you have any questions or need assistance, our support team is always ready to help at <a href="mailto:support@innovstem.com">support@innovstem.com</a>.</p>
+            <p>If you have any questions or need assistance, our support team is always ready to help at <a href="mailto:info@innovstem.com">info@innovstem.com</a>.</p>
             
             <p>We're excited to be part of your learning journey!</p>
             

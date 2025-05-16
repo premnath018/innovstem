@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Received</title>
+    <title>Appointment Status Notification</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -63,7 +63,7 @@
             text-decoration: none;
             font-weight: bold;
         }
-        .application-details {
+        .appointment-details {
             margin: 25px 0;
             padding: 15px;
             background: #f0f7ff;
@@ -79,6 +79,14 @@
             color: #fb8500;
             text-decoration: none;
         }
+        .status-success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-failed {
+            color: #dc3545;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -90,23 +98,43 @@
         </div>
         
         <div class="content">
-            <h1>Application Received</h1>
+            <h1>Appointment Status Update</h1>
             
-            <p>Dear {{ $application->applicant_name }},</p>
+            <p>Dear {{ $appointment->name }},</p>
             
-            <p>Thank you for applying to Innovstem! We have received your application and it will be processed soon. Below are the details of your submission:</p>
+            <p>Your appointment booking has been processed. Please find the status and details below:</p>
             
-            <div class="application-details">
-                <p><strong>Job Title:</strong> {{ $career->title }}</p>
-                <p><strong>Applicant Name:</strong> {{ $application->applicant_name }}</p>
-                <p><strong>Email:</strong> {{ $application->email }}</p>
-                <p><strong>Phone:</strong> {{ $application->phone ?? 'Not provided' }}</p>
-                <p><strong>Status:</strong> {{ $application->status }}</p>
+            <div class="appointment-details">
+                <p><strong>Status:</strong> 
+                    <span class="{{ $status === 'Paid' ? 'status-success' : 'status-failed' }}">{{ ucfirst($status) }}</span>
+                </p>
+                <p><strong>Name:</strong> {{ $appointment->name }}</p>
+                <p><strong>Email:</strong> {{ $appointment->email }}</p>
+                <p><strong>Mobile Number:</strong> {{ $appointment->mobile_number }}</p>
+                <p><strong>User Type:</strong> {{ $appointment->user_type }}</p>
+                <p><strong>Package:</strong> {{ $appointment->package->package_name }}</p>
+                <p><strong>Slot:</strong> {{ \Carbon\Carbon::parse($appointment->slot->slot_date)->format('F j, Y') }} at {{ \Carbon\Carbon::parse($appointment->slot->start_time)->format('h:i A') }} - {{ \Carbon\Carbon::parse($appointment->slot->end_time)->format('h:i A') }}</p>
+                @if($status === 'Paid')
+                    <p><strong>Transaction ID:</strong> {{ $appointment->transaction_id ?? 'N/A' }}</p>
+                    <p><strong>Amount Paid:</strong> ₹{{ number_format($appointment->amount_paid ?? 0, 2) }}</p>
+                @else
+                    <p><strong>Reason:</strong> Payment processing failed. Please try again or contact support.</p>
+                @endif
             </div>
             
-            <p>We’ll review your application and get back to you as soon as possible. If you have any questions, feel free to contact us at <a href="mailto:info@innovstem.com">info@innovstem.com</a>.</p>
+            @if($status === 'Paid')
+                <div style="text-align: center;">
+                    <a href="https://innovstem.com/appointments" class="btn">View Appointment</a>
+                </div>
+                <p>We look forward to assisting you at your scheduled appointment. If you have any questions, please contact our support team.</p>
+            @else
+                <div style="text-align: center;">
+                    <a href="https://innovstem.com/book-appointment" class="btn">Try Again</a>
+                </div>
+                <p>Please attempt to book again or contact our support team for assistance.</p>
+            @endif
             
-            <p>Best regards,<br>The Innovstem Recruitment Team</p>
+            <p>Best regards,<br>The Innovstem Team</p>
         </div>
         
         <div class="footer">

@@ -122,7 +122,7 @@
             
             <p>Once verified, you'll have full access to all the features and resources available on our platform.</p>
             
-            <p>If you did not create an account with Innovstem, please ignore this email or contact us at <a href="mailto:support@innovstem.com">support@innovstem.com</a>.</p>
+            <p>If you did not create an account with Innovstem, please ignore this email or contact us at <a href="mailto:info@innovstem.com">info@innovstem.com</a>.</p>
             
             <p>Best regards,<br>The Innovstem Team</p>
         </div>

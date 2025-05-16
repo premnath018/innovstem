@@ -123,7 +123,7 @@
                 </ul>
             </div>
             
-            <p>If you did not request this password change, please contact our security team immediately at <a href="mailto:support@innovstem.com">support@innovstem.com</a>.</p>
+            <p>If you did not request this password change, please contact our security team immediately at <a href="mailto:info@innovstem.com">info@innovstem.com</a>.</p>
             
             <p>Best regards,<br>The Innovstem Security Team</p>
         </div>

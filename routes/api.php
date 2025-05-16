@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\CounselingController;
 
 
 
@@ -197,3 +198,10 @@ Route::get('/careers', [CareerController::class, 'index']);
 Route::get('/careers/{id}', [CareerController::class, 'show']);
 Route::post('/careers/{id}', [CareerController::class, 'apply']);
 Route::get('/careers/application/{id}', [CareerController::class, 'getApplication']);
+
+
+
+Route::get('/packages', [CounselingController::class, 'packages']);
+Route::get('/slots', [CounselingController::class, 'slots']);
+Route::post('/appointments', [CounselingController::class, 'createAppointment']);
+Route::get('/appointments', [CounselingController::class, 'appointmentDetails']);

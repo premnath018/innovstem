@@ -9,14 +9,15 @@ use App\Models\Course;
 use App\Models\Webinar;
 use App\Models\Blog;
 use App\Models\Quiz;
+use App\Models\CounselingPackage;
+use App\Models\Slot;
+use App\Models\Appointment;
 
 class PlatformStatsWidget extends StatsOverviewWidget
 {
-
-
     protected static ?string $pollingInterval = null;
-    protected  ?string $heading = 'Platform Statistics';
-    protected  ?string $description = 'Key metrics overview';
+    protected ?string $heading = 'Platform Statistics';
+    protected ?string $description = 'Key metrics overview';
 
     protected function getStats(): array
     {
@@ -31,7 +32,7 @@ class PlatformStatsWidget extends StatsOverviewWidget
                 ->color('success'),
             StatsOverviewWidget\Stat::make('Total Courses', Course::count())
                 ->description('Available courses')
-                ->icon('heroicon-o-user-group')
+                ->icon('heroicon-o-book-open')
                 ->color('warning'),
             StatsOverviewWidget\Stat::make('Total Webinars', Webinar::count())
                 ->description('Scheduled webinars')
@@ -45,6 +46,18 @@ class PlatformStatsWidget extends StatsOverviewWidget
                 ->description('Created quizzes')
                 ->icon('heroicon-o-queue-list')
                 ->color('danger'),
+            StatsOverviewWidget\Stat::make('Total Packages', CounselingPackage::where('active', true)->count())
+                ->description('Active counseling packages')
+                ->icon('heroicon-o-briefcase')
+                ->color('primary'),
+            StatsOverviewWidget\Stat::make('Total Slots', Slot::where('is_active', true)->count())
+                ->description('Available counseling slots')
+                ->icon('heroicon-o-calendar')
+                ->color('success'),
+            StatsOverviewWidget\Stat::make('Total Appointments', Appointment::where('active', true)->count())
+                ->description('Booked appointments')
+                ->icon('heroicon-o-calendar-days')
+                ->color('info'),
         ];
     }
 

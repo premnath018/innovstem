@@ -120,7 +120,7 @@
                 <p><strong>Note:</strong> This password reset link will expire in 60 minutes for security reasons.</p>
             </div>
             
-            <p>If you didn't request a password reset, please contact our support team immediately at <a href="mailto:security@innovstem.com">security@innovstem.com</a>.</p>
+            <p>If you didn't request a password reset, please contact our support team immediately at <a href="mailto:info@innovstem.com">info@innovstem.com</a>.</p>
             
             <p>Best regards,<br>The Innovstem Security Team</p>
         </div>

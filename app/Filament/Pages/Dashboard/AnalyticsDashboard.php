@@ -20,10 +20,7 @@ class AnalyticsDashboard extends Dashboard
     protected static ?string $navigationLabel = 'Analytics';
     protected static string $routePath = 'analytics';
 
-    public static function getNavigationGroup(): ?string
-    {
-        return 'Dashboards';
-    }
+
 
     public function getWidgets(): array
     {
