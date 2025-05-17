@@ -12,9 +12,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CounselingController;
-
-
-
+use App\Http\Controllers\RazorpayController;
 
 /*
 |--------------------------------------------------------------------------
@@ -205,3 +203,8 @@ Route::get('/packages', [CounselingController::class, 'packages']);
 Route::get('/slots', [CounselingController::class, 'slots']);
 Route::post('/appointments', [CounselingController::class, 'createAppointment']);
 Route::get('/appointments', [CounselingController::class, 'appointmentDetails']);
+
+
+// Razorpay routes
+Route::post('/create-order', [RazorpayController::class, 'createOrder']);
+Route::post('/verify-payment', [RazorpayController::class, 'verifyPayment']);

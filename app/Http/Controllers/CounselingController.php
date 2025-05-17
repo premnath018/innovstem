@@ -39,7 +39,7 @@ class CounselingController extends Controller
             $date = $request->input('date'); // Optional date parameter
             $slots = $this->counselingService->getAvailableSlotsByDate($date);
 
-            return ApiResponse::success($slots, $slots['message']);
+            return ApiResponse::success($slots['slots'], $slots['message']);
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);
         }
