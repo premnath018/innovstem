@@ -103,8 +103,11 @@ class CounselingService
             throw new \Exception('Selected slot is already booked.');
         }
 
+        $ackNumber = $this->generateAckNumber();
+
         // Create appointment
         $appointment = Appointment::create([
+            'ack' => $ackNumber,
             'name' => $data['name'],
             'mobile_number' => $data['mobile_number'],
             'email' => $data['email'],
@@ -136,9 +139,9 @@ class CounselingService
      * @return array
      * @throws \Exception
      */
-    public function getAppointmentDetails(?int $id = null, ?string $mobileNumber = null)
+    public function getAppointmentDetails(?string $ack = null, ?string $mobileNumber = null)
     {
-        if (!$id && !$mobileNumber) {
+        if (!$ack && !$mobileNumber) {
             throw new \Exception('Either appointment ID or mobile number is required.');
         }
 
@@ -146,8 +149,8 @@ class CounselingService
             ->with(['package:id,category,package_name', 'slot:id,slot_date,start_time,end_time'])
             ->where('active', true);
 
-        if ($id) {
-            $appointment = $query->find($id);
+        if ($ack) {
+            $appointment = $query->where('ack', $ack)->first();
 
             if (!$appointment) {
                 throw new \Exception('Appointment not found.');
@@ -181,6 +184,7 @@ class CounselingService
     {
         return [
             'id' => $appointment->id,
+            'ack' => $appointment->ack,
             'name' => $appointment->name,
             'mobile_number' => $appointment->mobile_number,
             'email' => $appointment->email,
@@ -201,11 +205,23 @@ class CounselingService
             ],
             'transaction_id' => $appointment->transaction_id ?? 'N/A',
             'amount_paid' => $appointment->amount_paid ? number_format($appointment->amount_paid, 2) : 'N/A',
+            'appointment_status' => $appointment->appointment_status,
             'payment_status' => $appointment->payment_status,
             'note' => $appointment->note ?? 'N/A',
             'active' => $appointment->active,
             'created_at' => $appointment->created_at->toDateTimeString(),
             'updated_at' => $appointment->updated_at->toDateTimeString(),
         ];
+    }
+
+
+    protected function generateAckNumber(): string
+    {
+        do {
+            $randomNumber = mt_rand(100000, 999999); // Random 6-digit number
+            $ackNumber = 'ISA' . $randomNumber; // e.g., ISA123456
+        } while (Appointment::where('ack', $ackNumber)->exists());
+
+        return $ackNumber;
     }
 }

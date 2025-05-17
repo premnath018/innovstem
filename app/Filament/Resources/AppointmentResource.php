@@ -11,7 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
 
@@ -74,6 +73,16 @@ class AppointmentResource extends Resource
                             ])
                             ->required()
                             ->native(false),
+                        Forms\Components\Select::make('appointment_status')
+                            ->label('Appointment Status')
+                            ->options([
+                                'Booked' => 'Booked',
+                                'Attended' => 'Attended',
+                                'Cancelled' => 'Cancelled',
+                            ])
+                            ->required()
+                            ->default('Booked')
+                            ->native(false),
                         Forms\Components\Select::make('package_id')
                             ->label('Counseling Package')
                             ->relationship('package', 'package_name', fn (Builder $query) => $query->where('active', true))
@@ -106,6 +115,11 @@ class AppointmentResource extends Resource
                             ])
                             ->default('Pending')
                             ->native(false),
+                        Forms\Components\TextInput::make('ack')
+                            ->label('Acknowledgment Number')
+                            ->maxLength(9)
+                            ->disabled() // Read-only, auto-generated
+                            ->dehydrated(false), // Prevent saving manual input
                         Forms\Components\Textarea::make('note')
                             ->label('Note')
                             ->maxLength(65535)
@@ -120,9 +134,14 @@ class AppointmentResource extends Resource
 
     public static function table(Table $table): Table
     {
-
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('ack')
+                    ->label('Ack Number')
+                    ->searchable()
+                    ->sortable()
+                    ->placeholder('N/A')
+                    ->icon('heroicon-o-identification'),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Name')
                     ->searchable()
@@ -155,6 +174,16 @@ class AppointmentResource extends Resource
                     ->formatStateUsing(fn ($state, $record) => \Carbon\Carbon::parse($record->slot->start_time)->format('h:i A') . ' - ' . \Carbon\Carbon::parse($record->slot->end_time)->format('h:i A'))
                     ->sortable()
                     ->icon('heroicon-o-clock'),
+                Tables\Columns\TextColumn::make('appointment_status')
+                    ->label('Appointment Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Booked' => 'info',
+                        'Attended' => 'success',
+                        'Cancelled' => 'danger',
+                    })
+                    ->sortable()
+                    ->icon('heroicon-o-clipboard-document-check'),
                 Tables\Columns\TextColumn::make('payment_status')
                     ->label('Payment Status')
                     ->badge()
@@ -184,6 +213,14 @@ class AppointmentResource extends Resource
                         'Teacher' => 'Teacher',
                     ])
                     ->label('User Type')
+                    ->native(false),
+                Tables\Filters\SelectFilter::make('appointment_status')
+                    ->options([
+                        'Booked' => 'Booked',
+                        'Attended' => 'Attended',
+                        'Cancelled' => 'Cancelled',
+                    ])
+                    ->label('Appointment Status')
                     ->native(false),
                 Tables\Filters\SelectFilter::make('payment_status')
                     ->options([
@@ -320,6 +357,19 @@ class AppointmentResource extends Resource
                             ->label('Slot Time')
                             ->formatStateUsing(fn ($state, $record) => \Carbon\Carbon::parse($record->slot->start_time)->format('h:i A') . ' - ' . \Carbon\Carbon::parse($record->slot->end_time)->format('h:i A'))
                             ->icon('heroicon-o-clock'),
+                        Infolists\Components\TextEntry::make('appointment_status')
+                            ->label('Appointment Status')
+                            ->badge()
+                            ->color(fn (string $state): string => match ($state) {
+                                'Booked' => 'info',
+                                'Attended' => 'success',
+                                'Cancelled' => 'danger',
+                            })
+                            ->icon('heroicon-o-clipboard-document-check'),
+                        Infolists\Components\TextEntry::make('ack')
+                            ->label('Acknowledgment Number')
+                            ->placeholder('N/A')
+                            ->icon('heroicon-o-identification'),
                     ])
                     ->columns(3),
                 Infolists\Components\Section::make('Payment Information')
@@ -388,5 +438,4 @@ class AppointmentResource extends Resource
     {
         return static::getModel()::count();
     }
- 
 }

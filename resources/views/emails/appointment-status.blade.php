@@ -108,10 +108,12 @@
                 <p><strong>Status:</strong> 
                     <span class="{{ $status === 'Paid' ? 'status-success' : 'status-failed' }}">{{ ucfirst($status) }}</span>
                 </p>
+                <p><strong>Acknowledgment Number:</strong> {{ $appointment->ack ?? 'N/A' }}</p>
                 <p><strong>Name:</strong> {{ $appointment->name }}</p>
                 <p><strong>Email:</strong> {{ $appointment->email }}</p>
                 <p><strong>Mobile Number:</strong> {{ $appointment->mobile_number }}</p>
                 <p><strong>User Type:</strong> {{ $appointment->user_type }}</p>
+                <p><strong>Stauts:</strong> {{ $appointment->appointment_status }}</p>
                 <p><strong>Package:</strong> {{ $appointment->package->package_name }}</p>
                 <p><strong>Slot:</strong> {{ \Carbon\Carbon::parse($appointment->slot->slot_date)->format('F j, Y') }} at {{ \Carbon\Carbon::parse($appointment->slot->start_time)->format('h:i A') }} - {{ \Carbon\Carbon::parse($appointment->slot->end_time)->format('h:i A') }}</p>
                 @if($status === 'Paid')

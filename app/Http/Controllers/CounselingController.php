@@ -82,16 +82,16 @@ class CounselingController extends Controller
     {
         try {
             $request->validate([
-                'id' => 'nullable|integer|exists:appointments,id',
+                'ack' => 'nullable|exists:appointments,ack',
                 'mobile_number' => 'nullable|string|max:15',
             ]);
 
-            if (!$request->has('id') && !$request->has('mobile_number')) {
+            if (!$request->has('ack') && !$request->has('mobile_number')) {
                 return ApiResponse::error('Either appointment ID or mobile number is required.', 422);
             }
 
             $details = $this->counselingService->getAppointmentDetails(
-                $request->input('id'),
+                $request->input('ack'),
                 $request->input('mobile_number')
             );
 

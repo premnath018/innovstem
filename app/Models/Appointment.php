@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Appointment extends Model
 {
     protected $fillable = [
+        'ack',
         'name',
         'mobile_number',
         'email',
@@ -19,6 +20,7 @@ class Appointment extends Model
         'slot_id',
         'transaction_id',
         'amount_paid',
+        'appointment_status',
         'payment_status',
         'note',
         'active',

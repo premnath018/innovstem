@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
+            $table->string('ack')->unique();
             $table->string('name', 100);
             $table->string('mobile_number', 15);
             $table->string('email', 100);
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->foreignId('slot_id')->constrained('slots');
             $table->string('transaction_id', 100)->nullable();
             $table->decimal('amount_paid', 10, 2)->nullable();
+            $table->enum('appointment_status', ['Booked', 'Attended', 'Cancelled'])->default('Booked');
             $table->enum('payment_status', ['Pending', 'Paid', 'Failed'])->default('Pending');
             $table->text('note')->nullable();
             $table->boolean('active')->default(true);
