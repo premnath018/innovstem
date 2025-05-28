@@ -21,6 +21,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class CourseResource extends Resource
 {
@@ -31,7 +32,6 @@ class CourseResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
     protected static ?int $navigationSort = 4;
-
 
     public static function form(Forms\Form $form): Forms\Form
     {
@@ -73,10 +73,9 @@ class CourseResource extends Resource
                             ->native(false)
                             ->required(),
                         Textarea::make('content_long_description')
-                        ->columnSpanFull()
-                        ->label('Long Description'),
-
-                        ])->columns(2),
+                            ->columnSpanFull()
+                            ->label('Long Description'),
+                    ])->columns(2),
                 Forms\Components\Fieldset::make('Options')
                     ->schema([
                         Toggle::make('sync_meta_title')
@@ -96,7 +95,6 @@ class CourseResource extends Resource
                             ->inline(),
                     ])
                     ->columns(3),
-
                 Forms\Components\Section::make('Course Details and Media')
                     ->schema([
                         RichEditor::make('course_content')
@@ -121,7 +119,6 @@ class CourseResource extends Resource
                             ->columnSpanFull()
                             ->label('Learning Materials'),
                     ])->columns(2),
-
                 Forms\Components\Section::make('Meta Information')
                     ->schema([
                         TextInput::make('course_slug')
@@ -130,7 +127,7 @@ class CourseResource extends Resource
                             ->disabled(fn (Get $get) => $get('sync_slug'))
                             ->maxLength(255)
                             ->dehydrated()
-                            ->unique(Course::class,'course_slug',ignoreRecord: true),
+                            ->unique(Course::class, 'course_slug', ignoreRecord: true),
                         TextInput::make('course_meta_title')
                             ->label('Meta Title')
                             ->required()
@@ -153,7 +150,7 @@ class CourseResource extends Resource
                             ->required(),
                         Select::make('active')
                             ->label('Active')
-                            ->options([ 0 => 'Inactive', 1 => 'Active'])
+                            ->options([0 => 'Inactive', 1 => 'Active'])
                             ->required()
                             ->native(false),
                     ]),
@@ -176,7 +173,7 @@ class CourseResource extends Resource
                     ->badge()
                     ->color(fn (string $state): string => [
                         'primary', 'secondary', 'success', 'danger', 'warning', 'info',
-                    ][crc32($state) % 6] ?? 'primary') // Dynamically assign color
+                    ][crc32($state) % 6] ?? 'primary')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('classLevel.name')
                     ->label('Class')
@@ -184,7 +181,7 @@ class CourseResource extends Resource
                     ->badge()
                     ->color(fn (string $state): string => [
                         'primary', 'secondary', 'success', 'danger', 'warning', 'info',
-                    ][crc32($state) % 6] ?? 'primary') // Dynamically assign color
+                    ][crc32($state) % 6] ?? 'primary')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('view_count')
                     ->label('Views')
@@ -208,6 +205,97 @@ class CourseResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name')
+                    ->native(false)
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\SelectFilter::make('class_level_id')
+                    ->label('Class Level')
+                    ->relationship('classLevel', 'name')
+                    ->native(false)
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\SelectFilter::make('active')
+                    ->label('Status')
+                    ->options([
+                        '1' => 'Active',
+                        '0' => 'Inactive',
+                    ])
+                    ->native(false),
+                Tables\Filters\Filter::make('title_search')
+                    ->form([
+                        Forms\Components\TextInput::make('title')
+                            ->label('Search Title')
+                            ->placeholder('Enter course title'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['title'],
+                            fn (Builder $query, $value): Builder => $query->where('title', 'like', '%' . $value . '%')
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['title'] ?? null) {
+                            return 'Searching for title: ' . $data['title'];
+                        }
+                        return null;
+                    }),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Created From')
+                            ->native(false),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Created Until')
+                            ->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['created_from'] ?? null) {
+                            $indicators[] = 'Created From: ' . \Carbon\Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators[] = 'Created Until: ' . \Carbon\Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+                        return $indicators;
+                    })
+                    ->label('Created Date Range'),
+                Tables\Filters\SelectFilter::make('min_enrolments')
+                    ->label('Minimum Enrolments')
+                    ->options([
+                        '0' => 'Any',
+                        '10' => '10+',
+                        '50' => '50+',
+                    ])
+                    ->native(false)
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'] && $data['value'] !== '0',
+                            fn (Builder $query, $value): Builder => $query->where('enrolment_count', '>=', $data['value'])
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['value'] && $data['value'] !== '0') {
+                            return 'Minimum Enrolments: ' . $data['value'];
+                        }
+                        return null;
+                    }),
+            ])
+            ->persistFiltersInSession()
             ->searchOnBlur()
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -216,7 +304,7 @@ class CourseResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),            
+                ]),
             ]);
     }
 
@@ -239,32 +327,28 @@ class CourseResource extends Resource
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
-
                 Section::make('Course Content and Media')
                     ->schema([
                         ImageEntry::make('course_banner')
                             ->label('Banner Image')
                             ->columnSpanFull()
-                            ->extraAttributes(['class' => 'w-full h-auto']), // Makes it responsive
-
+                            ->extraAttributes(['class' => 'w-full h-auto']),
                         ImageEntry::make('course_thumbnail')
                             ->label('Thumbnail Image')
                             ->columnSpanFull()
-                            ->extraAttributes(['class' => 'w-full h-auto']), // Ensures no cropping
-
+                            ->extraAttributes(['class' => 'w-full h-auto']),
                         TextEntry::make('course_content')
                             ->label('Content')
                             ->html()
                             ->columnSpanFull(),
                         TextEntry::make('learning_materials')
-                            ->label('Learing Materials')
+                            ->label('Learning Materials')
                             ->html()
                             ->columnSpanFull()
                             ->separator('@$')
                             ->bulleted(),
                     ])
                     ->columns(2),
-
                 Section::make('Meta Information')
                     ->schema([
                         TextEntry::make('course_meta_title')
@@ -313,7 +397,6 @@ class CourseResource extends Resource
             'create' => Pages\CreateCourse::route('/create'),
             'edit' => Pages\EditCourse::route('/{record}/edit'),
             'view' => Pages\ViewCourse::route('/{record}'),
-
         ];
     }
 }

@@ -20,6 +20,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Grid;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class StudentResource extends Resource
 {
@@ -40,8 +41,9 @@ class StudentResource extends Resource
                         TextInput::make('name')->required(),
                         TextInput::make('mobile')->required()->unique(),
                         Select::make('user_id')
-                        ->relationship('user','name')
-                        ->required(),
+                            ->relationship('user', 'name')
+                            ->required()
+                            ->native(false),
                         Select::make('standard')
                             ->options([
                                 'Class 6' => 'Class 6',
@@ -52,7 +54,8 @@ class StudentResource extends Resource
                                 'Class 11' => 'Class 11',
                                 'Class 12' => 'Class 12',
                             ])
-                            ->required(),
+                            ->required()
+                            ->native(false),
                         TextInput::make('ambition')->nullable(),
                         TextInput::make('parent_no')->nullable(),
                         TextInput::make('age')->numeric()->required(),
@@ -62,14 +65,14 @@ class StudentResource extends Resource
                                 'female' => 'Female',
                                 'other' => 'Other',
                             ])
-                            ->required(),
-                            Select::make('active')
+                            ->required()
+                            ->native(false),
+                        Select::make('active')
                             ->label('Active')
-                            ->options([ 0 => 'Inactive', 1 => 'Active'])
+                            ->options([0 => 'Inactive', 1 => 'Active'])
                             ->required()
                             ->native(false),
                     ])->columns(2),
-
                 Section::make('Address Details')
                     ->schema([
                         TextInput::make('district')->required(),
@@ -104,6 +107,11 @@ class StudentResource extends Resource
                     }),
                 TextColumn::make('district')->sortable()->searchable(),
                 TextColumn::make('state')->sortable(),
+                TextColumn::make('active')
+                    ->label('Active')
+                    ->formatStateUsing(fn ($state) => $state ? 'Active' : 'Inactive')
+                    ->badge()
+                    ->color(fn ($state) => $state ? 'success' : 'danger'),
                 TextColumn::make('created_at')->dateTime()->sortable(),
             ])
             ->filters([
@@ -116,14 +124,129 @@ class StudentResource extends Resource
                         'Class 10' => 'Class 10',
                         'Class 11' => 'Class 11',
                         'Class 12' => 'Class 12',
-                    ]),
+                    ])
+                    ->native(false),
                 SelectFilter::make('gender')
                     ->options([
                         'male' => 'Male',
                         'female' => 'Female',
                         'other' => 'Other',
-                    ]),
+                    ])
+                    ->native(false),
+                Tables\Filters\Filter::make('name_search')
+                    ->form([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Search Name')
+                            ->placeholder('Enter student name'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['name'],
+                            fn (Builder $query, $value): Builder => $query->where('name', 'like', '%' . $value . '%')
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['name'] ?? null) {
+                            return 'Searching for name: ' . $data['name'];
+                        }
+                        return null;
+                    }),
+                SelectFilter::make('active')
+                    ->label('Status')
+                    ->options([
+                        '1' => 'Active',
+                        '0' => 'Inactive',
+                    ])
+                    ->native(false),
+                Tables\Filters\Filter::make('age_range')
+                    ->form([
+                        Forms\Components\TextInput::make('age_from')
+                            ->label('Age From')
+                            ->numeric()
+                            ->placeholder('Min age'),
+                        Forms\Components\TextInput::make('age_to')
+                            ->label('Age To')
+                            ->numeric()
+                            ->placeholder('Max age'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['age_from'],
+                                fn (Builder $query, $value): Builder => $query->where('age', '>=', $value)
+                            )
+                            ->when(
+                                $data['age_to'],
+                                fn (Builder $query, $value): Builder => $query->where('age', '<=', $value)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['age_from'] ?? null) {
+                            $indicators[] = 'Age From: ' . $data['age_from'];
+                        }
+                        if ($data['age_to'] ?? null) {
+                            $indicators[] = 'Age To: ' . $data['age_to'];
+                        }
+                        return $indicators;
+                    })
+                    ->label('Age Range'),
+                SelectFilter::make('district')
+                    ->label('District')
+                    ->options(function () {
+                        return Student::distinct()
+                            ->pluck('district')
+                            ->filter()
+                            ->mapWithKeys(fn ($district) => [$district => $district])
+                            ->toArray();
+                    })
+                    ->native(false)
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'],
+                            fn (Builder $query, $value): Builder => $query->where('district', $value)
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['value'] ?? null) {
+                            return 'District: ' . $data['value'];
+                        }
+                        return null;
+                    }),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Created From')
+                            ->native(false),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Created Until')
+                            ->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['created_from'] ?? null) {
+                            $indicators[] = 'Created From: ' . \Carbon\Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators[] = 'Created Until: ' . \Carbon\Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+                        return $indicators;
+                    })
+                    ->label('Created Date Range'),
             ])
+            ->filtersFormColumns(2)
+            ->persistFiltersInSession()
             ->actions([
                 Tables\Actions\ViewAction::make()->modal(),
                 Tables\Actions\EditAction::make()->modal(),
@@ -131,7 +254,7 @@ class StudentResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),   
+                ]),
             ]);
     }
 
@@ -149,13 +272,17 @@ class StudentResource extends Resource
                         TextEntry::make('age')->label('Age'),
                         TextEntry::make('gender')->label('Gender')->badge(),
                         TextEntry::make('district')->label('District'),
+                        TextEntry::make('active')
+                            ->label('Active')
+                            ->formatStateUsing(fn ($state) => $state ? 'Active' : 'Inactive')
+                            ->badge()
+                            ->color(fn ($state) => $state ? 'success' : 'danger'),
                         TextEntry::make('address')->label('Full Address')->columnSpanFull(),
                         TextEntry::make('state')->label('State'),
                         TextEntry::make('created_at')->label('Registered At')->dateTime(),
                     ]),
             ]);
     }
-
 
     public static function getNavigationBadge(): ?string
     {

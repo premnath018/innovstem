@@ -30,7 +30,7 @@ class QuizController extends Controller
 
             $quizData = $this->quizService->getQuizzesWithoutAnswers($quiz->id);
 
-            $quizData = $this->transformQuiz($quizData);
+            // $quizData = $this->transformQuiz($quizData);
 
 
             return ApiResponse::success($quizData, 'Quiz retrieved successfully.');

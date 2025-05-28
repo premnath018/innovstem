@@ -101,10 +101,9 @@ class NewsResource extends Resource
             ->columns([
                 TextColumn::make('content')
                     ->label('News Content')
-                    ->html() // Enables HTML rendering
-                    ->limit(50) // Still limits characters to prevent overwhelming the table
+                    ->html()
+                    ->limit(50)
                     ->formatStateUsing(function ($state) {
-                        // Strip tags for plain text preview while preserving basic formatting
                         return strip_tags($state, '<p><br><strong><em><ul><li>');
                     }),
                 IconColumn::make('active')
@@ -129,7 +128,95 @@ class NewsResource extends Resource
                     ->dateTime()
                     ->sortable(),
             ])
-            ->filters([])
+            ->filters([
+                Tables\Filters\Filter::make('content_search')
+                    ->form([
+                        Forms\Components\TextInput::make('content')
+                            ->label('Search Content')
+                            ->placeholder('Enter keywords'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['content'],
+                            fn (Builder $query, $value): Builder => $query->where('content', 'like', '%' . $value . '%')
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['content'] ?? null) {
+                            return 'Searching for content: ' . $data['content'];
+                        }
+                        return null;
+                    }),
+                Tables\Filters\TernaryFilter::make('active')
+                    ->label('Active'),
+                Tables\Filters\TernaryFilter::make('latest_news')
+                    ->label('Latest News'),
+                Tables\Filters\Filter::make('priority_range')
+                    ->form([
+                        Forms\Components\TextInput::make('priority_from')
+                            ->label('Priority From')
+                            ->numeric()
+                            ->placeholder('Min priority'),
+                        Forms\Components\TextInput::make('priority_to')
+                            ->label('Priority To')
+                            ->numeric()
+                            ->placeholder('Max priority'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['priority_from'],
+                                fn (Builder $query, $value): Builder => $query->where('priority', '>=', $value)
+                            )
+                            ->when(
+                                $data['priority_to'],
+                                fn (Builder $query, $value): Builder => $query->where('priority', '<=', $value)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['priority_from'] ?? null) {
+                            $indicators[] = 'Priority From: ' . $data['priority_from'];
+                        }
+                        if ($data['priority_to'] ?? null) {
+                            $indicators[] = 'Priority To: ' . $data['priority_to'];
+                        }
+                        return $indicators;
+                    })
+                    ->label('Priority Range'),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Created From')
+                            ->native(false),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Created Until')
+                            ->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['created_from'] ?? null) {
+                            $indicators[] = 'Created From: ' . \Carbon\Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators[] = 'Created Until: ' . \Carbon\Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+                        return $indicators;
+                    })
+                    ->label('Created Date Range'),
+            ])
+            ->persistFiltersInSession()
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -138,7 +225,7 @@ class NewsResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),            
+                ]),
             ]);
     }
 

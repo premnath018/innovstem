@@ -21,7 +21,9 @@ class CareerController extends Controller
      */
     public function index()
     {
-        $careers = Career::all()->where('is_active',true);
+        $careers = Career::where('is_active',true)
+            ->orderBy('created_at', 'desc')
+            ->get(['id','title','location','employment_type','domain','experience']);
 
         return ApiResponse::success(
             data: $careers,
@@ -37,7 +39,10 @@ class CareerController extends Controller
      */
     public function show($id)
     {
-        $career = Career::find($id);
+        $career = Career::find($id)
+        ->get(['id','title','location','employment_type','description','domain','experience'])
+        ->first();
+
 
         if (!$career) {
             return ApiResponse::error(
@@ -62,6 +67,7 @@ class CareerController extends Controller
     public function apply(Request $request, $id)
     {
         $career = Career::find($id);
+
 
         if (!$career) {
             return ApiResponse::error(

@@ -8,7 +8,20 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Quiz extends Model
 {
-    protected $fillable = ['title', 'quizable_type', 'quizable_id'];
+    protected $fillable = [
+        'title',
+        'quizable_type',
+        'quizable_id',
+        'retry',
+        'is_active',
+        'mix'
+    ];
+
+    protected $casts = [
+        'retry' => 'boolean',
+        'is_active' => 'boolean',
+        'mix' => 'boolean',
+    ];
 
     public function quizable(): MorphTo
     {

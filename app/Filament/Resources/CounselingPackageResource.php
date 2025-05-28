@@ -59,11 +59,11 @@ class CounselingPackageResource extends Resource
                             ->minValue(0),
                         Forms\Components\TextInput::make('duration')
                             ->label('Duration')
-                            ->maxLength(50)
-                            ->placeholder('e.g., 30 min, 3 seatings'),
+                            ->maxLength(255)
+                            ->placeholder('e.g., 30 min,  // 3 sessions'),
                         Forms\Components\RichEditor::make('includes')
                             ->label('Includes')
-                            ->maxLength(65535)
+                            ->required()
                             ->columnSpanFull(),
                         Forms\Components\Toggle::make('active')
                             ->label('Active')
@@ -75,7 +75,6 @@ class CounselingPackageResource extends Resource
 
     public static function table(Table $table): Table
     {
-
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('category')
@@ -99,8 +98,8 @@ class CounselingPackageResource extends Resource
                     ->sortable()
                     ->icon('heroicon-o-clock'),
                 Tables\Columns\IconColumn::make('active')
-                    ->boolean()
                     ->label('Active')
+                    ->boolean()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
@@ -108,31 +107,140 @@ class CounselingPackageResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->icon('heroicon-o-calendar')
-                    ->toggleable(isToggledHiddenByDefault : true ),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->dateTime()
                     ->sortable()
                     ->toggleable()
                     ->icon('heroicon-o-arrow-path')
-                    ->toggleable(isToggledHiddenByDefault : true ),
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('category')
+                    ->label('Category')
                     ->options([
                         'Student' => 'Student',
                         'Parental' => 'Parental',
                         'Teacher' => 'Teacher',
                         'Overall' => 'Overall',
                     ])
-                    ->label('Category')
                     ->native(false),
                 Tables\Filters\TernaryFilter::make('active')
                     ->label('Active')
                     ->trueLabel('Active Packages')
                     ->falseLabel('Inactive Packages')
                     ->native(false),
+                Tables\Filters\Filter::make('package_name_search')
+                    ->form([
+                        Forms\Components\TextInput::make('package_name')
+                            ->label('Search Package Name')
+                            ->placeholder('Enter package name'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['package_name'],
+                            fn (Builder $query, $value): Builder => $query->where('package_name', 'like', '%' . $value . '%')
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['package_name'] ?? null) {
+                            return 'Searching for package name: ' . $data['package_name'];
+                        }
+                        return null;
+                    }),
+                Tables\Filters\Filter::make('price_range')
+                    ->form([
+                        Forms\Components\TextInput::make('price_from')
+                            ->label('Price From (INR)')
+                            ->numeric()
+                            ->type('number')
+                            ->placeholder('Min price'),
+                        Forms\Components\TextInput::make('price_to')
+                            ->label('Price To (INR)')
+                            ->type('number')
+                            ->numeric()
+                            ->placeholder('number')
+                            ->placeholder('Max price'),
+                    ])
+                    ->columns(2)
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['price_from'],
+                                fn (Builder $query, $value): Builder => $query->where('price_inr', '>=', $value),
+                            )
+                            ->when(
+                                $data['price_to'],
+                                fn (Builder $query, $value): Builder => $query->where('price_inr', '<=', $value),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['price_from'] ?? null) {
+                            $indicators[] = 'Price From: ₹' . $data['price_from'];
+                        }
+                        if ($data['price_to'] ?? null) {
+                            $indicators[] = 'Price To: ₹' . $data['price_to'];
+                        }
+                        return $indicators;
+                    })
+                    ->label('Price Range'),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Created From')
+                            ->native(false),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Created Until')
+                            ->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['created_from'] ?? null) {
+                            $indicators[] = 'Created From: ' . \Carbon\Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators[] = 'Created Until: ' . \Carbon\Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+                        return $indicators;
+                    })
+                    ->label('Created Date Range'),
+                Tables\Filters\SelectFilter::make('duration')
+                    ->label('Duration')
+                    ->options(function () {
+                        return CounselingPackage::distinct()
+                            ->pluck('duration')
+                            ->filter()
+                            ->mapWithKeys(fn ($duration) => [$duration => $duration])
+                            ->toArray();
+                    })
+                    ->native(false)
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'],
+                            fn (Builder $query, $value): Builder => $query->where('duration', $value)
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['value'] ?? null) {
+                            return 'Duration: ' . $data['value'];
+                        }
+                        return null;
+                    }),
             ])
+            ->persistFiltersInSession()
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->icon('heroicon-o-eye')
@@ -146,7 +254,7 @@ class CounselingPackageResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->icon('heroicon-o-trash'),
-                   ]),
+                ]),
             ])
             ->defaultSort('created_at', 'desc')
             ->defaultPaginationPageOption(25);

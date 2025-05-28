@@ -21,7 +21,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Forms\Get;
-
+use Illuminate\Database\Eloquent\Builder;
 
 class WebinarResource extends Resource
 {
@@ -188,6 +188,91 @@ class WebinarResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
+            ->filters([
+                Tables\Filters\Filter::make('title_search')
+                    ->form([
+                        Forms\Components\TextInput::make('title')
+                            ->label('Search Title')
+                            ->placeholder('Enter webinar title'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['title'],
+                            fn (Builder $query, $value): Builder => $query->where('title', 'like', '%' . $value . '%')
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['title'] ?? null) {
+                            return 'Searching for title: ' . $data['title'];
+                        }
+                        return null;
+                    }),
+                Tables\Filters\SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name')
+                    ->native(false)
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\SelectFilter::make('active')
+                    ->label('Status')
+                    ->options([
+                        '1' => 'Active',
+                        '0' => 'Inactive',
+                    ])
+                    ->native(false),
+                Tables\Filters\Filter::make('webinar_date')
+                    ->form([
+                        Forms\Components\DatePicker::make('date_from')
+                            ->label('Date From')
+                            ->native(false),
+                        Forms\Components\DatePicker::make('date_until')
+                            ->label('Date Until')
+                            ->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['date_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('webinar_date_time', '>=', $date)
+                            )
+                            ->when(
+                                $data['date_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('webinar_date_time', '<=', $date)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['date_from'] ?? null) {
+                            $indicators[] = 'Date From: ' . \Carbon\Carbon::parse($data['date_from'])->toFormattedDateString();
+                        }
+                        if ($data['date_until'] ?? null) {
+                            $indicators[] = 'Date Until: ' . \Carbon\Carbon::parse($data['date_until'])->toFormattedDateString();
+                        }
+                        return $indicators;
+                    })
+                    ->label('Webinar Date Range'),
+                Tables\Filters\SelectFilter::make('min_attendance')
+                    ->label('Minimum Attendance')
+                    ->options([
+                        '0' => 'Any',
+                        '10' => '10+',
+                        '50' => '50+',
+                    ])
+                    ->native(false)
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'] && $data['value'] !== '0',
+                            fn (Builder $query, $value): Builder => $query->where('attendance_count', '>=', $data['value'])
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['value'] && $data['value'] !== '0') {
+                            return 'Minimum Attendance: ' . $data['value'];
+                        }
+                        return null;
+                    }),
+            ])
+            ->persistFiltersInSession()
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

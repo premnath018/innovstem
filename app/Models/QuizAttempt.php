@@ -7,9 +7,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuizAttempt extends Model
 {
-    protected $fillable = ['student_id', 'quiz_id', 'score', 'attempted_at'];
+    protected $fillable = [
+        'student_id',
+        'quiz_id',
+        'score',
+        'correct_answers',
+        'incorrect_answers',
+        'attempted_at'
+    ];
 
-    public $timestamps = false; // We use 'attempted_at' instead of default timestamps
+    public $timestamps = false;
 
     protected $casts = [
         'attempted_at' => 'datetime',

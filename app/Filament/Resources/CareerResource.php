@@ -86,7 +86,7 @@ class CareerResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault : true ),
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('employment_type')
@@ -94,10 +94,103 @@ class CareerResource extends Resource
                         'Full-time' => 'Full-time',
                         'Part-time' => 'Part-time',
                         'Contract' => 'Contract',
-                    ]),
+                    ])
+                    ->native(false),
                 Tables\Filters\TernaryFilter::make('is_active')
+                    ->native(false)
                     ->label('Active'),
+                Tables\Filters\Filter::make('title_search')
+                    ->form([
+                        Forms\Components\TextInput::make('title')
+                            ->label('Search Title')
+                            ->placeholder('Enter career title'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['title'],
+                            fn (Builder $query, $value): Builder => $query->where('title', 'like', '%' . $value . '%')
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['title'] ?? null) {
+                            return 'Searching for title: ' . $data['title'];
+                        }
+                        return null;
+                    }),
+                Tables\Filters\SelectFilter::make('domain')
+                    ->label('Domain')
+                    ->native(false)
+                    ->options(function () {
+                        return Career::distinct()
+                            ->pluck('domain')
+                            ->filter()
+                            ->mapWithKeys(fn ($domain) => [$domain => $domain])
+                            ->toArray();
+                    })
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'],
+                            fn (Builder $query, $value): Builder => $query->where('domain', $value)
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['value'] ?? null) {
+                            return 'Domain: ' . $data['value'];
+                        }
+                        return null;
+                    }),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Created From')
+                            ->native(false),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Created Until')
+                            ->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['created_from'] ?? null) {
+                            $indicators[] = 'Created From: ' . \Carbon\Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators[] = 'Created Until: ' . \Carbon\Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+                        return $indicators;
+                    })
+                    ->label('Created Date Range'),
+                Tables\Filters\SelectFilter::make('min_applications')
+                    ->label('Minimum Applications')
+                    ->options([
+                        '0' => 'Any',
+                        '10' => '10+',
+                        '50' => '50+',
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'] && $data['value'] !== '0',
+                            fn (Builder $query, $value): Builder => $query->has('applications', '>=', $data['value'])
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['value'] && $data['value'] !== '0') {
+                            return 'Minimum Applications: ' . $data['value'];
+                        }
+                        return null;
+                    }),
             ])
+            ->persistFiltersInSession()
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),

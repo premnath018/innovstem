@@ -3,6 +3,7 @@
 namespace App\Filament\Exports;
 
 use App\Models\CareerApplication;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
@@ -45,5 +46,17 @@ class CareerApplicationExporter extends Exporter
         }
 
         return $body;
+    }
+
+    public function getFormats(): array
+    {
+        return [
+            ExportFormat::Csv,
+        ];
+    }
+
+    public function getFileName(Export $export): string
+    {
+        return "Applications -{$export->getKey()}.csv";
     }
 }

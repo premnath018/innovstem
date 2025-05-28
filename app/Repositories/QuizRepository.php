@@ -15,23 +15,27 @@ class QuizRepository
     }
 
     /**
-     * Get all quizzes.
+     * Get all active quizzes.
      */
     public function getAll()
     {
-        return $this->quiz->with('questions.options')->get();
+        return $this->quiz->where('is_active', true)
+            ->with('questions.options')
+            ->get();
     }
 
     /**
-     * Find a quiz by its ID.
+     * Find an active quiz by its ID.
      */
     public function findById(int $id)
     {
-        return $this->quiz->with('questions.options')->find($id);
+        return $this->quiz->where('is_active', true)
+            ->with('questions.options')
+            ->find($id);
     }
 
     /**
-     * Find a quiz by slug and type.
+     * Find an active quiz by slug and type.
      */
     public function findBySlug(string $type, string $slug)
     {
@@ -47,6 +51,7 @@ class QuizRepository
         };
 
         return $this->quiz
+            ->where('is_active', true)
             ->whereHasMorph('quizable', [$type], function ($query) use ($slugColumn, $slug) {
                 $query->where($slugColumn, '=', $slug);
             })
@@ -54,9 +59,8 @@ class QuizRepository
             ->first();
     }
 
-
     /**
-     * Get quizzes without revealing correct answers.
+     * Get an active quiz without revealing correct answers, with optional question shuffling.
      */
     public function getQuizzesWithoutAnswers(int $id)
     {
@@ -66,6 +70,11 @@ class QuizRepository
             return null;
         }
 
+        // Shuffle questions if mix is true
+        if ($quiz->mix) {
+            $quiz->questions = $quiz->questions->shuffle();
+        }
+
         // Remove the `is_correct` attribute
         $quiz->questions->each(function ($question) {
             $question->options->each(function ($option) {
@@ -73,69 +82,111 @@ class QuizRepository
             });
         });
 
-        return $quiz;
+        return $this->transformQuiz($quiz);
     }
 
     /**
-     * Check answers for a quiz.
+     * Check answers for a quiz and store attempt details.
      */
     public function checkAnswers(int $quizId, array $answers): array
     {
         $quiz = $this->findById($quizId);
-    
+
         if (!$quiz) {
             return [
                 'message' => 'Quiz not found.',
+                'success' => false,
             ];
         }
-    
-        // ✅ Get the logged-in user and their student ID
+
+        if (!$quiz->is_active) {
+            return [
+                'message' => 'This quiz is currently inactive.',
+                'success' => false,
+            ];
+        }
+
+        // Get the logged-in user and their student ID
         $user = auth()->user();
-      //  dd($user);
         $studentId = $user?->student?->id;
-    
+
         if (!$studentId) {
             return [
                 'message' => 'Student profile not found.',
+                'success' => false,
             ];
         }
-    
-        $score = 0;
+
+        $correctAnswers = 0;
         $totalQuestions = $quiz->questions->count();
-    
-        // ✅ Calculate the score
+        $incorrectAnswers = 0;
+
+        // Calculate the score and count correct/incorrect answers
         foreach ($quiz->questions as $question) {
             if (isset($answers[$question->id])) {
                 $correctOption = $question->options->firstWhere('is_correct', true);
-    
-                if ($correctOption && $correctOption->id == $answers[$question->id]) {
-                    $score++;
+
+                if ($correctOption && $correctOption->id == (int)$answers[$question->id]) {
+                    $correctAnswers++;
+                } else {
+                    $incorrectAnswers++;
                 }
+            } else {
+                $incorrectAnswers++; // Unanswered questions count as incorrect
             }
         }
-    
-        $score = round(($score / $totalQuestions) * 100);
+
+        // Calculate score as percentage
+        $score = $totalQuestions > 0 ? round(($correctAnswers / $totalQuestions) * 100) : 0;
+
+        // Update or create quiz attempt
         $quizAttempt = QuizAttempt::where('student_id', $studentId)
             ->where('quiz_id', $quizId)
             ->first();
-    
+
         if ($quizAttempt) {
-            $quizAttempt->update(['score' => $score]);
+            if (!$quiz->retry) {
+                return [
+                    'message' => 'Retries are not allowed for this quiz.',
+                    'success' => false,
+                    'score' => $quizAttempt->score,
+                    'correct_answers' => $quizAttempt->correct_answers,
+                    'incorrect_answers' => $quizAttempt->incorrect_answers,
+                    'total_questions' => $totalQuestions,
+                    'retry_allowed' => $quiz->retry,
+                ];
+            }
+            $quizAttempt->update([
+                'score' => $score,
+                'correct_answers' => $correctAnswers,
+                'incorrect_answers' => $incorrectAnswers,
+                'attempted_at' => now(),
+            ]);
         } else {
-            QuizAttempt::create([
+            $quizAttempt = QuizAttempt::create([
                 'student_id' => $studentId,
                 'quiz_id' => $quizId,
-                'score' => $score
+                'score' => $score,
+                'correct_answers' => $correctAnswers,
+                'incorrect_answers' => $incorrectAnswers,
+                'attempted_at' => now(),
             ]);
         }
-    
+
         return [
+            'success' => true,
             'score' => $score,
-            'total' => $totalQuestions,
+            'correct_answers' => $correctAnswers,
+            'incorrect_answers' => $incorrectAnswers,
+            'total_questions' => $totalQuestions,
+            'retry_allowed' => $quiz->retry,
+            'message' => 'Quiz attempt recorded successfully.',
         ];
     }
-    
 
+    /**
+     * Transform quiz data for API response.
+     */
     protected function transformQuiz($quiz)
     {
         return [
@@ -143,6 +194,8 @@ class QuizRepository
             'title' => $quiz->title,
             'number_of_questions' => $quiz->questions->count(),
             'quizable_id' => $quiz->quizable_id,
+            'retry' => $quiz->retry,
+            'mix' => $quiz->mix,
             'questions' => $quiz->questions->map(function ($question) {
                 return [
                     'id' => $question->id,
@@ -152,10 +205,9 @@ class QuizRepository
                             'id' => $option->id,
                             'option_text' => $option->option_text,
                         ];
-                    }),
+                    }), 
                 ];
             }),
         ];
     }
-
 }

@@ -293,6 +293,7 @@ class AppointmentResource extends Resource
                     })
                     ->label('Slot Date Range'),
             ])
+            ->persistFiltersInSession()
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->icon('heroicon-o-eye')

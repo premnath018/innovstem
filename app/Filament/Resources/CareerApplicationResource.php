@@ -108,6 +108,12 @@ class CareerApplicationResource extends Resource
                     ->toggleable(),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('career_id')
+                    ->label('Career')
+                    ->relationship('career', 'title')
+                    ->searchable()
+                    ->native(false)
+                    ->preload(),
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
                         'Pending' => 'Pending',
@@ -115,50 +121,109 @@ class CareerApplicationResource extends Resource
                         'Shortlisted' => 'Shortlisted',
                         'Rejected' => 'Rejected',
                         'Accepted' => 'Accepted',
-                    ]),
-                Tables\Filters\SelectFilter::make('career_id')
-                    ->label('Careers')
-                    ->relationship('career', 'title'),
+                    ])
+                    ->native(false),
+                Tables\Filters\SelectFilter::make('limit_applicants')
+                    ->label('Limit Applicants')
+                    ->options([
+                        '10' => 'Top 10',
+                        '50' => 'Top 50',
+                        '75' => 'Top 75',
+                        '100' => 'Top 100',
+                    ])
+                    ->native(false)
+                    ->query(function (Builder $query, array $data): Builder {
+                        if ($data['value']) {
+                            return $query->limit($data['value']);
+                        }
+                        return $query;
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['value'] ?? null) {
+                            return 'Showing top ' . $data['value'] . ' applicants';
+                        }
+                        return null;
+                    }),
+                Tables\Filters\Filter::make('applicant_name_search')
+                    ->form([
+                        Forms\Components\TextInput::make('applicant_name')
+                            ->label('Search Applicant Name')
+                            ->placeholder('Enter applicant name'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['applicant_name'],
+                            fn (Builder $query, $value): Builder => $query->where('applicant_name', 'like', '%' . $value . '%')
+                        );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['applicant_name'] ?? null) {
+                            return 'Searching for applicant: ' . $data['applicant_name'];
+                        }
+                        return null;
+                    }),
+                Tables\Filters\SelectFilter::make('resume_availability')
+                    ->label('Resume Availability')
+                    ->native(false)
+                    ->options([
+                        'with_resume' => 'With Resume',
+                        'without_resume' => 'Without Resume',
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        if ($data['value'] === 'with_resume') {
+                            return $query->whereNotNull('resume_path');
+                        } elseif ($data['value'] === 'without_resume') {
+                            return $query->whereNull('resume_path');
+                        }
+                        return $query;
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if ($data['value'] === 'with_resume') {
+                            return 'Showing applicants with resumes';
+                        } elseif ($data['value'] === 'without_resume') {
+                            return 'Showing applicants without resumes';
+                        }
+                        return null;
+                    }),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Applied From')
+                            ->native(false),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Applied Until')
+                            ->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['created_from'] ?? null) {
+                            $indicators[] = 'Applied From: ' . \Carbon\Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators[] = 'Applied Until: ' . \Carbon\Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+                        return $indicators;
+                    })
+                    ->label('Applied Date Range'),
             ])
+            ->persistFiltersInSession()
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ])
-            ->filters([
-                Tables\Filters\Filter::make('created_at')
-                ->form([
-                    Forms\Components\DatePicker::make('created_from')
-                        ->label('Applied From')
-                        ->native(false),
-                    Forms\Components\DatePicker::make('created_until')
-                        ->label('Applied Until')
-                        ->native(false),
-                ])
-                ->query(function (Builder $query, array $data): Builder {
-                    return $query
-                        ->when(
-                            $data['created_from'],
-                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
-                        )
-                        ->when(
-                            $data['created_until'],
-                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
-                        );
-                })
-                ->indicateUsing(function (array $data): array {
-                    $indicators = [];
-                    if ($data['created_from'] ?? null) {
-                        $indicators[] = 'Applied From: ' . \Carbon\Carbon::parse($data['created_from'])->toFormattedDateString();
-                    }
-                    if ($data['created_until'] ?? null) {
-                        $indicators[] = 'Applied Until: ' . \Carbon\Carbon::parse($data['created_until'])->toFormattedDateString();
-                    }
-                    return $indicators;
-                })
-                ->label('Applied Date Range'),
             ])
             ->defaultSort('created_at', 'desc');
     }

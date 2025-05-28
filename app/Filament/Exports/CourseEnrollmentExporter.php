@@ -7,6 +7,7 @@ use App\Models\Student;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
+use Filament\Actions\Exports\Enums\ExportFormat;
 
 class CourseEnrollmentExporter extends Exporter
 {
@@ -54,5 +55,17 @@ class CourseEnrollmentExporter extends Exporter
         }
 
         return $body;
+    }
+
+    public function getFormats(): array
+    {
+        return [
+            ExportFormat::Csv,
+        ];
+    }
+
+    public function getFileName(Export $export): string
+    {
+        return "Course Enrollments -{$export->getKey()}.csv";
     }
 }
