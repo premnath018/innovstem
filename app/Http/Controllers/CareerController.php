@@ -23,7 +23,7 @@ class CareerController extends Controller
     {
         $careers = Career::where('is_active',true)
             ->orderBy('created_at', 'desc')
-            ->get(['id','title','location','employment_type','domain','experience']);
+            ->get(['id','title','location','employment_type','domain','experience','created_at']);
 
         return ApiResponse::success(
             data: $careers,
@@ -40,7 +40,7 @@ class CareerController extends Controller
     public function show($id)
     {
         $career = Career::find($id)
-        ->get(['id','title','location','employment_type','description','domain','experience'])
+        ->get(['id','title','location','employment_type','description','domain','experience','created_at'])
         ->first();
 
 

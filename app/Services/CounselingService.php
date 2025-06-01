@@ -32,13 +32,21 @@ class CounselingService
     public function getAvailableSlotsByDate(?string $date)
     {
         $parsedDate = $date ? Carbon::parse($date)->format('Y-m-d') : Carbon::today()->format('Y-m-d');
-
+        $today = Carbon::today()->format('Y-m-d');
+        $now = Carbon::now()->format('H:i:s');
+    
         // Fetch all active slots for the date
-        $slots = Slot::where('slot_date', $parsedDate)
-            ->where('is_active', true)
-            ->orderBy('start_time')
+        $slotsQuery = Slot::where('slot_date', $parsedDate)
+            ->where('is_active', true);
+    
+        // If the selected date is today, only get future slots
+        if ($parsedDate === $today) {
+            $slotsQuery->where('start_time', '>', $now);
+        }
+    
+        $slots = $slotsQuery->orderBy('start_time')
             ->get(['id', 'day_of_week', 'slot_date', 'start_time', 'end_time']);
-
+    
         if ($slots->isEmpty()) {
             return [
                 'message' => 'No slots available for the selected date.',
@@ -46,15 +54,15 @@ class CounselingService
                 'status' => 'no_slots',
             ];
         }
-
+    
         // Check which slots are booked
         $bookedSlotIds = Appointment::whereIn('slot_id', $slots->pluck('id'))
             ->where('active', true)
             ->pluck('slot_id')
             ->toArray();
-
+    
         $availableSlots = $slots->filter(fn ($slot) => !in_array($slot->id, $bookedSlotIds));
-
+    
         if ($availableSlots->isEmpty()) {
             return [
                 'message' => 'All slots are booked for the selected date.',
@@ -62,19 +70,20 @@ class CounselingService
                 'status' => 'all_booked',
             ];
         }
-
+    
         return [
             'message' => 'Available slots retrieved successfully.',
             'slots' => $availableSlots->map(fn ($slot) => [
                 'id' => $slot->id,
                 'day_of_week' => $slot->day_of_week,
-                'slot_date' => $slot->slot_date->format('Y-m-d'),
+                'slot_date' => Carbon::parse($slot->slot_date)->format('Y-m-d'),
                 'start_time' => Carbon::parse($slot->start_time)->format('h:i A'),
                 'end_time' => Carbon::parse($slot->end_time)->format('h:i A'),
             ]),
             'status' => 'available',
         ];
     }
+    
 
     /**
      * Create a new appointment.
