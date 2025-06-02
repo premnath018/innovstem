@@ -126,12 +126,12 @@
             
             @if($status === 'Paid')
                 <div style="text-align: center;">
-                    <a href="https://innovstem.com/appointments" class="btn">View Appointment</a>
+                    <a href="https://innovstem.com/" class="btn">View Appointment</a>
                 </div>
                 <p>We look forward to assisting you at your scheduled appointment. If you have any questions, please contact our support team.</p>
             @else
                 <div style="text-align: center;">
-                    <a href="https://innovstem.com/book-appointment" class="btn">Try Again</a>
+                    <a href="https://innovstem.com/" class="btn">Try Again</a>
                 </div>
                 <p>Please attempt to book again or contact our support team for assistance.</p>
             @endif

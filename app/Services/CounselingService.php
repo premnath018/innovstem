@@ -153,35 +153,39 @@ class CounselingService
         if (!$ack && !$mobileNumber) {
             throw new \Exception('Either appointment ID or mobile number is required.');
         }
-
+    
         $query = Appointment::query()
             ->with(['package:id,category,package_name', 'slot:id,slot_date,start_time,end_time'])
             ->where('active', true);
-
+    
         if ($ack) {
             $appointment = $query->where('ack', $ack)->first();
-
+    
             if (!$appointment) {
                 throw new \Exception('Appointment not found.');
             }
-
+    
             return [
-                'type' => 'single',
-                'appointment' => $this->formatAppointment($appointment),
+                'appointments' => [
+                    $this->formatAppointment($appointment)
+                ],
             ];
         }
-
-        $appointments = $query->where('mobile_number', $mobileNumber)->get();
-
+    
+        $appointments = $query
+            ->where('mobile_number', $mobileNumber)
+            ->orderByDesc('created_at')
+            ->get();
+    
         if ($appointments->isEmpty()) {
             throw new \Exception('No appointments found for the provided mobile number.');
         }
-
+    
         return [
-            'type' => 'multiple',
             'appointments' => $appointments->map(fn ($appointment) => $this->formatAppointment($appointment))->toArray(),
         ];
     }
+    
 
     /**
      * Format appointment data for API response.
