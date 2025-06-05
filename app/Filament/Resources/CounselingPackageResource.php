@@ -61,7 +61,7 @@ class CounselingPackageResource extends Resource
                             ->label('Duration')
                             ->maxLength(255)
                             ->placeholder('e.g., 30 min,  // 3 sessions'),
-                        Forms\Components\RichEditor::make('includes')
+                        Forms\Components\Textarea::make('includes')
                             ->label('Includes')
                             ->required()
                             ->columnSpanFull(),
