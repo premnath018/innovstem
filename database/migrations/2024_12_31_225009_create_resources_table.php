@@ -26,6 +26,8 @@ return new class extends Migration
             $table->text('resource_meta_keyword')->nullable();
             $table->text('resource_meta_description')->nullable();
             $table->integer('view_count')->default(0);
+            $table->enum('type', ['free', 'paid'])->default('free'); // New field: type
+            $table->decimal('amount', 8, 2)->nullable(); // New field: amount (in INR)
             $table->timestamps();
         });
     }

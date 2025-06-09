@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\ResourceService;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ResourceController extends Controller
 {
@@ -15,39 +16,35 @@ class ResourceController extends Controller
         $this->ResourceService = $ResourceService;
     }
 
-    /**
-     * Get paginated Resources.
-     */
     public function paginate()
     {
         try {
-            $Resources = $this->ResourceService->getPaginatedResources(9); // Default to 15 items per page
+            $Resources = $this->ResourceService->getPaginatedResources(9);
             return ApiResponse::success($Resources, 'Paginated Resources retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);
         }
     }
 
-    /**
-     * Get a Resource by slug.
-     */
     public function show($slug)
     {
         try {
-            $Resource = $this->ResourceService->getResourceBySlug($slug);
-            return ApiResponse::success($Resource, 'Resource retrieved successfully.');
+            $resource = $this->ResourceService->getResourceBySlug($slug);
+
+            if ($resource->type === 'paid' && !$resource->has_access) {
+                return ApiResponse::error('You do not have access to this paid resource.', 403);
+            }
+
+            return ApiResponse::success($resource, 'Resource retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 404);
         }
     }
 
-    /**
-     * Get recent Resources.
-     */
     public function recent()
     {
         try {
-            $Resources = $this->ResourceService->getRecentResources(5); // Default to 5 recent Resources
+            $Resources = $this->ResourceService->getRecentResources(5);
             return ApiResponse::success($Resources, 'Recent Resources retrieved successfully.');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), 500);

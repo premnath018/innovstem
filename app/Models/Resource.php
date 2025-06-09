@@ -21,6 +21,8 @@ class Resource extends Model
         'resource_meta_keyword',
         'resource_meta_description',
         'view_count',
+        'type', // New field
+        'amount', // New field
         'active',
     ];
 
@@ -38,5 +40,10 @@ class Resource extends Model
     public function quizzes(): MorphMany
     {
         return $this->morphMany(Quiz::class, 'quizable');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(ResourceTransaction::class);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ResourceResource\Pages;
 use App\Models\Resource as ResourceModel;
-use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -65,6 +64,28 @@ class ResourceResource extends Resource
                                     $set('resource_meta_description', $state);
                                 }
                             }),
+                        Select::make('type')
+                            ->label('Resource Type')
+                            ->options([
+                                'free' => 'Free',
+                                'paid' => 'Paid',
+                            ])
+                            ->required()
+                            ->native(false)
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, $set) {
+                                if ($state === 'free') {
+                                    $set('amount', null);
+                                }
+                            }),
+                        TextInput::make('amount')
+                            ->label('Amount (INR)')
+                            ->numeric()
+                            ->minValue(0)
+                            ->required(fn (Get $get) => $get('type') === 'paid')
+                            ->disabled(fn (Get $get) => $get('type') === 'free')
+                            ->dehydrated()
+                            ->prefix('₹'),
                     ])->columns(2),
                 Forms\Components\Fieldset::make('Options')
                     ->schema([
@@ -156,6 +177,15 @@ class ResourceResource extends Resource
                         'primary', 'secondary', 'success', 'danger', 'warning', 'info',
                     ][crc32($state) % 6] ?? 'primary')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('type')
+                    ->label('Type')
+                    ->badge()
+                    ->color(fn (string $state): string => $state === 'paid' ? 'success' : 'info')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('amount')
+                    ->label('Amount')
+                    ->money('INR')
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('active')
                     ->label('Active')
                     ->boolean()
@@ -200,6 +230,13 @@ class ResourceResource extends Resource
                     ->native(false)
                     ->searchable()
                     ->preload(),
+                Tables\Filters\SelectFilter::make('type')
+                    ->label('Type')
+                    ->options([
+                        'free' => 'Free',
+                        'paid' => 'Paid',
+                    ])
+                    ->native(false),
                 Tables\Filters\SelectFilter::make('active')
                     ->label('Status')
                     ->options([
@@ -282,6 +319,13 @@ class ResourceResource extends Resource
                         TextEntry::make('resource_description')
                             ->label('Short Description')
                             ->columnSpanFull(),
+                        TextEntry::make('type')
+                            ->label('Resource Type')
+                            ->badge()
+                            ->color(fn (string $state): string => $state === 'paid' ? 'success' : 'info'),
+                        TextEntry::make('amount')
+                            ->label('Amount')
+                            ->money('INR'),
                     ])
                     ->columns(2),
                 Section::make('Resource Content and Media')
@@ -331,7 +375,9 @@ class ResourceResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            // You can add a relation manager for ResourceTransaction here if needed
+        ];
     }
 
     public static function getNavigationBadge(): ?string

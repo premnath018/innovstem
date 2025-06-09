@@ -69,11 +69,31 @@ Route::middleware([JwtMiddleware::class])->group(function () {
     | attending webinars, and fetching enrolled courses.
     |
     */
+
     
     Route::get('/student/courses', [StudentController::class, 'enrolledCourses']);
     Route::get('/student/webinars', [StudentController::class, 'attendedWebinars']);
     Route::post('/student/enroll-course', [StudentController::class, 'enrollCourse']);
     Route::post('/student/attend-webinar', [StudentController::class, 'attendWebinar']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Resource Routes
+    |--------------------------------------------------------------------------
+    |
+    | Routes for retrieving resources, including search, pagination, and details.
+    |
+    */
+
+    Route::prefix('resources')->group(function () {
+        Route::get('/', [ResourceController::class, 'paginate'])->name('resources.paginate'); // Fetch paginated resources
+        Route::get('/d/{slug}', [ResourceController::class, 'show'])->name('resources.show'); // Fetch a resource by slug
+        Route::get('/search', [ResourceController::class, 'search'])->name('resources.search'); // Search resources
+        Route::get('/recent', [ResourceController::class, 'recent'])->name('resources.recent'); // Fetch recent resources
+    });
+
+    Route::post('/resources/order', [RazorpayController::class, 'createResourceOrder']);
+    Route::post('/resources/verify-payment', [RazorpayController::class, 'verifyResourcePayment']);
 
     /*
     |--------------------------------------------------------------------------
@@ -129,21 +149,6 @@ Route::prefix('courses')->group(function () {
     Route::get('/d/{slug}', [CourseController::class, 'show'])->name('courses.show'); // Fetch a course by slug
 });
 
-/*
-|--------------------------------------------------------------------------
-| Resource Routes
-|--------------------------------------------------------------------------
-|
-| Routes for retrieving resources, including search, pagination, and details.
-|
-*/
-
-Route::prefix('resources')->group(function () {
-    Route::get('/', [ResourceController::class, 'paginate'])->name('resources.paginate'); // Fetch paginated resources
-    Route::get('/d/{slug}', [ResourceController::class, 'show'])->name('resources.show'); // Fetch a resource by slug
-    Route::get('/search', [ResourceController::class, 'search'])->name('resources.search'); // Search resources
-    Route::get('/recent', [ResourceController::class, 'recent'])->name('resources.recent'); // Fetch recent resources
-});
 
 /*
 |--------------------------------------------------------------------------
